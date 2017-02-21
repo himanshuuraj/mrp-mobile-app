@@ -62,39 +62,21 @@ angular.module('starter.controllers', ['ngDraggable'])
     };
     var userId = window.localStorage.userId;
     var existingShops;
+    $scope.urlOfImage = "https://mrps-orderform.firebaseapp.com/";
+    var dbRef = loginCred.dbRef;
+    var shopDetail = {name : "Ram Kirana Stores",tin : "TIN12345C"};
+    $scope.cartArray = {};
+    $scope.cartArray[shopDetail.tin] = [];
+    $scope.tabArray = ['rice','ravva','broken'];
     var getShopData = function(){
         var shopsRef = dbRef.child('users/'+userId + '/shops');
 			shopsRef.once('value', function(snap) {
 
 				existingShops = snap.val();
                                 console.log(existingShops);
-                                //window.localStorage.shopName = existingShops[0].name;
-                                //window.localStorage.tin = existingShops[0].tin;
-//				var newShop =	{
-//  				name: "Ganta Kirana stores",
-//  				proprietor_name : "Vishwa Sastry",
-//  				mobile : "9999900000",
-//  				pan : "arer1345v",
-//  				tin : "b323445v",
-//  				state : "AP",
-//  				district : "VSKP",
-//  				city : "vizag",
-//  				address : "No.345, Second Avenue",
-//  				tax_id : {
-//  				 type : "cfg",
-//  				 value : "caeae"
-//				}
-//			}
-//
-//				existingShops.push(newShop);
-//				shopsRef.set(existingShops);
   			});
     }
 
-    var dbRef = loginCred.dbRef;
-    $scope.cartArray = [];
-
-    $scope.tabArray = ['rice','ravva','broken'];
     
     String.prototype.getWeight = function(){
         var x = this.toString();
@@ -129,13 +111,13 @@ angular.module('starter.controllers', ['ngDraggable'])
             x["price"] = "Rs 1200";
             delete x.description;
             delete x.available;
-            $scope.cartArray.push(x);
+            $scope.cartArray[shopDetail.tin].push(x);
         }else{
             tickElement.style.backgroundColor = "white";
-            var length = $scope.cartArray.length;
+            var length = $scope.cartArray[shopDetail.tin].length;
             for(var index = 0; index<length; index++){
-                if($scope.cartArray[index].productId == key){
-                    $scope.cartArray.splice(index,1);
+                if($scope.cartArray[shopDetail.tin][index].productId == key){
+                    $scope.cartArray[shopDetail.tin].splice(index,1);
                     break;
                 }
             }
@@ -146,7 +128,7 @@ angular.module('starter.controllers', ['ngDraggable'])
     
     $scope.proceedToSaveInCart = function(){
         var x = {};
-        angular.forEach($scope.cartArray,function(item,index){
+        angular.forEach($scope.cartArray[shopDetail.tin],function(item,index){
             x[index] = item;
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
@@ -182,8 +164,6 @@ angular.module('starter.controllers', ['ngDraggable'])
         return $scope.urlOfImage+$scope.selectedItem+"_200/"+key+".png";
     };
     
-    $scope.urlOfImage = "https://mrps-orderform.firebaseapp.com/";//+rice+"_200/"+"10KgLalithaBrown.png";
-
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
@@ -237,27 +217,22 @@ angular.module('starter.controllers', ['ngDraggable'])
      
       var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
  	 promise.then(function(e) {
- 	 	 	var usersRef = dbRef.child('users');
+ 	 	 	var usersRef = dbRef.child('users/'+ e.uid);
  			var userId = window.localStorage.userId = e.uid;
- 	 	 	 usersRef.once('value', function(snap){
-                                console.log(snap.val());
-                                var temp = snap.val();
-                                temp = temp[userId];
-                                window.localStorage.userInfo = JSON.stringify(temp);
-                                window.localStorage.userId = userId;
-                                console.log(userId);
- 	 	 	 	if(snap.hasChild(userId)){
- 	 	 	 		alert("exists");
-                                        $state.transitionTo('app.search', {arg:'arg'});
- 	 	 	 		//proceed to load the main page
- 	 	 	 	}else{
-                                    alert("done");
-                                    $scope.showUserInputField = true;
-                                    $scope.$apply();
- 	 	 	 		//load the form page to enter profile info
- 	 	 	 	}
- 	 	 	 });  	
- 	 }).catch(e => alert("UserName password doesnot match"));
+                        usersRef.once('value').then(function(data){
+                            alert("done");
+                            var data = data.val();
+                            if(data)
+                                window.localStorage.userInfo = JSON.stringify(data);
+                            else{
+                                $scope.showUserInputField = true;
+                                $scope.$apply();
+                            }
+                        }).catch(function(e){console.log(e)});	
+ 	 }).catch(
+                 function(e){
+                     console.log(e);
+                 });
       
   };
   
@@ -329,15 +304,18 @@ angular.module('starter.controllers', ['ngDraggable'])
   
   //authRef.createUserWithEmailAndPassword(email,pass)
 })
-.controller('shopCtrl', function($scope,$http) {
-  var shops = window.localStorage.userInfo.shops;
-  $scope.shopArray = ["shop1","shop2","shop3"];
+.controller('shopCtrl', function($scope,$http,$state) {
+  var userInfo = JSON.parse(window.localStorage.userInfo);
+  $scope.shopArray = userInfo.shops;
   $scope.showShopInput = false;
   $scope.shop = {
       tax_id : {}
   };
   $scope.createNewShop = function(){
       $scope.showShopInput = true;
+  };
+  $scope.showItems = function(name,tin){
+      $state.go('app.search', {name:name,tin:tin});
   };
 })
 
