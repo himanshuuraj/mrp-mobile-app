@@ -1,0 +1,76 @@
+<ion-view view-title="Cart" ng-init="init();">
+  <ion-content>
+  
+      <div class="card">
+          <div class="row">
+              <div class="col" style="height:40px;">
+                  Select Lorry
+              </div>
+              <div class="col" style="height:40px;">
+                  <select>
+                      <option>17 Kg</option>
+                      <option>21 Kg</option>
+                      <option>25 Kg</option>
+                  </select>
+              </div>
+          </div>
+      </div>
+      
+      <ion-scroll zooming = "true" direction = "x" style="width:100%;height:150px;" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
+            <div class = "scroll-container card" style="height:100%;background-image: url('')">
+                <div ng-repeat="product in deliveryArray track by $index" style="width:80px;height:100%;">
+                    {{product.productId}}
+                </div>
+            </div>
+        </ion-scroll>
+      
+      
+      <div class="card" ng-repeat = "data in cartArray" ng-drag="true" ng-drag-data="$index" data-allow-transform="true"
+          style="height:130px;background-color:lightgray;position:relative;">
+      <div class = "row" style="height:100%;">
+        <div class = "col col-20" style="height:100%;">
+          <img src="img/image.jpg" style="height:100%;"/>
+        </div>
+        <div class = "col">
+          <div class="row" style="padding:0;">
+            <div class="col" style="padding:0;">
+              <div class="text-center" style="padding:0;">
+                <h5 style="text-align: center;" id="name{{$index}}"><b>{{data.name}}</b>
+                  <br>
+                  {{data.master_weight}}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="padding:0;">
+            <div class="col col-33" style="text-align:center;">Quantity</div>
+            <div class="col col-33" style="text-align:center;">Bag</div>
+            <div class="col col-33" style="text-align:center;">Amount</div>
+          </div>
+          <div class="row" style="height:40px;padding:0px;">
+
+            <div class="col col-33">
+              <input type="text" id="quantity{{$index}}" ng-keyup="textInQuantity(data.productId,data.master_weight);" style="text-align:center;width:100%;" value="{{data.quantity}}" placeholder="quantity"/>
+            </div>
+            <div class="col col-33">
+              <input type="text" id="bag{{$index}}" ng-keyup="textInBag(data.productId,data.master_weight);" style="text-align:center;width:100%;" value="{{data.bag}}" placeholder="bags"/>
+            </div>
+            <div class="col col-33">
+              <p id="price{{$index}}" style="text-align:center;width:100%;">Rs. 1200</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      
+      <div class="card">
+          <b>Address</b>
+          {{userInfo.address}}
+      </div>
+      
+  
+  </ion-content>
+    <ion-footer-bar align-title="center" class="bar-assertive">
+        <button ng-click="submitOrder()">Proceed</button>
+    </ion-footer-bar>
+</ion-view>

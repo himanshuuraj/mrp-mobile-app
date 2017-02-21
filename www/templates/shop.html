@@ -1,0 +1,68 @@
+<ion-view view-title="Shop">
+  <ion-content>
+    <div class="card" ng-hide="showShopInput" ng-repeat="shop in shopArray">
+        {{shop}}
+    </div>
+      <button class="button button-block button-calm" ng-hide="showShopInput" ng-click="createNewShop()">New Shop</button>
+  
+      
+      <div class="padding" ng-show="showShopInput">
+          <div class="list list-inset">
+              <label class="item item-input">
+                  <input type="text" placeholder="Name" ng-model="shop.name">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Mobile Number" ng-model="shop.mobile">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Is Agent" ng-model="shop.isAgent">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Address" ng-model="shop.address">
+              </label>
+              <div class="padding">
+                  Shop
+              </div>
+              <label class="item item-input">
+                  <input type="text" placeholder="Name" ng-model="shop.name">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Proprietor Name" ng-model="shop.proprietor_name">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Mobile" ng-model="shop.mobile">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Pan" ng-model="shop.pan">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Tin" ng-model="shop.tin">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="State" ng-model="shop.state">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="District" ng-model="shop.district">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="City" ng-model="shop.city">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Address" ng-model="shop.address">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Tax Type "ng-model="shop.tax_id.type">
+              </label>
+              <label class="item item-input">
+                  <input type="text" placeholder="Tax Value" ng-model="shop.tax_id.value">
+              </label>
+            </div>
+          <button class="button button-block button-calm" ng-click="fillSignUpData()">Submit</button>
+          <!--<div class="bar bar-footer">
+            <h1 class="title" ng-click="proceed();">proceed</h1>
+         </div>-->
+      </div>
+      
+  
+  </ion-content>
+</ion-view>
