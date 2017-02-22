@@ -58,7 +58,6 @@ angular.module('starter.controllers', ['ngDraggable'])
     var earlySelectedTab = "rice";
     $scope.init = function(){
       /*alert("Hello");*/
-      setTimeout(function(){getShopData();},0);
     };
     var userId = window.localStorage.userId;
     var existingShops;
@@ -68,14 +67,7 @@ angular.module('starter.controllers', ['ngDraggable'])
     $scope.cartArray = {};
     $scope.cartArray[shopDetail.tin] = [];
     $scope.tabArray = ['rice','ravva','broken'];
-    var getShopData = function(){
-        var shopsRef = dbRef.child('users/'+userId + '/shops');
-			shopsRef.once('value', function(snap) {
-
-				existingShops = snap.val();
-                                console.log(existingShops);
-  			});
-    }
+    
 
     
     String.prototype.getWeight = function(){
@@ -122,7 +114,7 @@ angular.module('starter.controllers', ['ngDraggable'])
                 }
             }
         }
-
+        window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
         console.log($scope.cartArray);
     };
     
@@ -189,19 +181,10 @@ angular.module('starter.controllers', ['ngDraggable'])
 })
 
 .controller('loginCtrl', function($scope,$http,$state,loginCred) {
-    // Initialize Firebase
-//  var config = {
-//    apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
-//    authDomain: "stage-db-b035c.firebaseapp.com",
-//    databaseURL: "https://stage-db-b035c.firebaseio.com",
-//    storageBucket: "stage-db-b035c.appspot.com",
-//    messagingSenderId: "950510485815"
-//  };
-//  firebase.initializeApp(config);
-//  var authRef = firebase.auth();
   var dbRef = loginCred.dbRef;
   var authRef = loginCred.authRef;
   $scope.userData = {};
+  $scope.loginAgain = false;
   $scope.signUpData = {
       shop :{
          tax_id : {}
@@ -216,25 +199,46 @@ angular.module('starter.controllers', ['ngDraggable'])
       }
      
       var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
- 	 promise.then(function(e) {
- 	 	 	var usersRef = dbRef.child('users/'+ e.uid);
- 			var userId = window.localStorage.userId = e.uid;
-                        usersRef.once('value').then(function(data){
-                            alert("done");
-                            var data = data.val();
-                            if(data)
-                                window.localStorage.userInfo = JSON.stringify(data);
-                            else{
-                                $scope.showUserInputField = true;
-                                $scope.$apply();
-                            }
-                        }).catch(function(e){console.log(e)});	
- 	 }).catch(
-                 function(e){
-                     console.log(e);
-                 });
-      
+        promise.then(function(e) {
+                       var usersRef = dbRef.child('users/'+ e.uid);
+                       var userId = window.localStorage.userId = e.uid;
+                       usersRef.once('value').then(function(data){
+                           alert("done");
+                           var data = data.val();
+                           console.log(data);
+                           if(data){
+                               window.localStorage.userInfo = JSON.stringify(data);
+                               getShopData();
+                               $state.go('app.search', {name:'name',tin:'tin'});
+                           }
+                           else{
+                               $scope.showUserInputField = true;
+                               $scope.$apply();
+                           }
+                       }).catch(function(e){console.log(e)});	
+        }).catch(
+                function(e){
+                    alert("Username password doesnt match")
+                    console.log(e);
+                });
   };
+  
+  var getShopData = function(){
+        var userId = window.localStorage.userId;
+        var shopsRef = dbRef.child('users/'+userId + '/shops');
+			shopsRef.once('value', function(snap) {
+				var existingShops = snap.val();
+                                if(existingShops.length == 1){
+                                    window.localStorage.shopName = existingShops[0].name;
+                                    window.localStorage.tin = existingShops[0].tin;
+                                    $state.go('app.search', {name:'name',tin:'tin'});
+                                }
+                                else{
+                                    $state.go('app.shop', {name:'name',tin:'tin'});
+                                }
+                                console.log(existingShops);
+  			});
+      }
   
   $scope.signUp = function(){
       if(!$scope.userData.password || !$scope.userData.username){
@@ -265,6 +269,7 @@ angular.module('starter.controllers', ['ngDraggable'])
   };
   $scope.fillSignUpData = function(){
       //var dbRef = firebase.database().ref();
+      
       var usersRef = dbRef.child('users');
 	var foo = {};
 
@@ -294,15 +299,24 @@ angular.module('starter.controllers', ['ngDraggable'])
 
 			var promise = usersRef.set(foo);
                         promise.then(function(e) {
-                         window.localStorage.isAgent = $scope.signUpData.isAgent;
-                         window.localStorage.name = $scope.signUpData.name;
-                         window.localStorage.tin = $scope.signUpData.tin;
-                         $state.transitionTo('app.search', {arg:'arg'});
+                            alert("PLease Login Again");
+                            $scope.loginAgain = true;
  	 }).catch(e => console.log(e))
          
   };
   
-  //authRef.createUserWithEmailAndPassword(email,pass)
+  $scope.moveToLoginScreen = function(){
+    $scope.showUserInputField = true;  
+  };
+  
+  $scope.getIsAgent = function(data){
+      if(data == 'true'){
+          $scope.signUpData.isAgent = true;
+      }else{
+          $scope.signUpData.isAgent = false;
+      }
+  };
+  
 })
 .controller('shopCtrl', function($scope,$http,$state) {
   var userInfo = JSON.parse(window.localStorage.userInfo);
@@ -315,13 +329,20 @@ angular.module('starter.controllers', ['ngDraggable'])
       $scope.showShopInput = true;
   };
   $scope.showItems = function(name,tin){
+      window.localStorage.tin = tin;
+      window.localStorage.shopName = name;
       $state.go('app.search', {name:name,tin:tin});
   };
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred) {
     $scope.init = function(){
-        $scope.cartArray = JSON.parse(window.sessionStorage.cartArray);
+        var userId = window.localStorage.userId;
+        var userInfo = JSON.parse(window.localStorage.userInfo);
+        var tin = window.localStorage.tin;
+        $scope.shopName = window.localStorage.shopName;
+        var temp = JSON.parse(window.sessionStorage.cartArray);
+        $scope.cartArray = temp[tin];
         console.log($scope.cartArray);
         var userInfo = JSON.parse(window.localStorage.userInfo);
         //console.log($stateParams);
@@ -332,43 +353,39 @@ angular.module('starter.controllers', ['ngDraggable'])
     $scope.deliveryArray = [];
     $scope.submitOrder = function(){
             
-            var x = {};
-            angular.forEach($scope.cartArray,function(item,index){
-                x[index] = item;
-                delete x[index].$$hashKey;
-            });
-            
-            console.log(x);
-
-                var newOrder = {
-                        userid : window.localStorage.userId,
-                        orderId : "2016",
-                        time : new Date().getTime(),
-                        userName : userInfo.name,
-                        district : userInfo.shops[0].district,
-                        city : userInfo.shops[0].city,
-                        state : userInfo.shops[0].state,
-                        status : "in-cart",
-                        shops : {
-                                0 : {
-                                        name : userInfo.shops[0].name,
-                                        TIN : userInfo.shops[0].tin,
-                                        items : x
-
-
-                                }
+        var x = {};
+        angular.forEach($scope.cartArray,function(item,index){
+            x[index] = item;
+            delete x[index].$$hashKey;
+        });
+        console.log(x);
+        var newOrder = {
+                userid : window.localStorage.userId,
+                orderId : "2016",
+                time : new Date().getTime(),
+                userName : userInfo.name,
+                district : userInfo.shops[0].district,
+                city : userInfo.shops[0].city,
+                state : userInfo.shops[0].state,
+                status : "in-cart",
+                shops : {
+                        0 : {
+                                name : userInfo.shops[0].name,
+                                TIN : userInfo.shops[0].tin,
+                                items : x
                         }
-
                 }
-                var promise = ordersRef.push(newOrder);
-                        promise.then(function(e) {
-                            alert("submitted");
-                }).catch(e => console.log(e))
-            }
+
+        }
+        var promise = ordersRef.push(newOrder);
+                promise.then(function(e) {
+                    alert("submitted");
+        }).catch(e => console.log(e))
+    }
             
     var userInfo = window.localStorage.userInfo;
     console.log(userInfo);
-    $scope.userInfo = JSON.parse(window.localStorage.userInfo);
+    //$scope.userInfo = JSON.parse(window.localStorage.userInfo);
          
     $scope.onDropComplete = function(data,event){
         console.log(data);

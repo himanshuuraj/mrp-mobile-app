@@ -34,6 +34,7 @@
                   <input type="text" placeholder="Mobile Number" ng-model="signUpData.mobile">
               </label>
               <label class="item item-input">
+                  Is Agent <input type="radio" value="true" ng-change="getIsAgent('true')"/> <input type="radio" value="false" ng-change="getIsAgent('flase')"/>
                   <input type="text" placeholder="Is Agent" ng-model="signUpData.isAgent">
               </label>
               <label class="item item-input">
@@ -78,6 +79,8 @@
             </div>
           <button class="button button-block button-calm" ng-click="fillSignUpData()">Submit</button>
       </div>
+      
+      <button ng-show="loginAgain" class="button button-block button-calm" ng-click="showUserInputField = true;">Click Here To Login</button>
       
       
       
