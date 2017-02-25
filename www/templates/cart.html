@@ -8,9 +8,9 @@
               </div>
               <div class="col" style="height:40px;">
                   <select>
-                      <option>17 Kg</option>
-                      <option>21 Kg</option>
-                      <option>25 Kg</option>
+                      <option>17 tonnes</option>
+                      <option>21 tonnes</option>
+                      <option>25 tonnes</option>
                   </select>
               </div>
           </div>
@@ -25,42 +25,15 @@
         </ion-scroll>
       
       
-      <div class="card" ng-repeat = "data in cartArray" ng-drag="true" ng-drag-data="$index" data-allow-transform="true"
-          style="height:130px;background-color:lightgray;position:relative;">
-      <div class = "row" style="height:100%;">
-        <div class = "col col-20" style="height:100%;">
-          <img src="img/image.jpg" style="height:100%;"/>
-        </div>
-        <div class = "col">
-          <div class="row" style="padding:0;">
-            <div class="col" style="padding:0;">
-              <div class="text-center" style="padding:0;">
-                <h5 style="text-align: center;" id="name{{$index}}"><b>{{data.name}}</b>
-                  <br>
-                  {{data.master_weight}}
-                </h5>
-              </div>
+      <div class="padding" ng-repeat = "(key,data) in cartArray" ng-drag="true" ng-drag-data="$index" data-allow-transform="true"
+          style="background-color:lightgray;position:relative;">
+      {{key}}
+            <div class="card" ng-repeat="order in data">
+                {{order.name}}<br>
+                {{order.bag}}<br>
+                <button ng-click="addToDeliveryArray(key,order)">Add</button>
+                <button ng-click="removeItemFromDeliverable(key,order)">Remove</button>
             </div>
-          </div>
-          <div class="row" style="padding:0;">
-            <div class="col col-33" style="text-align:center;">Quantity</div>
-            <div class="col col-33" style="text-align:center;">Bag</div>
-            <div class="col col-33" style="text-align:center;">Amount</div>
-          </div>
-          <div class="row" style="height:40px;padding:0px;">
-
-            <div class="col col-33">
-              <input type="text" id="quantity{{$index}}" ng-keyup="textInQuantity(data.productId,data.master_weight);" style="text-align:center;width:100%;" value="{{data.quantity}}" placeholder="quantity"/>
-            </div>
-            <div class="col col-33">
-              <input type="text" id="bag{{$index}}" ng-keyup="textInBag(data.productId,data.master_weight);" style="text-align:center;width:100%;" value="{{data.bag}}" placeholder="bags"/>
-            </div>
-            <div class="col col-33">
-              <p id="price{{$index}}" style="text-align:center;width:100%;">Rs. 1200</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
       
       <div class="card">

@@ -7,6 +7,8 @@
 angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    
+  //$ionicConfigProvider.views.swipeBackEnabled(false);
   $stateProvider
 
     .state('app', {
@@ -94,6 +96,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 })
 
 .run(function($ionicPlatform,$state) {
+    
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -106,9 +109,13 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    
+    //$ionicConfigProvider.views.swipeBackEnabled(false);
     if(window.localStorage.userId)
         $state.go('app.search', {arg:'arg'});
     else
         $state.go('app.login', {arg:'arg'});
   });
+  
+    //$ionicConfigProvider.views.swipeBackEnabled(false);
 });

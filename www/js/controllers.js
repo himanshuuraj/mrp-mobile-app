@@ -11,9 +11,16 @@ angular.module('starter.controllers', ['ngDraggable'])
   firebase.initializeApp(config);
   var authRef = this.authRef = firebase.auth();
   this.dbRef = firebase.database().ref();
+  this.moveToUrl = function(urlToMove){
+      var currentUrl = window.location.href.toString();
+      var index = currentUrl.indexOf("/app/");
+      currentUrl = currentUrl.substring(0,index);
+      currentUrl += '/app/' + urlToMove;
+      window.location.href = currentUrl;
+  };
 })
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout,$rootScope) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -23,52 +30,60 @@ angular.module('starter.controllers', ['ngDraggable'])
   //});
 
   // Form data for the login modal
+  
+  $scope.showHeader = true;
+  if(window.location.href.includes("login"))
+      $scope.showHeader = false;
+  
   $scope.loginData = {};
-
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
+  
+  $rootScope.$on('agent',function(){
+      $scope.isAgent = window.localStorage.isAgent;
   });
+  $scope.isAgent = false;// window.localStorage.isAgent;
 
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
-
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
-
-})
-.controller('searchCtrl', function($scope,$http,loginCred,$state) {
-    var earlySelectedTab = "rice";
-    $scope.init = function(){
-      /*alert("Hello");*/
+    $scope.signOut = function(){
+        window.localStorage.clear();
+        window.location.href = "http://localhost:8383/lalitha/index.html#/app/login";//"/app.login";
     };
+})
+.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicNavBarDelegate) {
+    var earlySelectedTab = "rice";
     var userId = window.localStorage.userId;
     var existingShops;
     $scope.urlOfImage = "https://mrps-orderform.firebaseapp.com/";
     var dbRef = loginCred.dbRef;
-    var shopDetail = {name : "Ram Kirana Stores",tin : "TIN12345C"};
+    var shopDetail = {name : "",tin : ""};
     $scope.cartArray = {};
-    $scope.cartArray[shopDetail.tin] = [];
+    $scope.cartArray = {};//[shopDetail.tin] = [];
     $scope.tabArray = ['rice','ravva','broken'];
     
-
+    $scope.isAgent = window.localStorage.isAgent;
+    
+     var getShopData = function(){
+        var shopsRef = dbRef.child('users/'+userId + '/shops');
+        shopsRef.once('value', function(snap) {
+                     existingShops = snap.val();
+                     if(existingShops.length == 1){
+                                window.localStorage.shopName = shopDetail.name = existingShops[0].name;
+                                window.localStorage.tin = shopDetail.tin = existingShops[0].tin;
+                                $scope.cartArray[shopDetail.tin] = [];
+                     }else
+                           $scope.shopArray = existingShops;
+                     console.log(existingShops);
+        });
+    }
+    
+    $scope.getShopItem = function(shop){
+        shopDetail.name = shop.name;
+        shopDetail.tin = shop.tin;
+        if(!$scope.cartArray[shopDetail.tin] )
+            $scope.cartArray[shopDetail.tin] = [];
+    };
+    
+    $scope.init = function(){
+        getShopData();
+    }
     
     String.prototype.getWeight = function(){
         var x = this.toString();
@@ -124,7 +139,8 @@ angular.module('starter.controllers', ['ngDraggable'])
             x[index] = item;
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
-        $state.go('app.cart', {arg:'arg'});
+        //$state.go('app.cart', {arg:'arg'});
+        //loginCred.moveToUrl("cart");
         //saveInCart(x);
     };
     
@@ -156,7 +172,6 @@ angular.module('starter.controllers', ['ngDraggable'])
         return $scope.urlOfImage+$scope.selectedItem+"_200/"+key+".png";
     };
     
-
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
         console.log(data);
@@ -180,7 +195,7 @@ angular.module('starter.controllers', ['ngDraggable'])
     };
 })
 
-.controller('loginCtrl', function($scope,$http,$state,loginCred) {
+.controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate) {
   var dbRef = loginCred.dbRef;
   var authRef = loginCred.authRef;
   $scope.userData = {};
@@ -190,6 +205,8 @@ angular.module('starter.controllers', ['ngDraggable'])
          tax_id : {}
       }
   };
+    
+   $ionicNavBarDelegate.showBackButton(false);
     
   $scope.signIn = function(){
       //$scope.showUserInputField = true;
@@ -203,12 +220,14 @@ angular.module('starter.controllers', ['ngDraggable'])
                        var usersRef = dbRef.child('users/'+ e.uid);
                        var userId = window.localStorage.userId = e.uid;
                        usersRef.once('value').then(function(data){
-                           alert("done");
+                           alert("signIn successful");
                            var data = data.val();
                            console.log(data);
                            if(data){
                                window.localStorage.userInfo = JSON.stringify(data);
-                               getShopData();
+                               window.localStorage.isAgent = data.isAgent;
+                               $rootScope.$broadcast('isAgent',{});
+                               //getShopData();
                                $state.go('app.search', {name:'name',tin:'tin'});
                            }
                            else{
@@ -222,23 +241,6 @@ angular.module('starter.controllers', ['ngDraggable'])
                     console.log(e);
                 });
   };
-  
-  var getShopData = function(){
-        var userId = window.localStorage.userId;
-        var shopsRef = dbRef.child('users/'+userId + '/shops');
-			shopsRef.once('value', function(snap) {
-				var existingShops = snap.val();
-                                if(existingShops.length == 1){
-                                    window.localStorage.shopName = existingShops[0].name;
-                                    window.localStorage.tin = existingShops[0].tin;
-                                    $state.go('app.search', {name:'name',tin:'tin'});
-                                }
-                                else{
-                                    $state.go('app.shop', {name:'name',tin:'tin'});
-                                }
-                                console.log(existingShops);
-  			});
-      }
   
   $scope.signUp = function(){
       if(!$scope.userData.password || !$scope.userData.username){
@@ -268,40 +270,36 @@ angular.module('starter.controllers', ['ngDraggable'])
       
   };
   $scope.fillSignUpData = function(){
-      //var dbRef = firebase.database().ref();
-      
-      var usersRef = dbRef.child('users');
+      var usersRef = dbRef.child('users/'+ window.localStorage.userId );
 	var foo = {};
-
-  			foo[window.localStorage.userId] = {
-
-  			name : $scope.signUpData.name,
-  			mobile : $scope.signUpData.mobile,
-  			isAgent : $scope.signUpData.isAgent,
-  			address : $scope.signUpData.address,
-  			shops : [{
-  				name: $scope.signUpData.shop.name,
-  				proprietor_name : $scope.signUpData.shop.proprietor_name,
-  				mobile : $scope.signUpData.shop.mobile,
-  				pan : $scope.signUpData.shop.pan,
-  				tin : $scope.signUpData.shop.tin,
-  				state : $scope.signUpData.shop.state,
-  				district : $scope.signUpData.shop.district,
-  				city : $scope.signUpData.shop.city,
-  				address : $scope.signUpData.shop.address,
-  				tax_id : {
-  				 type : $scope.signUpData.shop.tax_id.type,
-  				 value : $scope.signUpData.shop.tax_id.value
-				}
-  			}]
-  			
-  			};
-
-			var promise = usersRef.set(foo);
+                    foo = {
+                            email : $scope.userData.username,
+                            name : $scope.signUpData.name,
+                            mobile : $scope.signUpData.mobile,
+                            isAgent : $scope.signUpData.isAgent,
+                            address : $scope.signUpData.address,
+                            shops : [{
+                                    name: $scope.signUpData.shop.name,
+                                    proprietor_name : $scope.signUpData.shop.proprietor_name,
+                                    mobile : $scope.signUpData.shop.mobile,
+                                    pan : $scope.signUpData.shop.pan,
+                                    tin : $scope.signUpData.shop.tin,
+                                    state : $scope.signUpData.shop.state,
+                                    district : $scope.signUpData.shop.district,
+                                    city : $scope.signUpData.shop.city,
+                                    address : $scope.signUpData.shop.address,
+                                    tax_id : {
+                                     type : $scope.signUpData.shop.tax_id.type,
+                                     value : $scope.signUpData.shop.tax_id.value
+                                    }
+                            }]
+                    };
+                    var promise = usersRef.set(foo);
                         promise.then(function(e) {
-                            alert("PLease Login Again");
+                            alert("Please Login Again");
                             $scope.loginAgain = true;
- 	 }).catch(e => console.log(e))
+                            $scope.$apply();
+ 	}).catch(e => console.log(e))
          
   };
   
@@ -335,22 +333,20 @@ angular.module('starter.controllers', ['ngDraggable'])
   };
 })
 
-.controller('cartCtrl', function($scope,$http,$stateParams,loginCred) {
+.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate) {
+    
+     var userId = window.localStorage.userId;
+     var userInfo = JSON.parse(window.localStorage.userInfo);
+     var dbRef = loginCred.dbRef;
+     var ordersRef =  dbRef.child('orders');
     $scope.init = function(){
-        var userId = window.localStorage.userId;
-        var userInfo = JSON.parse(window.localStorage.userInfo);
-        var tin = window.localStorage.tin;
-        $scope.shopName = window.localStorage.shopName;
         var temp = JSON.parse(window.sessionStorage.cartArray);
-        $scope.cartArray = temp[tin];
+        $scope.cartArray = temp;//[tin];
         console.log($scope.cartArray);
-        var userInfo = JSON.parse(window.localStorage.userInfo);
-        //console.log($stateParams);
-        var dbRef = loginCred.dbRef;
-        var ordersRef =  dbRef.child('orders');
-        
+        //$ionicNavBarDelegate.showBackButton(false);
     };
-    $scope.deliveryArray = [];
+    $scope.deliveryArray = {};
+    var selectedLorrySize = 25;
     $scope.submitOrder = function(){
             
         var x = {};
@@ -383,9 +379,42 @@ angular.module('starter.controllers', ['ngDraggable'])
         }).catch(e => console.log(e))
     }
             
-    var userInfo = window.localStorage.userInfo;
-    console.log(userInfo);
-    //$scope.userInfo = JSON.parse(window.localStorage.userInfo);
+    $scope.addToDeliveryArray = function(key,value){
+        var x = {};
+        x[key] = value;
+        if(!$scope.deliveryArray[selectedLorrySize]){
+            $scope.deliveryArray[selectedLorrySize] = {};
+            $scope.deliveryArray[selectedLorrySize][key] = [];
+        }
+        if(!$scope.deliveryArray[selectedLorrySize][key])
+            $scope.deliveryArray[selectedLorrySize][key] = [];
+        $scope.deliveryArray[selectedLorrySize][key].push(value);
+        console.log($scope.deliveryArray);
+        /*
+         * $scope.deliveryArray = {
+         *      25 : {
+         *              tin :[] 
+         * */
+    };
+    
+    $scope.removeItemFromDeliverable = function(key,value){
+        var x = {};
+        x[key] = value;
+        if(!$scope.deliveryArray[selectedLorrySize] || !$scope.deliveryArray[selectedLorrySize][key])
+            return;
+        var lengthOfArray = $scope.deliveryArray[selectedLorrySize][key].length;
+        for(var index = 0; index <  lengthOfArray; index++){
+            if($scope.deliveryArray[selectedLorrySize][key][index].productId == value.productId){
+                $scope.deliveryArray[selectedLorrySize][key].splice(index,1);
+                if($scope.deliveryArray[selectedLorrySize][key].length == 0)
+                    delete $scope.deliveryArray[selectedLorrySize][key];
+                if(Object.keys($scope.deliveryArray[selectedLorrySize]).length == 0)
+                    delete $scope.deliveryArray[selectedLorrySize];
+                break;
+            }
+        }
+        console.log($scope.deliveryArray);
+    }
          
     $scope.onDropComplete = function(data,event){
         console.log(data);

@@ -1,5 +1,14 @@
 <ion-view view-title="Lalitha" ng-init="init();">
   <ion-content>
+      
+      <div class="card" ng-show="!isAgent" ng-cloak>
+          Select Shop<br>
+          <div class="row" ng-repeat="shop in shopArray" ng-click="getShopItem(shop)">
+              {{shop.name}}
+          </div>
+          
+      </div>
+      
     <div class="button-bar padding">
       <a class="button button-positive" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab}}</a>
     </div>
@@ -133,6 +142,6 @@
 
   </ion-content>
     <ion-footer-bar align-title="center" class="bar-assertive">
-        <button ng-click="proceedToSaveInCart()">Proceed</button>
+        <button ng-click="proceedToSaveInCart()"><a href="#/app/cart">Proceed</a></button>
     </ion-footer-bar>
 </ion-view>

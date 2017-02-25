@@ -1,8 +1,8 @@
-<ion-modal-view>
+<ion-view><!-- hide-nav-bar="true"-->
   <ion-header-bar>
     <h1 class="title">Login</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+      <button class="button button-clear">Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -34,7 +34,7 @@
                   <input type="text" placeholder="Mobile Number" ng-model="signUpData.mobile">
               </label>
               <label class="item item-input">
-                  Is Agent <input type="radio" value="true" ng-change="getIsAgent('true')"/> <input type="radio" value="false" ng-change="getIsAgent('flase')"/>
+                   <!--<input type="radio" value="true" ng-change="getIsAgent('true')"/> <input type="radio" value="false" ng-change="getIsAgent('false')"/>-->
                   <input type="text" placeholder="Is Agent" ng-model="signUpData.isAgent">
               </label>
               <label class="item item-input">
@@ -86,4 +86,4 @@
       
   </ion-content>
      
-</ion-modal-view>
+</ion-view>
