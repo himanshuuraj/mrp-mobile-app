@@ -47,8 +47,20 @@ angular.module('starter.controllers', ['ngDraggable'])
         window.location.href = "http://localhost:8383/lalitha/index.html#/app/login";//"/app.login";
     };
 })
-.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicNavBarDelegate) {
+.controller('summaryCtrl', function($scope,$http,loginCred,$state) {
+    $scope.init = function(){
+        alert("d");
+    }
+        })
+
+
+.controller('searchCtrl', function($scope,$http,loginCred,$state) {
     var earlySelectedTab = "rice";
+    $scope.init = function(){
+      //TODO - change this to call everytime shop is changed
+      $scope.getItemsPrice();
+      setTimeout(function(){getShopData();},0);
+    };
     var userId = window.localStorage.userId;
     var existingShops;
     $scope.urlOfImage = "https://mrps-orderform.firebaseapp.com/";
@@ -172,6 +184,56 @@ angular.module('starter.controllers', ['ngDraggable'])
         return $scope.urlOfImage+$scope.selectedItem+"_200/"+key+".png";
     };
     
+    $scope.getProductItems = function(){
+        var productsRef = dbRef.child('products');
+        productsRef.once('value').then(function(productSnapshot){
+            var productsList = productSnapshot.val();
+            $scope.brokenArray = productsList.broken;
+            $scope.ravvaArray = productsList.ravva;
+            $scope.riceArray = productsList.rice;
+            document.getElementById("ricetab").className = "button button-assertive";
+            $scope.selectedItem = "rice";  
+            $scope.$apply();
+        }).catch(function(){
+            console.log("Failed to get list of product items");
+        });
+
+    };
+    
+    $scope.getPrice = function(key){
+        //
+        var type=$scope.selectedItem;
+//        var shopName = "";
+//        var tin = "";
+//        key='10kgLalithaBrown';
+        var arrayName = type + 'PriceArray';
+      //  var orderContext = shop.orderContext; //orderContext = agent/outlet/user
+        var orderContext = 'agent';
+        var price = 'N/A';
+        if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][orderContext])
+            price = $scope[arrayName][key][orderContext];   
+            
+        return price;
+    }
+    
+    $scope.getItemsPrice = function(){
+        //TODO replace areasDummy
+      //  var areaId = shop.areaId;
+        var areaRef = dbRef.child('areasDummy/'+'VSP_RURAL');
+        areaRef.once('value').then(function(areaSnapshot){
+            var productsList = areaSnapshot.val();
+            console.log("Fetched list of prices for selected area" + productsList);
+            $scope.brokenPriceArray = productsList.broken;
+            $scope.ravvaPriceArray = productsList.ravva;
+            $scope.ricePriceArray = productsList.rice;
+            $scope.getProductItems();
+
+        }).catch(function(){
+            console.log("Failed to get list of product items");
+        })
+
+    };
+
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
         console.log(data);
@@ -295,7 +357,7 @@ angular.module('starter.controllers', ['ngDraggable'])
                             }]
                     };
                     var promise = usersRef.set(foo);
-                        promise.then(function(e) {
+                    promise.then(function(e) {
                             alert("Please Login Again");
                             $scope.loginAgain = true;
                             $scope.$apply();

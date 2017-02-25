@@ -44,7 +44,7 @@
               <input type="text" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" style="text-align:center;width:100%;" placeholder="bags"/>
             </div>
             <div class="col col-33">
-              <p id="{{key}}price" style="text-align:center;width:100%;">Rs. 1200</p>
+              <p id="{{key}}price" style="text-align:center;width:100%;">Rs.{{getPrice(key)}}</p>
             </div>
           </div>
         </div>
