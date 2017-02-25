@@ -525,7 +525,6 @@ $scope.shopArray=$scope.cartArray.shops;
         console.log($scope.cartArray);
         //$ionicNavBarDelegate.showBackButton(false);
     };
-<<<<<<< HEAD
     $scope.deliveryArray = {};
     var selectedLorrySize = 25;
     $scope.submitOrder = function(){
