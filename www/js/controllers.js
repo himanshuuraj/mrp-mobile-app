@@ -54,10 +54,18 @@ angular.module('starter.controllers', ['ngDraggable'])
   };
 
 })
+
+.controller('summaryCtrl', function($scope,$http,loginCred,$state) {
+    $scope.init = function(){
+        alert("d");
+    }
+        })
 .controller('searchCtrl', function($scope,$http,loginCred,$state) {
     var earlySelectedTab = "rice";
     $scope.init = function(){
-      /*alert("Hello");*/
+      //TODO - change this to call everytime shop is changed
+      $scope.getItemsPrice();
+      setTimeout(function(){getShopData();},0);
     };
     var userId = window.localStorage.userId;
     var existingShops;
@@ -156,6 +164,55 @@ angular.module('starter.controllers', ['ngDraggable'])
         return $scope.urlOfImage+$scope.selectedItem+"_200/"+key+".png";
     };
     
+    $scope.getProductItems = function(){
+        var productsRef = dbRef.child('products');
+        productsRef.once('value').then(function(productSnapshot){
+            var productsList = productSnapshot.val();
+            $scope.brokenArray = productsList.broken;
+            $scope.ravvaArray = productsList.ravva;
+            $scope.riceArray = productsList.rice;
+            document.getElementById("ricetab").className = "button button-assertive";
+            $scope.selectedItem = "rice";  
+            $scope.$apply();
+        }).catch(function(){
+            console.log("Failed to get list of product items");
+        });
+
+    };
+    
+    $scope.getPrice = function(key){
+        //
+        var type=$scope.selectedItem;
+//        var shopName = "";
+//        var tin = "";
+//        key='10kgLalithaBrown';
+        var arrayName = type + 'PriceArray';
+      //  var orderContext = shop.orderContext; //orderContext = agent/outlet/user
+        var orderContext = 'agent';
+        var price = 'N/A';
+        if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][orderContext])
+            price = $scope[arrayName][key][orderContext];   
+            
+        return price;
+    }
+    
+    $scope.getItemsPrice = function(){
+        //TODO replace areasDummy
+      //  var areaId = shop.areaId;
+        var areaRef = dbRef.child('areasDummy/'+'VSP_RURAL');
+        areaRef.once('value').then(function(areaSnapshot){
+            var productsList = areaSnapshot.val();
+            console.log("Fetched list of prices for selected area" + productsList);
+            $scope.brokenPriceArray = productsList.broken;
+            $scope.ravvaPriceArray = productsList.ravva;
+            $scope.ricePriceArray = productsList.rice;
+            $scope.getProductItems();
+
+        }).catch(function(){
+            console.log("Failed to get list of product items");
+        })
+
+    };
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
@@ -268,12 +325,10 @@ angular.module('starter.controllers', ['ngDraggable'])
       
   };
   $scope.fillSignUpData = function(){
-      //var dbRef = firebase.database().ref();
-      
-      var usersRef = dbRef.child('users');
+      var usersRef = dbRef.child('users/'+ window.localStorage.userId );
 	var foo = {};
 
-  			foo[window.localStorage.userId] = {
+  			foo = {
 
   			name : $scope.signUpData.name,
   			mobile : $scope.signUpData.mobile,
@@ -296,7 +351,7 @@ angular.module('starter.controllers', ['ngDraggable'])
   			}]
   			
   			};
-
+ 
 			var promise = usersRef.set(foo);
                         promise.then(function(e) {
                             alert("PLease Login Again");
