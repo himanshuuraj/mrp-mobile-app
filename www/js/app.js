@@ -64,15 +64,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
+//    .state('app.playlists', {
+//      url: '/playlists',
+//      views: {
+//        'menuContent': {
+//          templateUrl: 'templates/playlists.html',
+//          controller: 'PlaylistsCtrl'
+//        }
+//      }
+//    })
     .state('app.login', {
       url: '/login',
       views: {
@@ -81,17 +81,17 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'loginCtrl'
         }
       }
-    })
+    });
 
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
+//  .state('app.single', {
+//    url: '/playlists/:playlistId',
+//    views: {
+//      'menuContent': {
+//        templateUrl: 'templates/playlist.html',
+//        controller: 'PlaylistCtrl'
+//      }
+//    }
+//  });
   
   $ionicConfigProvider.scrolling.jsScrolling(false);
  
@@ -120,9 +120,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
     
     //$ionicConfigProvider.views.swipeBackEnabled(false);
-    if(window.localStorage.userId)
-        $state.go('app.search', {arg:'arg'});
-    else
+//    if(window.localStorage.userId)
+//        $state.go('app.search', {arg:'arg'});
+//    else
         $state.go('app.login', {arg:'arg'});
   });
   

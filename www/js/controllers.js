@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngDraggable'])
 
-.service('loginCred', function() {
+.service('loginCred', function($ionicPopup) {
     var config = {
     apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
     authDomain: "stage-db-b035c.firebaseapp.com",
@@ -17,6 +17,17 @@ angular.module('starter.controllers', ['ngDraggable'])
       currentUrl = currentUrl.substring(0,index);
       currentUrl += '/app/' + urlToMove;
       window.location.href = currentUrl;
+  };
+  
+  this.showPopup = function(msg,title) {
+      title = title || "Alert"; 
+    var alertPopup = $ionicPopup.alert({
+      title: 'Alert!',
+      template: msg
+    });
+    alertPopup.then(function(res) {
+      console.log('Thank you for not eating my delicious ice cream cone');
+    });
   };
 })
 
@@ -351,6 +362,12 @@ $scope.shopArray=$scope.cartArray.shops;
         })
 
     };
+    
+    $scope.getSelectedItemArray = function(){
+        if(!$scope.selectedItem) 
+            return [];
+        return $scope[$scope.selectedItem] || [];
+    }
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
@@ -385,13 +402,16 @@ $scope.shopArray=$scope.cartArray.shops;
          tax_id : {}
       }
   };
-    
-   $ionicNavBarDelegate.showBackButton(false);
+  
+  var showPopUp = loginCred.showPopup;
+  
+  $scope.isChecked = true;
+  // $ionicNavBarDelegate.showBackButton(false);
     
   $scope.signIn = function(){
       //$scope.showUserInputField = true;
       if(!$scope.userData.password || !$scope.userData.username){
-          alert("Please fill the required info");
+          showPopUp("Please fill the required info");
           return;
       }
      
@@ -400,7 +420,7 @@ $scope.shopArray=$scope.cartArray.shops;
                        var usersRef = dbRef.child('users/'+ e.uid);
                        var userId = window.localStorage.userId = e.uid;
                        usersRef.once('value').then(function(data){
-                           alert("signIn successful");
+                           showPopUp("signIn successful");
                            var data = data.val();
                            console.log(data);
                            if(data){
@@ -417,39 +437,102 @@ $scope.shopArray=$scope.cartArray.shops;
                        }).catch(function(e){console.log(e)});	
         }).catch(
                 function(e){
-                    alert("Username password doesnt match")
+                    showPopUp("Username password doesnt match");
                     console.log(e);
                 });
   };
   
   $scope.signUp = function(){
       if(!$scope.userData.password || !$scope.userData.username){
-          alert("Please fill the required info");
+          showPopUp("Please fill the required info");
           return;
       }
-      //var dbRef = firebase.database().ref();
       var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
       promise.then(function(e) {
- 	 	 	var usersRef = dbRef.child('users');
- 			var userId=e.uid;
-                        window.localStorage.userId = userId;
- 	 	 	 usersRef.once('value', function(snap){
- 	 	 	 	if(snap.hasChild(userId)){
- 	 	 	 		alert("exists");
-                                        $state.transitionTo('app.search', {arg:'arg'});
- 	 	 	 		//proceed to load the main page
- 	 	 	 	}else{
-                                    $scope.showUserInputField = true;
-                                    $scope.$apply();
-                                    alert("done");
-                                    //load the form page to enter profile info
-                                    
- 	 	 	 	}
- 	 	 	 });  	
+ 	 var usersRef = dbRef.child('users');
+ 	var userId=e.uid;
+                     window.localStorage.userId = userId;
+                    usersRef.once('value', function(snap){
+                           if(snap.hasChild(userId)){
+                                   alert("exists");
+                                   $state.transitionTo('app.search', {arg:'arg'});
+                                   //proceed to load the main page
+                           }else{
+                               $scope.showUserInputField = true;
+                               $scope.$apply();
+                               showPopUp("done");
+                               //load the form page to enter profile info
+                           }
+                    });  	
  	 }).catch(e => console.log(e))
       
   };
+  
+  var validateField = function(){
+      if(!$scope.signUpData.name){
+          showPopUp('Enter Name Of User');
+          return 0;
+      }
+      if(!$scope.signUpData.mobile){
+          showPopUp('Enter Mobile Of User');
+          return 0;
+      }
+      if($scope.signUpData.isAgent.constructor != Boolean){
+          showPopUp('Please confirm agentType');
+          return 0;
+      }
+      if($scope.signUpData["isAgent"])
+          return 1;
+      if(!$scope.signUpData.shop.name){
+          showPopUp('Enter Shop Name');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.proprietor_name){
+          showPopUp('Enter Proprietor Name');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.mobile){
+          showPopUp('Enter Shop Mobile');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.pan){
+          showPopUp('Enter Shop Pan');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.tin){
+          showPopUp('Enter Shop Tin');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.state){
+          showPopUp('Enter Shop State');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.district){
+          showPopUp('Enter Shop District');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.city){
+          showPopUp('Enter Shop City');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.address){
+          showPopUp('Enter Shop address');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.tax_id.type){
+          showPopUp('Enter shop tax id');
+          return 0;
+      }
+      if(!$scope.signUpData.shop.tax_id.value){
+          showPopUp('Enter shop tax id');
+          return 0;
+      }
+      return 1;
+  }
+  
   $scope.fillSignUpData = function(){
+      if(!validateField())
+          return;
       var usersRef = dbRef.child('users/'+ window.localStorage.userId );
 	var foo = {};
                     foo = {
@@ -474,12 +557,15 @@ $scope.shopArray=$scope.cartArray.shops;
                                     }
                             }]
                     };
+                     if($scope.signUpData.isAgent){
+                        foo.shops = [];
+                    }
                     var promise = usersRef.set(foo);
                     promise.then(function(e) {
-                            alert("Please Login Again");
-                            $scope.loginAgain = true;
+                            showPopUp("Please Login Again");
+                            $scope.showUserInputField = false;
                             $scope.$apply();
- 	}).catch(e => console.log(e))
+ 	}).catch(e => showPopUp("Please try again"));
          
   };
   
@@ -488,10 +574,11 @@ $scope.shopArray=$scope.cartArray.shops;
   };
   
   $scope.getIsAgent = function(data){
-      if(data == 'true'){
-          $scope.signUpData.isAgent = true;
+      //alert(data);
+      if(data == true){
+          $scope.signUpData["isAgent"] = true;
       }else{
-          $scope.signUpData.isAgent = false;
+          $scope.signUpData["isAgent"] = false;
       }
   };
   
@@ -516,7 +603,7 @@ $scope.shopArray=$scope.cartArray.shops;
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate) {
     
      var userId = window.localStorage.userId;
-     var userInfo = JSON.parse(window.localStorage.userInfo);
+     //var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
      var ordersRef =  dbRef.child('orders');
     $scope.init = function(){
@@ -555,7 +642,7 @@ $scope.shopArray=$scope.cartArray.shops;
         }
         var promise = ordersRef.push(newOrder);
                 promise.then(function(e) {
-                    alert("submitted");
+                    showPopUp("submitted");
         }).catch(e => console.log(e))
     }
             

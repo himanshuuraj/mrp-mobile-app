@@ -5,44 +5,52 @@
       <button class="button button-clear">Close</button>
     </div>
   </ion-header-bar>
-  <ion-content>
-        <div class="padding" ng-hide="showUserInputField">
-            <div class="list list-inset">
-              <label class="item item-input">
+  <ion-content style="height:100%;background-color: #3847bc;" ng-hide="showUserInputField">
+      <div class="padding" style="height:30%;">
+          <img style="height:100%;width:100%;" src="img/rice.jpg"/>
+      </div>
+      <div class="padding blue" style="margin-top:5%;padding:4%;">
+          <div class="list list-inset blue">
+              <label class="item item-input blue" style="border:none;border-bottom:2px solid white;margin-left: 0.9%;width: 98%;padding-left: 0;">
                   <input type="text" placeholder="Username" ng-model="userData.username">
               </label>
-              <label class="item item-input">
-                  <input type="password" placeholder="Password" ng-model="userData.password">
+              <label class="item item-input blue" style="border:none;border-bottom:1px solid white;margin-left: 0.9%;width: 98%;padding-left: 0;">
+                  <input type="password" placeholder="Password" ng-model="userData.password" >
               </label>
             </div>
             <div class="row">
-              <div class="col">
-                  <button class="button button-block button-calm" ng-click="signIn()">Login</button>
-              </div>
-              <div class="col">
-                  <button class="button button-block button-calm" ng-click="signUp()">SignUp</button>
+                <div class="col">
+                  <button class="button button-block button-calm" ng-click="signIn()" style="background-color: #99b3ff;">Login</button>
               </div>
             </div>
-        </div>
+          
+      </div>
       
-      <div class="padding" ng-show="showUserInputField">
+      
+      <div  style="position:fixed;bottom:10%;display:block;width:60%;left:20%;">
+             <button class="button button-block button-calm" ng-click="signUp()" style="background-color: #99b3ff;">SignUp</button>
+       </div>
+  </ion-content>
+    
+    
+    <ion-content ng-show="showUserInputField" style="background-color: white;" id="abc">
+      <div class="padding" >
           <div class="list list-inset">
               <label class="item item-input">
                   <input type="text" placeholder="Name" ng-model="signUpData.name">
               </label>
               <label class="item item-input">
-                  <input type="text" placeholder="Mobile Number" ng-model="signUpData.mobile">
+                  <input type="tel" placeholder="Mobile Number" ng-model="signUpData.mobile">
               </label>
-              <label class="item item-input">
-                   <!--<input type="radio" value="true" ng-change="getIsAgent('true')"/> <input type="radio" value="false" ng-change="getIsAgent('false')"/>-->
-                  <input type="text" placeholder="Is Agent" ng-model="signUpData.isAgent">
-              </label>
+                   <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)">is Agent</ion-checkbox>
               <label class="item item-input">
                   <input type="text" placeholder="Address" ng-model="signUpData.address">
               </label>
-              <div class="padding">
-                  Shop
+          </div>
+          <div class="padding" ng-hide="isChecked">
+                  <center>Shop</center>
               </div>
+          <div class="list list-inset" ng-hide="isChecked">
               <label class="item item-input">
                   <input type="text" placeholder="Name" ng-model="signUpData.shop.name">
               </label>
@@ -80,7 +88,7 @@
           <button class="button button-block button-calm" ng-click="fillSignUpData()">Submit</button>
       </div>
       
-      <button ng-show="loginAgain" class="button button-block button-calm" ng-click="showUserInputField = true;">Click Here To Login</button>
+<!--      <button ng-show="loginAgain" class="button button-block button-calm" ng-click="showUserInputField = true;">Click Here To Login</button>-->
       
       
       
