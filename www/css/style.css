@@ -1,1 +1,24 @@
 /* Empty. Add your own CSS if you like */
+
+h1,h2,h3{
+    text-transform: uppercase;
+}
+
+.coupon{
+    border: 10px solid #bbb;
+    border-radius: 3px;
+    width:100%;
+    
+}
+
+.totalBox {
+    margin-left: 2%;
+}
+
+.applyCouponBtn{
+    
+}
+
+.priceList{
+    margin-top:5%;
+}

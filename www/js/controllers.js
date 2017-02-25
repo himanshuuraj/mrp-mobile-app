@@ -47,11 +47,129 @@ angular.module('starter.controllers', ['ngDraggable'])
         window.location.href = "http://localhost:8383/lalitha/index.html#/app/login";//"/app.login";
     };
 })
+
 .controller('summaryCtrl', function($scope,$http,loginCred,$state) {
     $scope.init = function(){
-        alert("d");
+        $scope.cartArray = {
+  "shops" : [ {
+    "items" : {
+      "ravva" : {
+        "1KGLalithaBlue" : {
+          "bags" : 30,
+          "discount_price" : 200,
+          "name" : "1 KG Super Fine Ravva",
+          "price" : 120,
+          "weight" : 10
+        },
+        "5KGLalithaGreen" : {
+          "bags" : 80,
+          "discount_price" : 150,
+          "name" : "5 KG Lalitha Green Ravva",
+          "price" : 120,
+          "weight" : 10
+        }
+        
+      },
+      "rice" : {
+        "10KGLalithaBrown" : {
+          "bags" : 500,
+          "discount_price" : 4300,
+          "name" : "10KG Lalitha Brown Rice",
+          "price" : 4500,
+          "weight" : 20
+        },
+        "5KGLalithaGreen" : {
+          "bags" : 400,
+          "discount_price" : 2200,
+          "name" : "5KG Lalitha Green Rice",
+          "price" : 2300,
+          "weight" : 25
+        },
+        "10KGLalithaPink" : {
+          "bags" : 350,
+          "discount_price" : 2200,
+          "name" : "10KG Lalitha Pink Rice",
+          "price" : 2500,
+          "weight" : 250
+        }
+      }
+    },
+    "name" : "Ram Kirana Stores"
+  }, {
+    "items" : {
+      "ravva" : {
+        "1KGLalithaBlue" : {
+          "bags" : 30,
+          "discount_price" : 200,
+          "name" : "1 KG Super Fine Ravva",
+          "price" : 120,
+          "weight" : 10
+        }
+      },
+      "rice" : {
+        "10KGLalithaBrown" : {
+          "bags" : 500,
+          "discount_price" : 4300,
+          "name" : "10KG Lalitha Brown Rice",
+          "price" : 4500,
+          "weight" : 20
+        },
+        "5KGLalithaGreen" : {
+          "bags" : 400,
+          "discount_price" : 2200,
+          "name" : "5KG Lalitha Green Rice",
+          "price" : 2300,
+          "weight" : 25
+        }
+      }
+    },
+    "name" : "Tom Kirana Stores"
+    
+  }],
+  "grossPrice" : "35700",
+    "totalPrice" : "34500",
+    "totalWeight" : "14500",
+    "discountAmount" : "1200"
+}
+
+$scope.shopArray=$scope.cartArray.shops;
+
+    };
+    
+    
+    $scope.submitOrder = function(){
+            
+        var x = {};
+        angular.forEach($scope.cartArray,function(item,index){
+            x[index] = item;
+            delete x[index].$$hashKey;
+        });
+        console.log(x);
+        var newOrder = {
+                userid : window.localStorage.userId,
+                orderId : "2016",
+                time : new Date().getTime(),
+                userName : userInfo.name,
+                district : userInfo.shops[0].district,
+                city : userInfo.shops[0].city,
+                state : userInfo.shops[0].state,
+                status : "in-cart",
+                shops : {
+                        0 : {
+                                name : userInfo.shops[0].name,
+                                TIN : userInfo.shops[0].tin,
+                                items : x
+                        }
+                }
+
+        }
+        var promise = ordersRef.push(newOrder);
+                promise.then(function(e) {
+                    alert("Your order has been successfully placed");
+        }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
     }
-        })
+
+})
 
 
 .controller('searchCtrl', function($scope,$http,loginCred,$state) {
@@ -407,6 +525,7 @@ angular.module('starter.controllers', ['ngDraggable'])
         console.log($scope.cartArray);
         //$ionicNavBarDelegate.showBackButton(false);
     };
+<<<<<<< HEAD
     $scope.deliveryArray = {};
     var selectedLorrySize = 25;
     $scope.submitOrder = function(){
@@ -477,6 +596,10 @@ angular.module('starter.controllers', ['ngDraggable'])
         }
         console.log($scope.deliveryArray);
     }
+    $scope.deliveryArray = [];            
+    var userInfo = window.localStorage.userInfo;
+    console.log(userInfo);
+    //$scope.userInfo = JSON.parse(window.localStorage.userInfo);
          
     $scope.onDropComplete = function(data,event){
         console.log(data);
