@@ -209,15 +209,58 @@ $scope.shopArray=$scope.cartArray.shops;
                                 window.localStorage.shopName = shopDetail.name = existingShops[0].name;
                                 window.localStorage.tin = shopDetail.tin = existingShops[0].tin;
                                 $scope.cartArray[shopDetail.tin] = [];
+                                $scope.shopDetail = shopDetail;
                      }else
                            $scope.shopArray = existingShops;
                      console.log(existingShops);
         });
     }
     
+    $scope.addQuantity = function(key,masterWeight){
+        var weight = masterWeight.getWeight();
+        var element = document.getElementById(key+"quantity");
+        var initWeight = element.value;
+        if(initWeight)
+            initWeight = parseInt(initWeight);
+        element.value = initWeight + weight;
+        $scope.textInQuantity(key,masterWeight);
+    };
+    $scope.minusQuantity = function(key,masterWeight){
+        var weight = masterWeight.getWeight();
+        var element = document.getElementById(key+"quantity");
+        var initWeight = element.value;
+        if(initWeight)
+            initWeight = parseInt(initWeight);
+        var finalWeight = initWeight - weight;
+        if(finalWeight < 0)
+            return;
+        element.value = finalWeight;
+        $scope.textInQuantity(key,masterWeight);
+    };
+    $scope.addBag = function(key,master_weight){
+        var element = document.getElementById(key+"bag");
+        element.value = ++element.value;
+        $scope.textInBag(key,master_weight);
+    };
+    $scope.minusBag = function(key,master_weight){
+        var element = document.getElementById(key+"bag");
+        if(!(element.value < 1)){
+         element.value = --element.value;
+         $scope.textInBag(key,master_weight);
+        }
+    };
+    
+    $scope.textInBag = function(key,master_weight){
+        var weight =  master_weight.getWeight();
+        var bagElement = document.getElementById(key+"bag");
+        var bagNumber = parseInt(bagElement.value);
+        document.getElementById(key+"quantity").value = bagNumber * weight;
+    }
+    
     $scope.getShopItem = function(shop){
         shopDetail.name = shop.name;
         shopDetail.tin = shop.tin;
+        $scope.shopDetail = shopDetail;
         if(!$scope.cartArray[shopDetail.tin] )
             $scope.cartArray[shopDetail.tin] = [];
     };
@@ -364,9 +407,8 @@ $scope.shopArray=$scope.cartArray.shops;
     };
     
     $scope.getSelectedItemArray = function(){
-        if(!$scope.selectedItem) 
-            return [];
-        return $scope[$scope.selectedItem] || [];
+        $scope.selectedItem = $scope.selectedItem || "rice";
+        return $scope[$scope.selectedItem+"Array"] || [];
     }
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
@@ -387,8 +429,6 @@ $scope.shopArray=$scope.cartArray.shops;
        var bag = document.getElementById(key+"bag");
        weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
        bag.value =  quantity/weight;
-       if((quantity/weight).constructor != Number)
-           quantityElement.style.border = "1px solid red";
     };
 })
 

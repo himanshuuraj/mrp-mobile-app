@@ -27,3 +27,14 @@ h1,h2,h3{
 
     background-color : whitesmoke;
 }
+<<<<<<< HEAD
+=======
+
+.ion-plus-circled:before{
+    color:gray;
+}
+
+.ion-minus-circled:before{
+    color:gray;
+}
+>>>>>>> 74e2c3a... modified item page
