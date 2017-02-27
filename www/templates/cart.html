@@ -16,23 +16,74 @@
           </div>
       </div>
       
-      <ion-scroll zooming = "true" direction = "x" style="width:100%;height:150px;" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
-            <div class = "scroll-container card" style="height:100%;background-image: url('')">
-                <div ng-repeat="product in deliveryArray track by $index" style="width:80px;height:100%;">
-                    {{product.productId}}
+      <div class = "card" style="height:20%;background-image: url('')">
+            <div ng-repeat="(key,product) in getDeliveryArray()">
+                {{key}}
+                <div ng-repeat="value in product track by $index">
+                    
+                   
                 </div>
             </div>
-        </ion-scroll>
+        </div>
       
-      
+      <div class="card" style="position:relative;display:block;height:20px;">
+          <div style="position:absolute;top:0;left:0;background-color: red;height:100%;" id="progressBar"></div>
+      </div>
+      <div class="padding" style="text-align:right">{{totalQuantity}}quintal/{{selectedLorrySize}}tonnes</div>
       <div class="padding" ng-repeat = "(key,data) in cartArray" ng-drag="true" ng-drag-data="$index" data-allow-transform="true"
           style="background-color:lightgray;position:relative;">
       {{key}}
-            <div class="card" ng-repeat="order in data">
-                {{order.name}}<br>
-                {{order.bag}}<br>
-                <button ng-click="addToDeliveryArray(key,order)">Add</button>
-                <button ng-click="removeItemFromDeliverable(key,order)">Remove</button>
+            <div class="card" ng-repeat="value in data track by $index" style="position:relative;">
+                 <!--here-->
+                    <div class = "row" style="height:100%;">
+                        <div class = "col col-20" style="height:100%;">
+                          <img ng-src="{{getImageUrl(key)}}" style="height:100%;"/>
+                        </div>
+                        <div class = "col">
+                          <div class="row" style="padding:0;">
+                            <div class="col" style="padding:0;">
+                              <div class="text-center" style="padding:0;">
+                                <h5 style="text-align: center;padding:0;" id="{{key}}name{{$index}}"><b>{{value.name}}</b>
+                                </h5>
+                                  <h5>
+                                      <b>MasterWeight {{value.master_weight}}</b>
+                                    </h5>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" style="height:50px;padding:0px;margin-top: 10px;">
+                            <div class="col col-33" style="position:relative;background-color: lightgray;">
+                              <input type="number" id="{{key}}quantity{{$index}}" ng-keyup="textInQuantity(key,this.value.master_weight);" ng-value="value.quantity"
+                                     style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" placeholder="quantity"/>
+                                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight,$index);">
+                                    <i class="icon ion-plus-circled"></i>
+                                </div>
+                                <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusQuantity(key,this.value.master_weight,$index);">
+                                    <i class="icon ion-minus-circled" style="float:right;"></i>
+                                </div>
+                            </div>
+                            <div class="col col-33" style="position:relative;background-color: lightgray;margin-left: 5%;">
+                              <input type="number" id="{{key}}bag{{$index}}" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="bags" ng-value="value.bag"
+                                     style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;"/>
+                                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight,$index);">
+                                    <i class="icon ion-plus-circled"></i>
+                                </div>
+                                <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusBag(key,this.value.master_weight,$index);">
+                                    <i class="icon ion-minus-circled" style="float:right;"></i>
+                                </div>
+                            </div>
+                            <div class="col col-33">
+                              <p id="{{key}}price{{$index}}" style="text-align:center;width:100%;">{{value.price}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="button icon ion-checkmark-round" id="{{key}}button" ng-click="addToCart(key,value)"
+                              style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:white;">
+                      </button>
+                    <!--here-->
+                <button ng-click="addToDeliveryArray(key,value)">Add</button>
+                <button ng-click="removeItemFromDeliverable(key,value)">Remove</button>
             </div>
     </div>
       

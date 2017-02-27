@@ -32,17 +32,10 @@
               </div>
             </div>
           </div>
-<!--          <div class="row" style="padding:0;">
-            <div class="col col-33" style="text-align:center;">Quantity</div>
-            <div class="col col-33" style="text-align:center;">Bag</div>
-            <div class="col col-33" style="text-align:center;">Amount</div>
-          </div>-->
           <div class="row" style="height:50px;padding:0px;margin-top: 10px;">
             <div class="col col-33" style="position:relative;background-color: lightgray;">
               <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
                      style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" placeholder="quantity"/>
-<!--              <input type="number" min="0" step="{{value.master_weight.getWeight()}}" ng-keyup="textInQuantity(key,this.value.master_weight);"
-                     placeholder="quantity" value="0" style="text-align:center;width:100%;" id="{{key}}quantity" /> -->
                 <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight);">
                     <i class="icon ion-plus-circled"></i>
                 </div>

@@ -11,6 +11,10 @@ angular.module('starter.controllers', ['ngDraggable'])
   firebase.initializeApp(config);
   var authRef = this.authRef = firebase.auth();
   this.dbRef = firebase.database().ref();
+  String.prototype.getWeight = function(){
+        var x = this.toString();
+        return parseInt(x.substring(0,x.length-2));
+    }
   this.moveToUrl = function(urlToMove){
       var currentUrl = window.location.href.toString();
       var index = currentUrl.indexOf("/app/");
@@ -29,6 +33,97 @@ angular.module('starter.controllers', ['ngDraggable'])
       console.log('Thank you for not eating my delicious ice cream cone');
     });
   };
+  this.addQuantity = function(key,masterWeight,index){
+        var weight = masterWeight.getWeight();
+        var element;
+        if(index != undefined)
+              element  = document.getElementById(key+"quantity" + index);
+        else
+              element = document.getElementById(key+"quantity");
+        var initWeight = element.value;
+        if(initWeight)
+            initWeight = parseInt(initWeight);
+        element.value = initWeight + weight;
+        if(index == undefined)
+            this.textInQuantity(key,masterWeight);
+        else
+            this.textInQuantity(key,masterWeight,index);
+    };
+    this.minusQuantity = function(key,masterWeight,index){
+        var weight = masterWeight.getWeight();
+        var element;
+        if((index === 0)  || index)
+              element  = document.getElementById(key+"quantity" + index);
+        else
+              element = document.getElementById(key+"quantity");
+        var initWeight = element.value;
+        if(initWeight)
+            initWeight = parseInt(initWeight);
+        var finalWeight = initWeight - weight;
+        if(finalWeight < 0)
+            return;
+        element.value = finalWeight;
+       if((index === 0)  || index)
+            this.textInQuantity(key,masterWeight,index);
+        else
+            this.textInQuantity(key,masterWeight);
+    };
+    this.addBag = function(key,master_weight,index){
+        var element;
+        if((index === 0)  || index)
+              element  = document.getElementById(key+"bag" + index);
+        else
+              element = document.getElementById(key+"bag");
+        element.value = ++element.value;
+        if((index === 0)  || index)
+            this.textInBag(key,master_weight,index);
+        else
+            this.textInBag(key,master_weight);
+    };
+    this.minusBag = function(key,master_weight,index){
+        var element;
+        if((index === 0)  || index)
+              element  = document.getElementById(key+"bag" + index);
+        else
+              element = document.getElementById(key+"bag");
+        if(!(element.value < 1)){
+         element.value = --element.value;
+         if((index === 0)  || index)
+            this.textInBag(key,master_weight,index);
+        else
+            this.textInBag(key,master_weight);
+        }
+    };
+    
+    this.textInBag = function(key,master_weight,index){
+        var weight =  master_weight.getWeight();
+        var bagElement;
+        if((index === 0)  || index)
+            bagElement = document.getElementById(key+"bag"+index);
+        else
+            bagElement = document.getElementById(key+"bag");
+        var bagNumber = parseInt(bagElement.value);
+        if((index === 0)  || index)
+            document.getElementById(key+"quantity"+index).value = bagNumber * weight;
+        else
+            document.getElementById(key+"quantity").value = bagNumber * weight;
+    }
+    
+     this.textInQuantity = function(key,weight,index){
+       var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
+       if((index === 0)  || index)
+            quantityElement = document.getElementById(key+"quantity"+index);
+        else
+            quantityElement = document.getElementById(key+"quantity");
+       var quantity = Number(quantityElement.value);
+       var bag;
+       if((index === 0)  || index)
+            bag = document.getElementById(key+"bag"+index);
+        else
+            bag = document.getElementById(key+"bag");
+       weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
+       bag.value =  quantity/weight;
+    };
 })
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout,$rootScope) {
@@ -216,46 +311,12 @@ $scope.shopArray=$scope.cartArray.shops;
         });
     }
     
-    $scope.addQuantity = function(key,masterWeight){
-        var weight = masterWeight.getWeight();
-        var element = document.getElementById(key+"quantity");
-        var initWeight = element.value;
-        if(initWeight)
-            initWeight = parseInt(initWeight);
-        element.value = initWeight + weight;
-        $scope.textInQuantity(key,masterWeight);
-    };
-    $scope.minusQuantity = function(key,masterWeight){
-        var weight = masterWeight.getWeight();
-        var element = document.getElementById(key+"quantity");
-        var initWeight = element.value;
-        if(initWeight)
-            initWeight = parseInt(initWeight);
-        var finalWeight = initWeight - weight;
-        if(finalWeight < 0)
-            return;
-        element.value = finalWeight;
-        $scope.textInQuantity(key,masterWeight);
-    };
-    $scope.addBag = function(key,master_weight){
-        var element = document.getElementById(key+"bag");
-        element.value = ++element.value;
-        $scope.textInBag(key,master_weight);
-    };
-    $scope.minusBag = function(key,master_weight){
-        var element = document.getElementById(key+"bag");
-        if(!(element.value < 1)){
-         element.value = --element.value;
-         $scope.textInBag(key,master_weight);
-        }
-    };
-    
-    $scope.textInBag = function(key,master_weight){
-        var weight =  master_weight.getWeight();
-        var bagElement = document.getElementById(key+"bag");
-        var bagNumber = parseInt(bagElement.value);
-        document.getElementById(key+"quantity").value = bagNumber * weight;
-    }
+    $scope.addQuantity = loginCred.addQuantity;
+    $scope.minusQuantity = loginCred.minusQuantity
+    $scope.addBag = loginCred.addBag;
+    $scope.minusBag = loginCred.minusBag;
+    $scope.textInBag = loginCred.textInBag;
+     $scope.textInQuantity = loginCred.textInQuantity;
     
     $scope.getShopItem = function(shop){
         shopDetail.name = shop.name;
@@ -422,14 +483,6 @@ $scope.shopArray=$scope.cartArray.shops;
    }).error(function(err){
         console.log(err);
    });
-
-    $scope.textInQuantity = function(key,weight){
-       var quantityElement = document.getElementById(key+"quantity");
-       var quantity = Number(quantityElement.value);
-       var bag = document.getElementById(key+"bag");
-       weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
-       bag.value =  quantity/weight;
-    };
 })
 
 .controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate) {
@@ -641,7 +694,7 @@ $scope.shopArray=$scope.cartArray.shops;
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate) {
-    
+
      var userId = window.localStorage.userId;
      //var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
@@ -653,7 +706,8 @@ $scope.shopArray=$scope.cartArray.shops;
         //$ionicNavBarDelegate.showBackButton(false);
     };
     $scope.deliveryArray = {};
-    var selectedLorrySize = 25;
+    var selectedLorrySize = $scope.selectedLorrySize = 25;
+    var progressBarElement = document.getElementById("progressBar");
     $scope.submitOrder = function(){
             
         var x = {};
@@ -685,6 +739,8 @@ $scope.shopArray=$scope.cartArray.shops;
                     showPopUp("submitted");
         }).catch(e => console.log(e))
     }
+    
+    var totalQuantity = $scope.totalQuantity = 0;
             
     $scope.addToDeliveryArray = function(key,value){
         var x = {};
@@ -696,6 +752,14 @@ $scope.shopArray=$scope.cartArray.shops;
         if(!$scope.deliveryArray[selectedLorrySize][key])
             $scope.deliveryArray[selectedLorrySize][key] = [];
         $scope.deliveryArray[selectedLorrySize][key].push(value);
+        totalQuantity += parseInt(value.quantity);
+        var width = totalQuantity/selectedLorrySize;
+        if(width > 100)
+            progressBarElement.style.backgroundColor = "red";
+        else
+            progressBarElement.style.backgroundColor = "green";
+        progressBarElement.style.width = width.toString()+"%";
+        $scope.totalQuantity = totalQuantity;
         console.log($scope.deliveryArray);
         /*
          * $scope.deliveryArray = {
@@ -713,6 +777,7 @@ $scope.shopArray=$scope.cartArray.shops;
         for(var index = 0; index <  lengthOfArray; index++){
             if($scope.deliveryArray[selectedLorrySize][key][index].productId == value.productId){
                 $scope.deliveryArray[selectedLorrySize][key].splice(index,1);
+                totalQuantity -= parseInt(value.quantity);
                 if($scope.deliveryArray[selectedLorrySize][key].length == 0)
                     delete $scope.deliveryArray[selectedLorrySize][key];
                 if(Object.keys($scope.deliveryArray[selectedLorrySize]).length == 0)
@@ -720,6 +785,13 @@ $scope.shopArray=$scope.cartArray.shops;
                 break;
             }
         }
+        var width = totalQuantity/selectedLorrySize;
+        $scope.totalQuantity = totalQuantity;
+        if(width > 100)
+            progressBarElement.style.backgroundColor = "red";
+        else
+            progressBarElement.style.backgroundColor = "green";
+        progressBarElement.style.width = width.toString()+"%";
         console.log($scope.deliveryArray);
     }
     $scope.deliveryArray = [];            
@@ -733,6 +805,17 @@ $scope.shopArray=$scope.cartArray.shops;
         $scope.cartArray.slice(data,1);
         console.log(event);
     }
+    
+    $scope.getDeliveryArray = function(){
+       return $scope.deliveryArray[selectedLorrySize] || [];
+    };
+    
+    $scope.addQuantity = loginCred.addQuantity;
+    $scope.minusQuantity = loginCred.minusQuantity
+    $scope.addBag = loginCred.addBag;
+    $scope.minusBag = loginCred.minusBag;
+    $scope.textInBag = loginCred.textInBag;
+    $scope.textInQuantity = loginCred.textInQuantity;
          
 })
 
