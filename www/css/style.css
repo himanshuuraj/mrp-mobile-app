@@ -1,4 +1,7 @@
 /* Empty. Add your own CSS if you like */
+ion-content{
+    background-color: #e9ebee;
+}
 
 h1,h2,h3{
     text-transform: uppercase;
@@ -24,12 +27,12 @@ h1,h2,h3{
 
 }
 .blue{
+    background-color : #3847bc;
+}
 
+#abc label{
     background-color : whitesmoke;
 }
-<<<<<<< HEAD
-=======
-
 .ion-plus-circled:before{
     color:gray;
 }
@@ -37,4 +40,3 @@ h1,h2,h3{
 .ion-minus-circled:before{
     color:gray;
 }
->>>>>>> 74e2c3a... modified item page

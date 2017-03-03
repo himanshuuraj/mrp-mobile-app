@@ -1,4 +1,4 @@
-<ion-view view-title="Lalitha" ng-init="init();">
+<ion-view view-title="SRI LALITHA ENTERPRISES" ng-init="init();">
   <ion-content>
       
       <div class="card" ng-show="!isAgent" ng-cloak>
@@ -13,7 +13,7 @@
       </div>
       
     <div class="button-bar padding">
-      <a class="button button-positive" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab}}</a>
+      <a class="button button-light" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:130px;background-color:lightgray;position:relative;">
       <div class = "row" style="height:100%;">
@@ -54,12 +54,12 @@
                 </div>
             </div>
             <div class="col col-33">
-              <p id="{{key}}price" style="text-align:center;width:100%;">&#8377;{{getPrice(key)}}</p>
+              <p id="{{key}}price" style="text-align:center;width:100%;">&#8377;{{}}</p>
             </div>
           </div>
         </div>
       </div>
-      <button class="button icon ion-checkmark-round" id="{{key}}button" ng-click="addToCart(key,value)"
+      <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
               style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:white;">
 
       </button>
@@ -151,7 +151,10 @@
       
 
   </ion-content>
-    <ion-footer-bar align-title="center" class="bar-assertive">
+<!--    <ion-footer-bar align-title="center" class="bar-assertive">
         <button ng-click="proceedToSaveInCart()"><a href="#/app/cart">Proceed</a></button>
+    </ion-footer-bar>-->
+    <ion-footer-bar align-title="center">
+        <button class="button button-block button-positive" ng-click="proceedToSaveInCart()" style="margin:0;">PROCEED</button>
     </ion-footer-bar>
 </ion-view>

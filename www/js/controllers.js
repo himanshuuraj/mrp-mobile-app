@@ -338,8 +338,8 @@ $scope.shopArray=$scope.cartArray.shops;
     $scope.changeContent = function(type){
         earlySelectedTab = $scope.selectedItem;
         $scope.selectedItem = type;
-        document.getElementById(type+"tab").className = "button button-assertive";
-        document.getElementById(earlySelectedTab+"tab").className = "button button-positive";
+        document.getElementById(type+"tab").className = "button button-positive";
+        document.getElementById(earlySelectedTab+"tab").className = "button button-light";
     };
 
     $scope.addToCart = function(key,value){
@@ -424,7 +424,7 @@ $scope.shopArray=$scope.cartArray.shops;
             $scope.brokenArray = productsList.broken;
             $scope.ravvaArray = productsList.ravva;
             $scope.riceArray = productsList.rice;
-            document.getElementById("ricetab").className = "button button-assertive";
+            document.getElementById("ricetab").className = "button button-positive";
             $scope.selectedItem = "rice";  
             $scope.$apply();
         }).catch(function(){
@@ -478,7 +478,7 @@ $scope.shopArray=$scope.cartArray.shops;
         $scope.brokenArray = data.broken;
         $scope.ravvaArray = data.ravva;
         $scope.riceArray = data.rice;
-        document.getElementById("ricetab").className = "button button-assertive";
+        document.getElementById("ricetab").className = "button button-positive";
         $scope.selectedItem = "rice";
    }).error(function(err){
         console.log(err);
@@ -852,12 +852,12 @@ $scope.shopArray=$scope.cartArray.shops;
     
     $scope.addToDelivery = function(key,value,index){
         var buttonElement = document.getElementById(key+"button"+index);
-        if(buttonElement.style.backgroundColor == "white"){
+        if(buttonElement.innerHTML.toString().trim() == "ADD"){
             $scope.addToDeliveryArray(key,value,index);
-            buttonElement.style.backgroundColor = "green";
+            buttonElement.innerHTML = "REMOVE";
         }else{
             $scope.removeItemFromDeliverable(key,value);
-            buttonElement.style.backgroundColor = "white";
+            buttonElement.innerHTML = "ADD";
         }
     }
          
