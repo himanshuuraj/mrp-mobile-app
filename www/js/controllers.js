@@ -11,6 +11,8 @@ angular.module('starter.controllers', ['ngDraggable'])
   firebase.initializeApp(config);
   var authRef = this.authRef = firebase.auth();
   this.dbRef = firebase.database().ref();
+  
+  var urlOfImage = "https://mrps-orderform.firebaseapp.com/";
   String.prototype.getWeight = function(){
         var x = this.toString();
         return parseInt(x.substring(0,x.length-2));
@@ -49,80 +51,81 @@ angular.module('starter.controllers', ['ngDraggable'])
         else
             this.textInQuantity(key,masterWeight,index);
     };
-    this.minusQuantity = function(key,masterWeight,index){
-        var weight = masterWeight.getWeight();
-        var element;
-        if((index === 0)  || index)
-              element  = document.getElementById(key+"quantity" + index);
-        else
-              element = document.getElementById(key+"quantity");
-        var initWeight = element.value;
-        if(initWeight)
-            initWeight = parseInt(initWeight);
-        var finalWeight = initWeight - weight;
-        if(finalWeight < 0)
-            return;
-        element.value = finalWeight;
-       if((index === 0)  || index)
-            this.textInQuantity(key,masterWeight,index);
-        else
-            this.textInQuantity(key,masterWeight);
-    };
-    this.addBag = function(key,master_weight,index){
-        var element;
-        if((index === 0)  || index)
-              element  = document.getElementById(key+"bag" + index);
-        else
-              element = document.getElementById(key+"bag");
-        element.value = ++element.value;
-        if((index === 0)  || index)
-            this.textInBag(key,master_weight,index);
-        else
-            this.textInBag(key,master_weight);
-    };
-    this.minusBag = function(key,master_weight,index){
-        var element;
-        if((index === 0)  || index)
-              element  = document.getElementById(key+"bag" + index);
-        else
-              element = document.getElementById(key+"bag");
-        if(!(element.value < 1)){
-         element.value = --element.value;
-         if((index === 0)  || index)
-            this.textInBag(key,master_weight,index);
-        else
-            this.textInBag(key,master_weight);
-        }
-    };
-    
-    this.textInBag = function(key,master_weight,index){
-        var weight =  master_weight.getWeight();
-        var bagElement;
-        if((index === 0)  || index)
-            bagElement = document.getElementById(key+"bag"+index);
-        else
-            bagElement = document.getElementById(key+"bag");
-        var bagNumber = parseInt(bagElement.value);
-        if((index === 0)  || index)
-            document.getElementById(key+"quantity"+index).value = bagNumber * weight;
-        else
-            document.getElementById(key+"quantity").value = bagNumber * weight;
+  this.minusQuantity = function(key,masterWeight,index){
+    var weight = masterWeight.getWeight();
+    var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"quantity" + index);
+    else
+          element = document.getElementById(key+"quantity");
+    var initWeight = element.value;
+    if(initWeight)
+        initWeight = parseInt(initWeight);
+    var finalWeight = initWeight - weight;
+    if(finalWeight < 0)
+        return;
+    element.value = finalWeight;
+   if((index === 0)  || index)
+        this.textInQuantity(key,masterWeight,index);
+    else
+        this.textInQuantity(key,masterWeight);
+};
+  this.addBag = function(key,master_weight,index){
+    var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"bag" + index);
+    else
+          element = document.getElementById(key+"bag");
+    element.value = ++element.value;
+    if((index === 0)  || index)
+        this.textInBag(key,master_weight,index);
+    else
+        this.textInBag(key,master_weight);
+};
+  this.minusBag = function(key,master_weight,index){
+    var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"bag" + index);
+    else
+          element = document.getElementById(key+"bag");
+    if(!(element.value < 1)){
+     element.value = --element.value;
+     if((index === 0)  || index)
+        this.textInBag(key,master_weight,index);
+    else
+        this.textInBag(key,master_weight);
     }
-    
-     this.textInQuantity = function(key,weight,index){
-       var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
-       if((index === 0)  || index)
-            quantityElement = document.getElementById(key+"quantity"+index);
-        else
-            quantityElement = document.getElementById(key+"quantity");
-       var quantity = Number(quantityElement.value);
-       var bag;
-       if((index === 0)  || index)
-            bag = document.getElementById(key+"bag"+index);
-        else
-            bag = document.getElementById(key+"bag");
-       weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
-       bag.value =  quantity/weight;
+};
+  this.textInBag = function(key,master_weight,index){
+    var weight =  master_weight.getWeight();
+    var bagElement;
+    if((index === 0)  || index)
+        bagElement = document.getElementById(key+"bag"+index);
+    else
+        bagElement = document.getElementById(key+"bag");
+    var bagNumber = parseInt(bagElement.value);
+    if((index === 0)  || index)
+        document.getElementById(key+"quantity"+index).value = bagNumber * weight;
+    else
+        document.getElementById(key+"quantity").value = bagNumber * weight;
+}
+  this.textInQuantity = function(key,weight,index){
+   var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
+   if((index === 0)  || index)
+        quantityElement = document.getElementById(key+"quantity"+index);
+    else
+        quantityElement = document.getElementById(key+"quantity");
+   var quantity = Number(quantityElement.value);
+   var bag;
+   if((index === 0)  || index)
+        bag = document.getElementById(key+"bag"+index);
+    else
+        bag = document.getElementById(key+"bag");
+   weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
+   bag.value =  quantity/weight;
+};
+  this.getImageUrl = function(key,selectedItem){
+        return urlOfImage+selectedItem+"_200/"+key+".png";
     };
 })
 
@@ -150,6 +153,7 @@ angular.module('starter.controllers', ['ngDraggable'])
 
     $scope.signOut = function(){
         window.localStorage.clear();
+        window.sessionStorage.clear();
         window.location.href = "http://localhost:8383/lalitha/index.html#/app/login";//"/app.login";
     };
 })
@@ -277,7 +281,6 @@ $scope.shopArray=$scope.cartArray.shops;
 
 })
 
-
 .controller('searchCtrl', function($scope,$http,loginCred,$state) {
     var earlySelectedTab = "rice";
     $scope.init = function(){
@@ -287,30 +290,28 @@ $scope.shopArray=$scope.cartArray.shops;
     };
     var userId = window.localStorage.userId;
     var existingShops;
-    $scope.urlOfImage = "https://mrps-orderform.firebaseapp.com/";
     var dbRef = loginCred.dbRef;
-    var shopDetail = {name : "",tin : ""};
+    $scope.shopDetail = {name : "",tin : ""};
     $scope.cartArray = {};
-    $scope.cartArray = {};//[shopDetail.tin] = [];
     $scope.tabArray = ['rice','ravva','broken'];
-    
     $scope.isAgent = window.localStorage.isAgent;
-    
-     var getShopData = function(){
+    var getShopData = function(){
         var shopsRef = dbRef.child('users/'+userId + '/shops');
         shopsRef.once('value', function(snap) {
                      existingShops = snap.val();
-                     if(existingShops.length == 1){
-                                window.localStorage.shopName = shopDetail.name = existingShops[0].name;
-                                window.localStorage.tin = shopDetail.tin = existingShops[0].tin;
-                                $scope.cartArray[shopDetail.tin] = [];
-                                $scope.shopDetail = shopDetail;
-                     }else
+                     if(!$scope.isAgent){
+                                window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
+                                window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
+                                $scope.cartArray[$scope.shopDetail.tin] = [];
+                     }else{
                            $scope.shopArray = existingShops;
+                           window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
+                           window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
+                       }
+                      $scope.$apply();
                      console.log(existingShops);
         });
     }
-    
     $scope.addQuantity = loginCred.addQuantity;
     $scope.minusQuantity = loginCred.minusQuantity
     $scope.addBag = loginCred.addBag;
@@ -319,11 +320,10 @@ $scope.shopArray=$scope.cartArray.shops;
      $scope.textInQuantity = loginCred.textInQuantity;
     
     $scope.getShopItem = function(shop){
-        shopDetail.name = shop.name;
-        shopDetail.tin = shop.tin;
-        $scope.shopDetail = shopDetail;
-        if(!$scope.cartArray[shopDetail.tin] )
-            $scope.cartArray[shopDetail.tin] = [];
+        $scope.shopDetail.name = shop.name;
+        $scope.shopDetail.tin = shop.tin;
+        if(!$scope.cartArray[$scope.shopDetail.tin] )
+            $scope.cartArray[$scope.shopDetail.tin] = [];
     };
     
     $scope.init = function(){
@@ -344,7 +344,8 @@ $scope.shopArray=$scope.cartArray.shops;
 
     $scope.addToCart = function(key,value){
         var tickElement = document.getElementById(key+"button");
-        if(tickElement.style.backgroundColor == "white"){
+        if(tickElement.style.backgroundColor == "white")
+        {
             var x = {};
             var quantityElement = document.getElementById(key+"quantity");
             var bagElement = document.getElementById(key+"bag");
@@ -363,13 +364,14 @@ $scope.shopArray=$scope.cartArray.shops;
             x["price"] = "Rs 1200";
             delete x.description;
             delete x.available;
-            $scope.cartArray[shopDetail.tin].push(x);
+            $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
+            $scope.cartArray[$scope.shopDetail.tin].push(x);
         }else{
             tickElement.style.backgroundColor = "white";
-            var length = $scope.cartArray[shopDetail.tin].length;
+            var length = $scope.cartArray[$scope.shopDetail.tin].length;
             for(var index = 0; index<length; index++){
-                if($scope.cartArray[shopDetail.tin][index].productId == key){
-                    $scope.cartArray[shopDetail.tin].splice(index,1);
+                if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
+                    $scope.cartArray[$scope.shopDetail.tin].splice(index,1);
                     break;
                 }
             }
@@ -380,7 +382,7 @@ $scope.shopArray=$scope.cartArray.shops;
     
     $scope.proceedToSaveInCart = function(){
         var x = {};
-        angular.forEach($scope.cartArray[shopDetail.tin],function(item,index){
+        angular.forEach($scope.cartArray[$scope.shopDetail.tin],function(item,index){
             x[index] = item;
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
@@ -413,9 +415,7 @@ $scope.shopArray=$scope.cartArray.shops;
           ordersRef.push(newOrder);
     }
     
-    $scope.getImageUrl = function(key){
-        return $scope.urlOfImage+$scope.selectedItem+"_200/"+key+".png";
-    };
+    $scope.getImageUrl = loginCred.getImageUrl;
     
     $scope.getProductItems = function(){
         var productsRef = dbRef.child('products');
@@ -490,15 +490,16 @@ $scope.shopArray=$scope.cartArray.shops;
   var authRef = loginCred.authRef;
   $scope.userData = {};
   $scope.loginAgain = false;
+  var showPopUp = loginCred.showPopup;
+  $scope.isChecked = true;
+  var userInfo;
+  var userId;
   $scope.signUpData = {
       shop :{
          tax_id : {}
       }
   };
-  
-  var showPopUp = loginCred.showPopup;
-  
-  $scope.isChecked = true;
+ 
   // $ionicNavBarDelegate.showBackButton(false);
     
   $scope.signIn = function(){
@@ -511,17 +512,20 @@ $scope.shopArray=$scope.cartArray.shops;
       var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
         promise.then(function(e) {
                        var usersRef = dbRef.child('users/'+ e.uid);
-                       var userId = window.localStorage.userId = e.uid;
+                       userId = window.localStorage.userId = e.uid;
                        usersRef.once('value').then(function(data){
                            showPopUp("signIn successful");
                            var data = data.val();
                            console.log(data);
                            if(data){
+                               userInfo = data;
                                window.localStorage.userInfo = JSON.stringify(data);
                                window.localStorage.isAgent = data.isAgent;
                                $rootScope.$broadcast('isAgent',{});
-                               //getShopData();
-                               $state.go('app.search', {name:'name',tin:'tin'});
+                               if(!userInfo.shops || (userInfo.shops.length == 0))
+                                    window.location.href = "http://localhost:8383/lalitha/index.html#/app/shop";
+                                else
+                                    window.location.href = "http://localhost:8383/lalitha/index.html#/app/search";
                            }
                            else{
                                $scope.showUserInputField = true;
@@ -627,38 +631,40 @@ $scope.shopArray=$scope.cartArray.shops;
       if(!validateField())
           return;
       var usersRef = dbRef.child('users/'+ window.localStorage.userId );
-	var foo = {};
-                    foo = {
-                            email : $scope.userData.username,
-                            name : $scope.signUpData.name,
-                            mobile : $scope.signUpData.mobile,
-                            isAgent : $scope.signUpData.isAgent,
-                            address : $scope.signUpData.address,
-                            shops : [{
-                                    name: $scope.signUpData.shop.name,
-                                    proprietor_name : $scope.signUpData.shop.proprietor_name,
-                                    mobile : $scope.signUpData.shop.mobile,
-                                    pan : $scope.signUpData.shop.pan,
-                                    tin : $scope.signUpData.shop.tin,
-                                    state : $scope.signUpData.shop.state,
-                                    district : $scope.signUpData.shop.district,
-                                    city : $scope.signUpData.shop.city,
-                                    address : $scope.signUpData.shop.address,
-                                    tax_id : {
-                                     type : $scope.signUpData.shop.tax_id.type,
-                                     value : $scope.signUpData.shop.tax_id.value
-                                    }
-                            }]
-                    };
-                     if($scope.signUpData.isAgent){
-                        foo.shops = [];
-                    }
-                    var promise = usersRef.set(foo);
-                    promise.then(function(e) {
-                            showPopUp("Please Login Again");
-                            $scope.showUserInputField = false;
-                            $scope.$apply();
- 	}).catch(e => showPopUp("Please try again"));
+        var foo = {};
+            foo = {
+                    email : $scope.userData.username,
+                    name : $scope.signUpData.name,
+                    mobile : $scope.signUpData.mobile,
+                    isAgent : $scope.signUpData.isAgent,
+                    address : $scope.signUpData.address,
+                    shops : [{
+                            name: $scope.signUpData.shop.name,
+                            proprietor_name : $scope.signUpData.shop.proprietor_name,
+                            mobile : $scope.signUpData.shop.mobile,
+                            pan : $scope.signUpData.shop.pan,
+                            tin : $scope.signUpData.shop.tin,
+                            state : $scope.signUpData.shop.state,
+                            district : $scope.signUpData.shop.district,
+                            city : $scope.signUpData.shop.city,
+                            address : $scope.signUpData.shop.address,
+                            tax_id : {
+                             type : $scope.signUpData.shop.tax_id.type,
+                             value : $scope.signUpData.shop.tax_id.value
+                            }
+                    }]
+            };
+             if($scope.signUpData.isAgent){
+                foo.shops = [];
+            }
+            var promise = usersRef.set(foo);
+            promise.then(function(e) {
+                    showPopUp("Please Login Again");
+                    $scope.showUserInputField = false;
+                    window.localStorage.clear();
+                    window.sessionStorage.clear();
+                    $scope.$apply();
+        }).catch(e => showPopUp("Please try again"));
          
   };
   
@@ -676,10 +682,13 @@ $scope.shopArray=$scope.cartArray.shops;
   };
   
 })
-.controller('shopCtrl', function($scope,$http,$state) {
+
+.controller('shopCtrl', function($scope,$http,loginCred,$state) {
   var userInfo = JSON.parse(window.localStorage.userInfo);
-  $scope.shopArray = userInfo.shops;
+  $scope.shopArray = userInfo.shops || [];
   $scope.showShopInput = false;
+  var showPopUp = loginCred.showPopup;
+  var userId;
   $scope.shop = {
       tax_id : {}
   };
@@ -691,17 +700,37 @@ $scope.shopArray=$scope.cartArray.shops;
       window.localStorage.shopName = name;
       $state.go('app.search', {name:name,tin:tin});
   };
+  $scope.addNewShop = function(){
+      userInfo["shops"] = userInfo["shops"] || [];
+      console.log($scope.shop);
+      userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
+      userId = window.localStorage.userId;
+      var dbRef = loginCred.dbRef;
+      var usersRef = dbRef.child('users');
+      var foo = {};
+      foo[userId] = userInfo;
+      var promise = usersRef.set(foo);
+      promise.then(function(e) {
+                    showPopUp("shop Enter Successfully");
+                    $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
+                    $scope.shop = {
+                        tax_id : {}
+                    };
+                    $scope.showShopInput = false;
+                    $scope.$apply();
+        }).catch(e => showPopUp("Please try again"));
+  };
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate) {
 
      var userId = window.localStorage.userId;
-     //var userInfo = JSON.parse(window.localStorage.userInfo);
+     var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
      var ordersRef =  dbRef.child('orders');
     $scope.init = function(){
         var temp = JSON.parse(window.sessionStorage.cartArray);
-        $scope.cartArray = temp;//[tin];
+        $scope.cartArray = temp || [];//[tin];
         console.log($scope.cartArray);
         //$ionicNavBarDelegate.showBackButton(false);
     };
@@ -742,8 +771,11 @@ $scope.shopArray=$scope.cartArray.shops;
     
     var totalQuantity = $scope.totalQuantity = 0;
             
-    $scope.addToDeliveryArray = function(key,value){
+    $scope.addToDeliveryArray = function(key,value,index){
         var x = {};
+        console.log(value);
+        value.quantity = document.getElementById(key+"quantity"+index).value;
+        value.bag = document.getElementById(key+"bag"+index).value;
         x[key] = value;
         if(!$scope.deliveryArray[selectedLorrySize]){
             $scope.deliveryArray[selectedLorrySize] = {};
@@ -768,7 +800,7 @@ $scope.shopArray=$scope.cartArray.shops;
          * */
     };
     
-    $scope.removeItemFromDeliverable = function(key,value){
+    $scope.removeItemFromDeliverable = function(key,value,index){
         var x = {};
         x[key] = value;
         if(!$scope.deliveryArray[selectedLorrySize] || !$scope.deliveryArray[selectedLorrySize][key])
@@ -816,7 +848,23 @@ $scope.shopArray=$scope.cartArray.shops;
     $scope.minusBag = loginCred.minusBag;
     $scope.textInBag = loginCred.textInBag;
     $scope.textInQuantity = loginCred.textInQuantity;
+    $scope.getImageUrl = loginCred.getImageUrl;
+    
+    $scope.addToDelivery = function(key,value,index){
+        var buttonElement = document.getElementById(key+"button"+index);
+        if(buttonElement.style.backgroundColor == "white"){
+            $scope.addToDeliveryArray(key,value,index);
+            buttonElement.style.backgroundColor = "green";
+        }else{
+            $scope.removeItemFromDeliverable(key,value);
+            buttonElement.style.backgroundColor = "white";
+        }
+    }
          
+//    $scope.addToCart = function(key,value,index){
+//        var tickElement = document.getElementById(key+"button"+index);
+//        
+//    };
 })
 
 .controller('orderCtrl', function($scope,$http) {

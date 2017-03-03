@@ -8,18 +8,6 @@
       
       <div class="padding" ng-show="showShopInput">
           <div class="list list-inset">
-              <label class="item item-input">
-                  <input type="text" placeholder="Name" ng-model="shop.name">
-              </label>
-              <label class="item item-input">
-                  <input type="text" placeholder="Mobile Number" ng-model="shop.mobile">
-              </label>
-              <label class="item item-input">
-                  <input type="text" placeholder="Is Agent" ng-model="shop.isAgent">
-              </label>
-              <label class="item item-input">
-                  <input type="text" placeholder="Address" ng-model="shop.address">
-              </label>
               <div class="padding">
                   Shop
               </div>
@@ -57,12 +45,7 @@
                   <input type="text" placeholder="Tax Value" ng-model="shop.tax_id.value">
               </label>
             </div>
-          <button class="button button-block button-calm" ng-click="fillSignUpData()">Submit</button>
-          <!--<div class="bar bar-footer">
-            <h1 class="title" ng-click="proceed();">proceed</h1>
-         </div>-->
-      </div>
-      
-  
+          <button class="button button-block button-calm" ng-click="addNewShop()">Submit</button>
+      </div> 
   </ion-content>
 </ion-view>
