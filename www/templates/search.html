@@ -13,29 +13,34 @@
       </div>
       
     <div class="button-bar padding">
-      <a class="button button-light" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab}}</a>
+      <a class="button bgdarkGray" style="font-weight:  bold;" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
-    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:130px;background-color:lightgray;position:relative;">
+    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:135px;background-color:lightgray;position:relative;">
       <div class = "row" style="height:100%;">
         <div class = "col col-20" style="height:100%;">
           <img ng-src="{{getImageUrl(key,selectedItem)}}" style="height:100%;"/>
         </div>
-        <div class = "col">
-          <div class="row" style="padding:0;">
-            <div class="col" style="padding:0;">
-              <div class="text-center" style="padding:0;">
-                <h5 style="text-align: center;padding:0;" id="{{key}}name"><b>{{value.name}}</b>
-                </h5>
-                  <h5>
-                      <b>MasterWeight {{value.master_weight}}</b>
-                    </h5>
+        <div class = "col col-40" >
+              <div class="row text-left" style="padding:0;">
+                  <h4 style="text-align: left;padding:0;" id="{{key}}name"><b style="font-size: large">{{value.name.toUpperCase()}}</b>
+                </h4>
               </div>
-            </div>
-          </div>
-          <div class="row" style="height:50px;padding:0px;margin-top: 10px;">
-            <div class="col col-33" style="position:relative;background-color: lightgray;">
+              <div class="row text-left" style="padding:0;">
+                <h5 style="font-style: italic;padding:0;margin-top: 3px">
+                    Master Weight: {{value.master_weight}}
+                </h5>
+              </div>
+            <div class="row text-left" style="padding:0;">
+                <h4 id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%">
+                    <b style="font-size: large">&#8377;2450</b></h4>
+             </div>
+                  
+              </div>
+          <div class="col-25" style="height:50px;padding:0px;margin-top: 10px;margin-left: ">
+            <div class="row" style="position:relative;background-color: lightgray;">
+                <label>Quintals</label>
               <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
-                     style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" placeholder="quantity"/>
+                     style="text-align:center;width:100%;border-bottom:1px solid black;margin-left: 10px;margin-top: -12px;background-color: lightgray" placeholder="Quintals"/>
 <!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight);">
                     <i class="icon ion-plus-circled"></i>
                 </div>
@@ -43,9 +48,10 @@
                     <i class="icon ion-minus-circled" style="float:right;"></i>
                 </div>-->
             </div>
-            <div class="col col-33" style="position:relative;background-color: lightgray;margin-left: 5%;">
-              <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="bags"
-                     style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" ng-keyup="textInBag(key,this.value.master_weight);"/>
+            <div class="row" style="position:relative;background-color: lightgray;margin-top: 15%">
+              <label>Bags</label>
+              <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="Bags"
+                     style="text-align:center;width:100%;margin-left: 35px;margin-top: -12px;border-bottom:1px solid black;background-color: lightgray" ng-keyup="textInBag(key,this.value.master_weight);"/>
 <!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight);">
                     <i class="icon ion-plus-circled"></i>
                 </div>
@@ -53,18 +59,17 @@
                     <i class="icon ion-minus-circled" style="float:right;"></i>
                 </div>-->
             </div>
-            <div class="col col-33">
-              <p id="{{key}}price" style="text-align:center;width:100%;">&#8377;{{}}</p>
-            </div>
           </div>
-        </div>
-      </div>
-      <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
-              style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:white;">
+           <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
+              style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:darkgray;">
 
       </button>
-    </div>
 
+                      </div>
+
+     </div>
+
+     
 <!--    <div class="card" ng-show="selectedItem == 'ravva'" ng-repeat = "(key, value) in ravvaArray" style="height:130px;background-color:lightgray;position:relative;">
       <div class = "row" style="height:100%;">
         <div class = "col col-33" style="height:100%;">
@@ -155,6 +160,8 @@
         <button ng-click="proceedToSaveInCart()"><a href="#/app/cart">Proceed</a></button>
     </ion-footer-bar>-->
     <ion-footer-bar align-title="center">
-        <button class="button button-block button-positive" ng-click="proceedToSaveInCart()" style="margin:0;">PROCEED</button>
+        <div class="button-bar">
+            <button class="button  button-positive" ng-click="proceedToSaveInCart()" style="margin:0;"><b style="font-size: large">CONTINUE</b></button>
+        </div>
     </ion-footer-bar>
 </ion-view>
