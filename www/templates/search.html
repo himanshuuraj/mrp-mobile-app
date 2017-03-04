@@ -36,22 +36,22 @@
             <div class="col col-33" style="position:relative;background-color: lightgray;">
               <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
                      style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" placeholder="quantity"/>
-                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight);">
+<!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight);">
                     <i class="icon ion-plus-circled"></i>
                 </div>
                 <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusQuantity(key,this.value.master_weight);">
                     <i class="icon ion-minus-circled" style="float:right;"></i>
-                </div>
+                </div>-->
             </div>
             <div class="col col-33" style="position:relative;background-color: lightgray;margin-left: 5%;">
               <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="bags"
                      style="text-align:center;width:100%;background-color: lightgray;border-bottom:1px solid black;" ng-keyup="textInBag(key,this.value.master_weight);"/>
-                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight);">
+<!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight);">
                     <i class="icon ion-plus-circled"></i>
                 </div>
                 <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusBag(key,this.value.master_weight);">
                     <i class="icon ion-minus-circled" style="float:right;"></i>
-                </div>
+                </div>-->
             </div>
             <div class="col col-33">
               <p id="{{key}}price" style="text-align:center;width:100%;">&#8377;{{}}</p>

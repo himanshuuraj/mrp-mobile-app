@@ -356,6 +356,8 @@ $scope.shopArray=$scope.cartArray.shops;
                 return;
             }
             tickElement.style.backgroundColor = "green";
+            tickElement.className='button icon ion-minus-round'
+
             x = value;
             
             x["productId"] = key;
@@ -366,8 +368,11 @@ $scope.shopArray=$scope.cartArray.shops;
             delete x.available;
             $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
             $scope.cartArray[$scope.shopDetail.tin].push(x);
+            alert("Added to cart");
         }else{
             tickElement.style.backgroundColor = "white";
+            tickElement.className='button icon ion-plus-round'
+
             var length = $scope.cartArray[$scope.shopDetail.tin].length;
             for(var index = 0; index<length; index++){
                 if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
