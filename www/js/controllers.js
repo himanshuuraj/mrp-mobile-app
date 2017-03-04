@@ -326,10 +326,6 @@ $scope.shopArray=$scope.cartArray.shops;
             $scope.cartArray[$scope.shopDetail.tin] = [];
     };
     
-    $scope.init = function(){
-        getShopData();
-    }
-    
     String.prototype.getWeight = function(){
         var x = this.toString();
         return parseInt(x.substring(0,x.length-2));
@@ -394,6 +390,8 @@ $scope.shopArray=$scope.cartArray.shops;
         //$state.go('app.cart', {arg:'arg'});
         //loginCred.moveToUrl("cart");
         //saveInCart(x);
+        window.location.hash = "#/app/cart";
+
     };
     
     var saveInCart = function(x){
@@ -455,9 +453,7 @@ $scope.shopArray=$scope.cartArray.shops;
     }
     
     $scope.getItemsPrice = function(){
-        //TODO replace areasDummy
-      //  var areaId = shop.areaId;
-        var areaRef = dbRef.child('areasDummy/'+'VSP_RURAL');
+        var areaRef = dbRef.child('priceList/'+ areaId);
         areaRef.once('value').then(function(areaSnapshot){
             var productsList = areaSnapshot.val();
             console.log("Fetched list of prices for selected area" + productsList);
@@ -551,18 +547,15 @@ $scope.shopArray=$scope.cartArray.shops;
       }
       var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
       promise.then(function(e) {
- 	 var usersRef = dbRef.child('users');
- 	var userId=e.uid;
+         var userId=e.uid;
+ 	 var usersRef = dbRef.child('users/' + userId);
                      window.localStorage.userId = userId;
                     usersRef.once('value', function(snap){
-                           if(snap.hasChild(userId)){
-                                   alert("exists");
-                                   $state.transitionTo('app.search', {arg:'arg'});
-                                   //proceed to load the main page
-                           }else{
+                           if(snap){
                                $scope.showUserInputField = true;
-                               $scope.$apply();
-                               showPopUp("done");
+                               $scope.$apply();                                   //proceed to load the main page
+                           }else{                             
+                               showPopUp("User could not be created.");
                                //load the form page to enter profile info
                            }
                     });  	
@@ -716,7 +709,7 @@ $scope.shopArray=$scope.cartArray.shops;
       foo[userId] = userInfo;
       var promise = usersRef.set(foo);
       promise.then(function(e) {
-                    showPopUp("shop Enter Successfully");
+                    showPopUp("Shop added successfully");
                     $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
                     $scope.shop = {
                         tax_id : {}
