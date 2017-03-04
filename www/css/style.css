@@ -57,3 +57,6 @@ h1,h2,h3{
     margin-top: 4px !important;
 }
 
+#shopDiv label {
+    background-color:lightgray;
+}

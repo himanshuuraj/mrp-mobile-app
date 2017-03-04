@@ -3,15 +3,15 @@
       
       <div class="card" ng-show="isAgent" ng-cloak>
           <div class="row">
-              <div class="col" ng-show="shopDetail.name" style="padding-top: 20px;">
+              <div class="col" ng-show="shopDetail.name" style="padding-top: 20px;background-color: darkgray">
                   <center>{{shopDetail.name}}/{{shopDetail.tin}}</center>
               </div>
-              <div class="col">
-                  <center>
-                      <button class="button button-positive" ng-click="showShopPopUp();">
+              <div class="col" style="background-color:darkgray">
+                 
+                      <button class="button button-positive" style="float:right" ng-click="showShopPopUp();">
                         Select Shop
                       </button>
-                  </center>
+                  
               </div>
           </div>
           
@@ -44,7 +44,7 @@
               </div>
             <div class="row text-left" style="padding:0;">
                 <h4 id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%">
-                    <b style="font-size: large">&#8377;{{getPrice(key)}}</b></h4>
+                    <b style="font-size: large">&#8377;1250</b></h4>
              </div>
                   
               </div>
