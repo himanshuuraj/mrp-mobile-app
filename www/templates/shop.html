@@ -1,10 +1,10 @@
-<ion-view view-title="Shop">
+<ion-view view-title="SHOPS">
   <ion-content>
     <div class="card" ng-hide="showShopInput" ng-click="showItems(shop.name,shop.tin)" ng-repeat="shop in shopArray">
         Shop Name :- {{shop.proprietor_name}}
     </div>
       <div class="padding"><center>
-            <button class="button  button-calm icon icon-left ion-plus" ng-hide="showShopInput" ng-click="createNewShop()">
+            <button class="button  button-positive icon icon-left ion-plus" ng-hide="showShopInput" ng-click="createNewShop()">
                 New Shop
             </button>
           </center>
@@ -50,7 +50,7 @@
               </label>
             </div>
             <div class="padding">
-                <button class="button button-block button-calm" ng-click="addNewShop()">Submit</button>
+                 <button class="button button-block button-positive" ng-click="addNewShop()">Submit</button>
             </div>
       </div> 
   </ion-content>

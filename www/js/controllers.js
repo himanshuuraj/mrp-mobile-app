@@ -105,9 +105,9 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         bagElement = document.getElementById(key+"bag");
     var bagNumber = parseInt(bagElement.value);
     if((index === 0)  || index)
-        document.getElementById(key+"quantity"+index).value = bagNumber * weight;
+        document.getElementById(key+"quantity"+index).value = (bagNumber * weight)/100 ;
     else
-        document.getElementById(key+"quantity").value = bagNumber * weight;
+        document.getElementById(key+"quantity").value = (bagNumber * weight)/100;
 }
   this.textInQuantity = function(key,weight,index){
    var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
@@ -122,7 +122,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     else
         bag = document.getElementById(key+"bag");
    weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
-   bag.value =  quantity/weight;
+   bag.value =  quantity*100/weight;
 };
   this.getImageUrl = function(key,selectedItem){
         return urlOfImage+selectedItem+"_200/"+key+".png";
@@ -155,7 +155,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     $scope.signOut = function(){
         window.localStorage.clear();
         window.sessionStorage.clear();
-        window.location.href = "http://localhost:8383/lalitha/index.html#/app/login";//"/app.login";
+        window.location.hash = "#/app/login";//"/app.login";
     };
 })
 
@@ -354,12 +354,12 @@ $scope.shopArray=$scope.cartArray.shops;
         earlySelectedTab = $scope.selectedItem;
         $scope.selectedItem = type;
         document.getElementById(type+"tab").className = "button button-positive";
-        document.getElementById(earlySelectedTab+"tab").className = "button button-light";
+        document.getElementById(earlySelectedTab+"tab").className = "button bgdarkGray";
     };
 
     $scope.addToCart = function(key,value){
         var tickElement = document.getElementById(key+"button");
-        if(tickElement.style.backgroundColor == "white")
+        if(tickElement.style.backgroundColor == "darkgray")
         {
             var x = {};
             var quantityElement = document.getElementById(key+"quantity");
@@ -371,7 +371,7 @@ $scope.shopArray=$scope.cartArray.shops;
                 return;
             }
             tickElement.style.backgroundColor = "green";
-            tickElement.className='button icon ion-minus-round'
+            tickElement.className='button icon ion-checkmark-round'
 
             x = value;
             
@@ -385,7 +385,7 @@ $scope.shopArray=$scope.cartArray.shops;
             $scope.cartArray[$scope.shopDetail.tin].push(x);
             alert("Added to cart");
         }else{
-            tickElement.style.backgroundColor = "white";
+            tickElement.style.backgroundColor = "darkgray";
             tickElement.className='button icon ion-plus-round'
 
             var length = $scope.cartArray[$scope.shopDetail.tin].length;
@@ -410,6 +410,8 @@ $scope.shopArray=$scope.cartArray.shops;
         //$state.go('app.cart', {arg:'arg'});
         //loginCred.moveToUrl("cart");
         //saveInCart(x);
+        window.location.hash = "#/app/cart";
+
     };
     
     var saveInCart = function(x){
@@ -471,9 +473,7 @@ $scope.shopArray=$scope.cartArray.shops;
     }
     
     $scope.getItemsPrice = function(){
-        //TODO replace areasDummy
-      //  var areaId = shop.areaId;
-        var areaRef = dbRef.child('areasDummy/'+'VSP_RURAL');
+        var areaRef = dbRef.child('priceList/'+ areaId);
         areaRef.once('value').then(function(areaSnapshot){
             var productsList = areaSnapshot.val();
             console.log("Fetched list of prices for selected area" + productsList);
@@ -600,9 +600,9 @@ $scope.shopArray=$scope.cartArray.shops;
                                window.localStorage.isAgent = data.isAgent;
                                $rootScope.$broadcast('isAgent',{});
                                if(!userInfo.shops || (userInfo.shops.length == 0))
-                                    window.location.href = "http://localhost:8383/lalitha/index.html#/app/shop";
+                                    window.location.hash = "#/app/shop";
                                 else
-                                    window.location.href = "http://localhost:8383/lalitha/index.html#/app/search";
+                                    window.location.hash = "#/app/search";
                            }
                            else{
                                $scope.showUserInputField = true;
@@ -623,18 +623,15 @@ $scope.shopArray=$scope.cartArray.shops;
       }
       var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
       promise.then(function(e) {
- 	 var usersRef = dbRef.child('users');
- 	var userId=e.uid;
+         var userId=e.uid;
+ 	 var usersRef = dbRef.child('users/' + userId);
                      window.localStorage.userId = userId;
                     usersRef.once('value', function(snap){
-                           if(snap.hasChild(userId)){
-                                   alert("exists");
-                                   $state.transitionTo('app.search', {arg:'arg'});
-                                   //proceed to load the main page
-                           }else{
+                           if(snap){
                                $scope.showUserInputField = true;
-                               $scope.$apply();
-                               showPopUp("done");
+                               $scope.$apply();                                   //proceed to load the main page
+                           }else{                             
+                               showPopUp("User could not be created.");
                                //load the form page to enter profile info
                            }
                     });  	
@@ -856,7 +853,7 @@ $scope.shopArray=$scope.cartArray.shops;
       foo[userId] = userInfo;
       var promise = usersRef.set(foo);
       promise.then(function(e) {
-                    showPopUp("shop Enter Successfully");
+                    showPopUp("Shop added successfully");
                     $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
                     $scope.shop = {
                         tax_id : {}
