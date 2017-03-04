@@ -3,13 +3,17 @@
     <div class="card" ng-hide="showShopInput" ng-click="showItems(shop.name,shop.tin)" ng-repeat="shop in shopArray">
         Shop Name :- {{shop.proprietor_name}}
     </div>
-      <button class="button button-block button-calm" ng-hide="showShopInput" ng-click="createNewShop()">New Shop</button>
+      <div class="padding"><center>
+            <button class="button  button-calm icon icon-left ion-plus" ng-hide="showShopInput" ng-click="createNewShop()">
+                New Shop
+            </button>
+          </center>
+      </div>
   
-      
       <div class="padding" ng-show="showShopInput">
           <div class="list list-inset">
               <div class="padding">
-                  Shop
+                  <h4><center>New Shop</center></h4>
               </div>
               <label class="item item-input">
                   <input type="text" placeholder="Name" ng-model="shop.name">
@@ -45,7 +49,9 @@
                   <input type="text" placeholder="Tax Value" ng-model="shop.tax_id.value">
               </label>
             </div>
-          <button class="button button-block button-calm" ng-click="addNewShop()">Submit</button>
+            <div class="padding">
+                <button class="button button-block button-calm" ng-click="addNewShop()">Submit</button>
+            </div>
       </div> 
   </ion-content>
 </ion-view>

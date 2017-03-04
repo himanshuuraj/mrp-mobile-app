@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngDraggable'])
+angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
 .service('loginCred', function($ionicPopup) {
     var config = {
@@ -127,6 +127,7 @@ angular.module('starter.controllers', ['ngDraggable'])
   this.getImageUrl = function(key,selectedItem){
         return urlOfImage+selectedItem+"_200/"+key+".png";
     };
+   
 })
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout,$rootScope) {
@@ -146,7 +147,7 @@ angular.module('starter.controllers', ['ngDraggable'])
   
   $scope.loginData = {};
   
-  $rootScope.$on('agent',function(){
+  $rootScope.$on('isAgent',function(){
       $scope.isAgent = window.localStorage.isAgent;
   });
   $scope.isAgent = false;// window.localStorage.isAgent;
@@ -281,13 +282,8 @@ $scope.shopArray=$scope.cartArray.shops;
 
 })
 
-.controller('searchCtrl', function($scope,$http,loginCred,$state) {
+.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup) {
     var earlySelectedTab = "rice";
-    $scope.init = function(){
-      //TODO - change this to call everytime shop is changed
-      $scope.getItemsPrice();
-      setTimeout(function(){getShopData();},0);
-    };
     var userId = window.localStorage.userId;
     var existingShops;
     var dbRef = loginCred.dbRef;
@@ -305,8 +301,8 @@ $scope.shopArray=$scope.cartArray.shops;
                                 $scope.cartArray[$scope.shopDetail.tin] = [];
                      }else{
                            $scope.shopArray = existingShops;
-                           window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
-                           window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
+                           if(!window.localStorage.tin)
+                                $scope.showShopPopUp();
                        }
                       $scope.$apply();
                      console.log(existingShops);
@@ -318,6 +314,29 @@ $scope.shopArray=$scope.cartArray.shops;
     $scope.minusBag = loginCred.minusBag;
     $scope.textInBag = loginCred.textInBag;
      $scope.textInQuantity = loginCred.textInQuantity;
+     var userInfo = JSON.parse(window.localStorage.userInfo);
+     $scope.init = function(){
+      //TODO - change this to call everytime shop is changed
+        $scope.getItemsPrice();
+        //setTimeout(function(){getShopData();},0);
+        if(window.localStorage.shopName){
+            $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
+        }
+    };
+    
+    if(!$scope.isAgent){
+                window.localStorage.shopName = $scope.shopDetail.name = userInfo.shops[0].name;
+                window.localStorage.tin = $scope.shopDetail.tin = userInfo.shops[0].tin;
+                $scope.cartArray[$scope.shopDetail.tin] = [];
+     }else{
+           $scope.shopArray = userInfo.shops || [];
+           if(!window.localStorage.tin)
+                $scope.showShopPopUp();
+            else{
+                $scope.shopDetail.name = window.localStorage.shopName;
+                $scope.shopDetail.tin = window.localStorage.tin;
+            }
+       }
     
     $scope.getShopItem = function(shop){
         $scope.shopDetail.name = shop.name;
@@ -325,10 +344,6 @@ $scope.shopArray=$scope.cartArray.shops;
         if(!$scope.cartArray[$scope.shopDetail.tin] )
             $scope.cartArray[$scope.shopDetail.tin] = [];
     };
-    
-    $scope.init = function(){
-        getShopData();
-    }
     
     String.prototype.getWeight = function(){
         var x = this.toString();
@@ -391,6 +406,7 @@ $scope.shopArray=$scope.cartArray.shops;
             x[index] = item;
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
+        window.location.hash = "#/app/cart";
         //$state.go('app.cart', {arg:'arg'});
         //loginCred.moveToUrl("cart");
         //saveInCart(x);
@@ -476,6 +492,12 @@ $scope.shopArray=$scope.cartArray.shops;
         $scope.selectedItem = $scope.selectedItem || "rice";
         return $scope[$scope.selectedItem+"Array"] || [];
     }
+    
+    $scope.setSearchedShop = function(shop){
+        window.localStorage.shopName = $scope.shopDetail.name = shop.name;
+        window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
+        //$scope.shopSearchElement = shop.name;
+    };
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
@@ -488,9 +510,50 @@ $scope.shopArray=$scope.cartArray.shops;
    }).error(function(err){
         console.log(err);
    });
+   
+   $scope.shopSearchElement ={
+              name: ""
+   };
+   $scope.shopArray = $scope.shopArray || [];
+   $scope.filterSearchedArray = function(shop){
+      return shop.name.includes($scope.shopSearchElement.name);
+   }
+   
+   $scope.showShopPopUp = function() {
+      // Custom popup
+      var myPopup = $ionicPopup.show({
+        template: '<div class="list">'+
+            '<label class="item item-input">'+
+            '<input type="text" id="searchElement" ng-model = "shopSearchElement.name"/>'+
+            '</label></div><ion-list> ' +
+          '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)">'+
+          '{{shop.name}}</ion-radio>'+
+          ' </ion-list>',
+           title: 'Choose Shop',
+           scope: $scope,
+           buttons: [
+              { text: 'Cancel' }, {
+                 text: '<b>Done</b>',
+                 type: 'button-positive',
+                    onTap: function(e) {
+                        console.log($scope.shopArray);
+                       if (!$scope.shopDetail.name) {
+                          //don't allow the user to close unless he enters model...
+                             e.preventDefault();
+                       } else {
+                          return $scope.shopDetail;
+                       }
+                    }
+              }
+           ]
+        });
+      myPopup.then(function(res) {
+         console.log('Tapped!', res);
+      });    
+    };
 })
 
-.controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate) {
+.controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate,$cordovaToast) {
   var dbRef = loginCred.dbRef;
   var authRef = loginCred.authRef;
   $scope.userData = {};
@@ -500,17 +563,26 @@ $scope.shopArray=$scope.cartArray.shops;
   var userInfo;
   var userId;
   $scope.signUpData = {
+      isAgent : true,
       shop :{
          tax_id : {}
       }
   };
  
   // $ionicNavBarDelegate.showBackButton(false);
+  $scope.showToast = function(message, duration, location) {
+        $cordovaToast.show(message, duration, location).then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
+    }
     
   $scope.signIn = function(){
       //$scope.showUserInputField = true;
       if(!$scope.userData.password || !$scope.userData.username){
-          showPopUp("Please fill the required info");
+          //showPopUp("Please fill the required info");
+          $scope.showToast('this is a test', 'long', 'center');
           return;
       }
      
@@ -578,6 +650,11 @@ $scope.shopArray=$scope.cartArray.shops;
       if(!$scope.signUpData.mobile){
           showPopUp('Enter Mobile Of User');
           return 0;
+      }else{
+          if($scope.signUpData.mobile.length != 10){
+                showPopUp("Mobile Number Not Accurate");
+                return 0;
+           }
       }
       if($scope.signUpData.isAgent.constructor != Boolean){
           showPopUp('Please confirm agentType');
@@ -596,6 +673,9 @@ $scope.shopArray=$scope.cartArray.shops;
       if(!$scope.signUpData.shop.mobile){
           showPopUp('Enter Shop Mobile');
           return 0;
+      }else{
+          if($scope.signUpData.shop.mobile != 10)
+              return 0;
       }
       if(!$scope.signUpData.shop.pan){
           showPopUp('Enter Shop Pan');
@@ -705,10 +785,70 @@ $scope.shopArray=$scope.cartArray.shops;
       window.localStorage.shopName = name;
       $state.go('app.search', {name:name,tin:tin});
   };
+  
+  var validateShop = function(){
+      if(!$scope.shop.name){
+          showPopUp('Enter Shop Name');
+          return 0;
+      }
+      if(!$scope.shop.proprietor_name){
+          showPopUp('Enter Proprietor Name');
+          return 0;
+      }
+      if(!$scope.shop.mobile){
+          showPopUp('Enter Shop Mobile');
+          return 0;
+      }else{
+          if($scope.shop.mobile.length != 10){
+              showPopUp('Mobile Number not correct');
+              return 0;
+          }
+      }
+      if(!$scope.shop.pan){
+          showPopUp('Enter Shop Pan');
+          return 0;
+      }
+      if(!$scope.shop.tin){
+          showPopUp('Enter Shop Tin');
+          return 0;
+      }
+      if(!$scope.shop.state){
+          showPopUp('Enter Shop State');
+          return 0;
+      }
+      if(!$scope.shop.district){
+          showPopUp('Enter Shop District');
+          return 0;
+      }
+      if(!$scope.shop.city){
+          showPopUp('Enter Shop City');
+          return 0;
+      }
+      if(!$scope.shop.address){
+          showPopUp('Enter Shop address');
+          return 0;
+      }
+      if(!$scope.shop.tax_id.type){
+          showPopUp('Enter shop tax id');
+          return 0;
+      }
+      if(!$scope.shop.tax_id.value){
+          showPopUp('Enter shop tax id');
+          return 0;
+      }
+      return 1;
+  }
+  
   $scope.addNewShop = function(){
+      if(!validateShop())
+          return;
       userInfo["shops"] = userInfo["shops"] || [];
       console.log($scope.shop);
       userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
+      delete userInfo.$$hashKey;
+      var shopLength = userInfo.shops.length;
+      for(var index = 0; index < shopLength; index++)
+          delete userInfo.shops[index].$$hashKey;
       userId = window.localStorage.userId;
       var dbRef = loginCred.dbRef;
       var usersRef = dbRef.child('users');
@@ -727,7 +867,7 @@ $scope.shopArray=$scope.cartArray.shops;
   };
 })
 
-.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate) {
+.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup) {
 
      var userId = window.localStorage.userId;
      var userInfo = JSON.parse(window.localStorage.userInfo);
@@ -775,6 +915,42 @@ $scope.shopArray=$scope.cartArray.shops;
     }
     
     var totalQuantity = $scope.totalQuantity = 0;
+    
+    $scope.setSelectedLorrySize = function(lorry){
+      $scope.selectedLorrySize = lorry;
+   };
+    
+     $scope.showLorryPopUp = function() {
+      $scope.data = {}
+      $scope.lorryArray = [17,21,25];
+      // Custom popup
+      var myPopup = $ionicPopup.show({
+        template: '<ion-list  > ' +
+          '<ion-radio ng-repeat="lorry in lorryArray" ng-value="lorry" ng-click="setSelectedLorrySize(lorry)">'+
+          '{{lorry}} tonnes</ion-radio>'+
+          ' </ion-list>',
+           title: 'Choose Lorry',
+           scope: $scope,
+           buttons: [
+              { text: 'Cancel' }, {
+                 text: '<b>Done</b>',
+                 type: 'button-positive',
+                    onTap: function(e) {
+                        console.log($scope.selectedLorrySize);
+                       if (!$scope.selectedLorrySize) {
+                          //don't allow the user to close unless he enters model...
+                             e.preventDefault();
+                       } else {
+                          return $scope.selectedLorrySize;
+                       }
+                    }
+              }
+           ]
+        });
+      myPopup.then(function(res) {
+         console.log('Tapped!', res);
+      });    
+    };
             
     $scope.addToDeliveryArray = function(key,value,index){
         var x = {};

@@ -1,13 +1,25 @@
 <ion-view view-title="SRI LALITHA ENTERPRISES" ng-init="init();">
   <ion-content>
       
-      <div class="card" ng-show="!isAgent" ng-cloak>
-          Select Shop<br>
-          <div class="row" ng-repeat="shop in shopArray" ng-click="getShopItem(shop)">
-              {{shop.name}}
+      <div class="card" ng-show="isAgent" ng-cloak>
+          <div class="row">
+              <div class="col" ng-show="shopDetail.name" style="padding-top: 20px;">
+                  <center>{{shopDetail.name}}/{{shopDetail.tin}}</center>
+              </div>
+              <div class="col">
+                  <center>
+                      <button class="button button-positive" ng-click="showShopPopUp();">
+                        Select Shop
+                      </button>
+                  </center>
+              </div>
           </div>
+          
+<!--          <div class="row" ng-repeat="shop in shopArray" ng-click="getShopItem(shop)">
+              {{shop.name}}
+          </div>  -->
       </div>
-      <div class="card" ng-show="isAgent">
+      <div class="card" ng-show="!isAgent">
           Shop Name :- {{shopDetail.name}}
           Tin Number :- {{shopDetail.tin}}
       </div>
@@ -64,96 +76,9 @@
 
       </button>
     </div>
-
-<!--    <div class="card" ng-show="selectedItem == 'ravva'" ng-repeat = "(key, value) in ravvaArray" style="height:130px;background-color:lightgray;position:relative;">
-      <div class = "row" style="height:100%;">
-        <div class = "col col-33" style="height:100%;">
-          <img src="img/image.jpg" style="height:100%;width:100%;"/>
-        </div>
-        <div class = "col">
-          <div class="row" style="padding:0;">
-            <div class="col" style="padding:0;">
-              <div class="text-center" style="padding:0;">
-                <h5 style="text-align: center;"><b>{{value.name}}</b>
-                  <br>
-                  {{value.master_weight}}
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="padding:0;">
-            <div class="col col-33" style="text-align:center;">Quantity</div>
-            <div class="col col-33" style="text-align:center;">Bag</div>
-            <div class="col col-33" style="text-align:center;">Amount</div>
-          </div>
-          <div class="row" style="height:40px;padding:0px;">
-
-            <div class="col col-33">
-              <input type="text" style="text-align:center;width:100%;" placeholder="quantity"/>
-            </div>
-            <div class="col col-33">
-              <input type="text" style="text-align:center;width:100%;" placeholder="bags"/>
-            </div>
-            <div class="col col-33">
-              <input type="text" style="text-align:center;width:100%;" placeholder="price"/>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="button icon ion-checkmark-round"
-              style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;">
-
-      </button>
-    </div>-->
-
-<!--    <div class="card" ng-show="selectedItem == 'broken'" ng-repeat = "(key, value) in brokenArray" style="height:130px;background-color:lightgray;position:relative;">
-      <div class = "row" style="height:100%;">
-        <div class = "col col-33" style="height:100%;">
-          <img ng-src="{{getImageUrl(key)}}" style="height:100%;width:100%;"/>
-        </div>
-        <div class = "col">
-          <div class="row" style="padding:0;">
-            <div class="col" style="padding:0;">
-              <div class="text-center" style="padding:0;">
-                <h5 style="text-align: center;"><b>{{value.name}}</b>
-                  <br>
-                  {{value.master_weight}}
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="padding:0;">
-            <div class="col col-33" style="text-align:center;">Quantity</div>
-            <div class="col col-33" style="text-align:center;">Bag</div>
-            <div class="col col-33" style="text-align:center;">Amount</div>
-          </div>
-          <div class="row" style="height:40px;padding:0px;">
-
-            <div class="col col-33">
-                <input type="text" id="{{key}}quantity" style="text-align:center;width:100%;" 
-                       ng-keydown="textInQuantity(this);" placeholder="quantity"/>
-            </div>
-            <div class="col col-33">
-              <input type="text" id="{{key}}bags" style="text-align:center;width:100%;"
-                     ng-keydown="textInBag(this);" placeholder="bags"/>
-            </div>
-            <div class="col col-33">
-                <p id="{{key}}price" style="text-align:center;width:100%;"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="button icon ion-checkmark-round"
-              style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;">
-
-      </button>
-    </div>-->
       
 
   </ion-content>
-<!--    <ion-footer-bar align-title="center" class="bar-assertive">
-        <button ng-click="proceedToSaveInCart()"><a href="#/app/cart">Proceed</a></button>
-    </ion-footer-bar>-->
     <ion-footer-bar align-title="center">
         <button class="button button-block button-positive" ng-click="proceedToSaveInCart()" style="margin:0;">PROCEED</button>
     </ion-footer-bar>
