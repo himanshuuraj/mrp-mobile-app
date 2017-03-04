@@ -282,7 +282,7 @@ $scope.shopArray=$scope.cartArray.shops;
 
 })
 
-.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup) {
+.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$timeout) {
     var earlySelectedTab = "rice";
     var userId = window.localStorage.userId;
     var existingShops;
@@ -388,6 +388,7 @@ $scope.shopArray=$scope.cartArray.shops;
         $scope.selectedItem = type;
         document.getElementById(type+"tab").className = "button button-positive";
         document.getElementById(earlySelectedTab+"tab").className = "button bgdarkGray";
+        addUI();
     };
 
     $scope.addToCart = function(key,value){
@@ -438,9 +439,6 @@ $scope.shopArray=$scope.cartArray.shops;
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
         window.location.hash = "#/app/cart";
-        //$state.go('app.cart', {arg:'arg'});
-        //loginCred.moveToUrl("cart");
-        //saveInCart(x);
         window.location.hash = "#/app/cart";
 
     };
@@ -535,8 +533,7 @@ $scope.shopArray=$scope.cartArray.shops;
         //$scope.shopSearchElement = shop.name;
     };
     
-    var updateUI = function(){
-        
+    var deleteUI = function(){
         var tin = earlySelectedShop["tin"];
         var obj = $scope.cartArray[tin] || [];
         for(var index = 0; index < obj.length; index++){
@@ -549,20 +546,32 @@ $scope.shopArray=$scope.cartArray.shops;
             buttonElement.style.backgroundColor = "darkgray";
             buttonElement.className='button icon ion-plus-round';
         }
-        
-        
+    }
+    
+    var addUI = function(){
         var tin = $scope.shopDetail.tin;
         var obj = $scope.cartArray[tin] || [];
         for(var index = 0; index < obj.length; index++){
             var productId = obj[index].productId;
-            var quantityElement = document.getElementById(productId + "quantity");
-            var bagElement = document.getElementById(productId + "bag");
-            var buttonElement = document.getElementById(productId + "button");
-            quantityElement.value = obj[index].quantity;
-            bagElement.value = obj[index].bag;
-            buttonElement.style.backgroundColor = "green";
-            buttonElement.className='button icon ion-checkmark-round';
+            $timeout(function(arg) {
+                    var quantityElement = document.getElementById(arg.pId + "quantity");
+                    if(!quantityElement)
+                        return;
+                    var bagElement = document.getElementById(arg.pId + "bag");
+                    var buttonElement = document.getElementById(arg.pId + "button");
+                    quantityElement.value = obj[arg.index].quantity;
+                    bagElement.value = obj[arg.index].bag;
+                    buttonElement.style.backgroundColor = "green";
+                    buttonElement.className='button icon ion-checkmark-round';
+          }, 0,true,{pId:productId,index:index});
         }
+    }
+    
+    var updateUI = function(){
+
+        deleteUI();
+        addUI();
+        
     }
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
