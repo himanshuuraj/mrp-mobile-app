@@ -815,13 +815,33 @@ $scope.shopArray=$scope.cartArray.shops;
   $scope.shop = {
       tax_id : {}
   };
-//  $scope.createNewShop = function(){
-//      $scope.showShopInput = true;
-//  };
-  $scope.showItems = function(name,tin){
-      window.localStorage.tin = tin;
-      window.localStorage.shopName = name;
-      $state.go('app.search', {name:name,tin:tin});
+  
+  $scope.removeShop = function(tin){
+      var shops = userInfo.shops || [];
+      var length = shops.length;
+      var flag = 0;
+      for(var index = 0; index < length; index++){
+          if(shops[index].tin == tin){
+              shops.splice(index,1);
+              flag = 1;
+              break;
+          }
+      }
+      if(flag){
+            userInfo.shops = shops;
+      }
+      saveShop();
+  }
+
+  $scope.toggleGroup = function(group) {
+    if ($scope.isGroupShown(group)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = group;
+    }
+  };
+  $scope.isGroupShown = function(group) {
+    return $scope.shownGroup === group;
   };
   
   var validateShop = function(){
@@ -883,6 +903,10 @@ $scope.shopArray=$scope.cartArray.shops;
       userInfo["shops"] = userInfo["shops"] || [];
       console.log($scope.shop);
       userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
+      saveShop('add');
+  };
+  
+  var saveShop = function(type){
       delete userInfo.$$hashKey;
       var shopLength = userInfo.shops.length;
       for(var index = 0; index < shopLength; index++)
@@ -896,15 +920,25 @@ $scope.shopArray=$scope.cartArray.shops;
       promise.then(function(e) {
                 console.log( e);
                     window.localStorage.userInfo = JSON.stringify(userInfo);
-                    showPopUp("Shop added successfully");
-                    $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
-                    $scope.shop = {
-                        tax_id : {}
-                    };
-                    $scope.showShopInput = false;
+                    if(type){
+                        showPopUp("Shop added successfully");
+                        $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
+                        $scope.shop = {
+                            tax_id : {}
+                        };
+                        $scope.showShopInput = false;
+                    }else{
+                        showPopUp("Shop deleted successfully");
+                        for(var index = 0; index < $scope.shopArray.length; index++){
+                            if($scope.shopArray[index].tin == tin){
+                                $scope.shopArray.splice(index,1);
+                                break;
+                            }
+                        }
+                    }
                     $scope.$apply();
         }).catch(e => showPopUp("Please try again"));
-  };
+  }
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {

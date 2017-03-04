@@ -1,8 +1,24 @@
 <ion-view view-title="SHOPS">
   <ion-content>
-    <div class="card" ng-hide="showShopInput" ng-click="showItems(shop.name,shop.tin)" ng-repeat="shop in shopArray">
-        Shop Name :- {{shop.proprietor_name}}
-    </div>
+      <div class="padding" ng-hide="showShopInput">
+        <ion-list>
+          <div ng-repeat="shop in shopArray">
+            <ion-item class="item-stable"
+                      ng-click="toggleGroup(shop)"
+                      ng-class="{active: isGroupShown(shop)}">
+                <i class="icon" ng-class="isGroupShown(shop) ? 'ion-minus' : 'ion-plus'"></i>
+              &nbsp;
+              Shop :- {{shop.name}}
+              <i class="icon ion-plus-circled" ng-click="removeShop(shop.tin)" style="align:right;"></i>
+            </ion-item>
+            <ion-item class="item-accordion"
+                      ng-show="isGroupShown(shop)">
+              Proprietory Name :- {{shop.proprietor_name}}
+              Mobile Number :- {{shop.mobile}}
+            </ion-item>
+          </div>
+        </ion-list>   
+      </div>
       <div class="padding"><center>
             <button class="button  button-positive icon icon-left ion-plus" ng-hide="showShopInput" ng-click="showShopInput = true;">
                 New Shop
