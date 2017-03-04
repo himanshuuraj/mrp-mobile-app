@@ -324,6 +324,39 @@ $scope.shopArray=$scope.cartArray.shops;
         }
     };
     
+     $scope.showShopPopUp = function() {
+      // Custom popup
+      var myPopup = $ionicPopup.show({
+        template: '<div class="list">'+
+            '<label class="item item-input">'+
+            '<input type="text" id="searchElement" ng-model = "shopSearchElement.name"/>'+
+            '</label></div><ion-list> ' +
+          '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)">'+
+          '{{shop.name}}</ion-radio>'+
+          ' </ion-list>',
+           title: 'Choose Shop',
+           scope: $scope,
+           buttons: [
+              { text: 'Cancel' }, {
+                 text: '<b>Done</b>',
+                 type: 'button-positive',
+                    onTap: function(e) {
+                        console.log($scope.shopArray);
+                       if (!$scope.shopDetail.name) {
+                          //don't allow the user to close unless he enters model...
+                             e.preventDefault();
+                       } else {
+                          return $scope.shopDetail;
+                       }
+                    }
+              }
+           ]
+        });
+      myPopup.then(function(res) {
+         console.log('Tapped!', res);
+      });    
+    };
+    
     if(!$scope.isAgent){
                 window.localStorage.shopName = $scope.shopDetail.name = userInfo.shops[0].name;
                 window.localStorage.tin = $scope.shopDetail.tin = userInfo.shops[0].tin;
@@ -371,10 +404,8 @@ $scope.shopArray=$scope.cartArray.shops;
                 return;
             }
             tickElement.style.backgroundColor = "green";
-            tickElement.className='button icon ion-checkmark-round'
-
+            tickElement.className='button icon ion-checkmark-round';
             x = value;
-            
             x["productId"] = key;
             x["quantity"] = quantity;
             x["bag"] = bag;
@@ -386,7 +417,7 @@ $scope.shopArray=$scope.cartArray.shops;
             alert("Added to cart");
         }else{
             tickElement.style.backgroundColor = "darkgray";
-            tickElement.className='button icon ion-plus-round'
+            tickElement.className='button icon ion-plus-round';
 
             var length = $scope.cartArray[$scope.shopDetail.tin].length;
             for(var index = 0; index<length; index++){
@@ -472,7 +503,10 @@ $scope.shopArray=$scope.cartArray.shops;
         return price;
     }
     
+    var earlySelectedShop = {};
+    
     $scope.getItemsPrice = function(){
+        var areaId = "areaId";
         var areaRef = dbRef.child('priceList/'+ areaId);
         areaRef.once('value').then(function(areaSnapshot){
             var productsList = areaSnapshot.val();
@@ -494,10 +528,42 @@ $scope.shopArray=$scope.cartArray.shops;
     }
     
     $scope.setSearchedShop = function(shop){
+        earlySelectedShop["tin"] = $scope.shopDetail.tin;
         window.localStorage.shopName = $scope.shopDetail.name = shop.name;
         window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
+        updateUI();
         //$scope.shopSearchElement = shop.name;
     };
+    
+    var updateUI = function(){
+        
+        var tin = earlySelectedShop["tin"];
+        var obj = $scope.cartArray[tin] || [];
+        for(var index = 0; index < obj.length; index++){
+            var productId = obj[index].productId;
+            var quantityElement = document.getElementById(productId + "quantity");
+            var bagElement = document.getElementById(productId + "bag");
+            var buttonElement = document.getElementById(productId + "button");
+            quantityElement.value = "";
+            bagElement.value = "";
+            buttonElement.style.backgroundColor = "darkgray";
+            buttonElement.className='button icon ion-plus-round';
+        }
+        
+        
+        var tin = $scope.shopDetail.tin;
+        var obj = $scope.cartArray[tin] || [];
+        for(var index = 0; index < obj.length; index++){
+            var productId = obj[index].productId;
+            var quantityElement = document.getElementById(productId + "quantity");
+            var bagElement = document.getElementById(productId + "bag");
+            var buttonElement = document.getElementById(productId + "button");
+            quantityElement.value = obj[index].quantity;
+            bagElement.value = obj[index].bag;
+            buttonElement.style.backgroundColor = "green";
+            buttonElement.className='button icon ion-checkmark-round';
+        }
+    }
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
    .success(function(data){
@@ -517,40 +583,7 @@ $scope.shopArray=$scope.cartArray.shops;
    $scope.shopArray = $scope.shopArray || [];
    $scope.filterSearchedArray = function(shop){
       return shop.name.includes($scope.shopSearchElement.name);
-   }
-   
-   $scope.showShopPopUp = function() {
-      // Custom popup
-      var myPopup = $ionicPopup.show({
-        template: '<div class="list">'+
-            '<label class="item item-input">'+
-            '<input type="text" id="searchElement" ng-model = "shopSearchElement.name"/>'+
-            '</label></div><ion-list> ' +
-          '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)">'+
-          '{{shop.name}}</ion-radio>'+
-          ' </ion-list>',
-           title: 'Choose Shop',
-           scope: $scope,
-           buttons: [
-              { text: 'Cancel' }, {
-                 text: '<b>Done</b>',
-                 type: 'button-positive',
-                    onTap: function(e) {
-                        console.log($scope.shopArray);
-                       if (!$scope.shopDetail.name) {
-                          //don't allow the user to close unless he enters model...
-                             e.preventDefault();
-                       } else {
-                          return $scope.shopDetail;
-                       }
-                    }
-              }
-           ]
-        });
-      myPopup.then(function(res) {
-         console.log('Tapped!', res);
-      });    
-    };
+  }
 })
 
 .controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate,$cordovaToast) {
@@ -592,7 +625,7 @@ $scope.shopArray=$scope.cartArray.shops;
                        userId = window.localStorage.userId = e.uid;
                        usersRef.once('value').then(function(data){
                            showPopUp("signIn successful");
-                           var data = data.val();
+                           data = data.val();
                            console.log(data);
                            if(data){
                                userInfo = data;
@@ -774,9 +807,9 @@ $scope.shopArray=$scope.cartArray.shops;
   $scope.shop = {
       tax_id : {}
   };
-  $scope.createNewShop = function(){
-      $scope.showShopInput = true;
-  };
+//  $scope.createNewShop = function(){
+//      $scope.showShopInput = true;
+//  };
   $scope.showItems = function(name,tin){
       window.localStorage.tin = tin;
       window.localStorage.shopName = name;
@@ -851,8 +884,10 @@ $scope.shopArray=$scope.cartArray.shops;
       var usersRef = dbRef.child('users/'+ userId);
       var foo = {};
       foo[userId] = userInfo;
-      var promise = usersRef.set(foo);
+      var promise = usersRef.update(userInfo);
       promise.then(function(e) {
+                console.log( e);
+                    window.localStorage.userInfo = JSON.stringify(userInfo);
                     showPopUp("Shop added successfully");
                     $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
                     $scope.shop = {
