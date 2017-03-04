@@ -408,6 +408,7 @@ $scope.shopArray=$scope.cartArray.shops;
             tickElement.className='button icon ion-checkmark-round';
             x = value;
             x["productId"] = key;
+            x["itemType"] = $scope.selectedItem;
             x["quantity"] = quantity;
             x["bag"] = bag;
             x["price"] = "Rs 1200";
@@ -568,10 +569,8 @@ $scope.shopArray=$scope.cartArray.shops;
     }
     
     var updateUI = function(){
-
         deleteUI();
         addUI();
-        
     }
 
    $http.get("https://mrps-orderform.firebaseio.com/products.json")
@@ -914,6 +913,7 @@ $scope.shopArray=$scope.cartArray.shops;
      var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
      var ordersRef =  dbRef.child('orders');
+     $scope.getImageUrl = loginCred.getImageUrl;
     $scope.init = function(){
         var temp = JSON.parse(window.sessionStorage.cartArray);
         $scope.cartArray = temp || [];//[tin];
