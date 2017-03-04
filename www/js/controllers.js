@@ -907,7 +907,7 @@ $scope.shopArray=$scope.cartArray.shops;
   };
 })
 
-.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup) {
+.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
 
      var userId = window.localStorage.userId;
      var userInfo = JSON.parse(window.localStorage.userInfo);
@@ -923,43 +923,102 @@ $scope.shopArray=$scope.cartArray.shops;
     $scope.deliveryArray = {};
     var selectedLorrySize = $scope.selectedLorrySize = 25;
     var progressBarElement = document.getElementById("progressBar");
-    $scope.submitOrder = function(){
-            
-        var x = {};
-        angular.forEach($scope.cartArray,function(item,index){
-            x[index] = item;
-            delete x[index].$$hashKey;
-        });
-        console.log(x);
-        var newOrder = {
-                userid : window.localStorage.userId,
-                orderId : "2016",
-                time : new Date().getTime(),
-                userName : userInfo.name,
-                district : userInfo.shops[0].district,
-                city : userInfo.shops[0].city,
-                state : userInfo.shops[0].state,
-                status : "in-cart",
-                shops : {
-                        0 : {
-                                name : userInfo.shops[0].name,
-                                TIN : userInfo.shops[0].tin,
-                                items : x
-                        }
-                }
-
-        }
-        var promise = ordersRef.push(newOrder);
-                promise.then(function(e) {
-                    showPopUp("submitted");
-        }).catch(e => console.log(e))
-    }
+//    $scope.submitOrder = function(){
+//            
+//        var x = {};
+//        angular.forEach($scope.cartArray,function(item,index){
+//            x[index] = item;
+//            delete x[index].$$hashKey;
+//        });
+//        console.log(x);
+//        var newOrder = {
+//                userid : window.localStorage.userId,
+//                orderId : "2016",
+//                time : new Date().getTime(),
+//                userName : userInfo.name,
+//                district : userInfo.shops[0].district,
+//                city : userInfo.shops[0].city,
+//                state : userInfo.shops[0].state,
+//                status : "in-cart",
+//                shops : {
+//                        0 : {
+//                                name : userInfo.shops[0].name,
+//                                TIN : userInfo.shops[0].tin,
+//                                items : x
+//                        }
+//                }
+//
+//        }
+//        var promise = ordersRef.push(newOrder);
+//                promise.then(function(e) {
+//                    showPopUp("submitted");
+//        }).catch(e => console.log(e))
+//    }
     
     var totalQuantity = $scope.totalQuantity = 0;
+    var earlySelectedLorry;
     
     $scope.setSelectedLorrySize = function(lorry){
+      earlySelectedLorry = $scope.selectedLorrySize;
       $scope.selectedLorrySize = lorry;
+      $timeout(function(){updateUI();},0);
    };
+   
+   function updateUI(){
+       var selectedLorrySize = $scope.selectedLorrySize;
+       var obj = $scope.deliveryArray[selectedLorrySize];
+       totalQuantity = 0;
+       for(var key in obj){
+           var arr = obj[key];
+           var length = arr.length;
+           for(var index = 0; index < length; index++){
+               totalQuantity += parseInt(arr[index].quantity);
+           }
+       }
+       var width = totalQuantity/selectedLorrySize;
+        if(width > 100)
+            progressBarElement.style.backgroundColor = "red";
+        else
+            progressBarElement.style.backgroundColor = "green";
+        progressBarElement.style.width = width.toString()+"%";
+        $scope.totalQuantity = totalQuantity;
+        removeUI();
+        addUI();
+   }
+   
+   function removeUI(){
+       var obj = $scope.deliveryArray[earlySelectedLorry] || [];
+       for(var key in obj){
+           var arr = obj[key];
+           var length = arr.length;
+           for(var index = 0; index < length; index++){
+               var quantityElement = document.getElementById(key+"quantity"+arr[index].index);
+               if(!quantityElement) return;
+               var bagElement = document.getElementById(key+"bag"+arr[index].index);
+               var buttonElement = document.getElementById(key+"button"+arr[index].index);
+               quantityElement.value = arr[index].quantity;
+               bagElement.value = arr[index].bag;
+               buttonElement.innerHTML = "ADD";
+           }
+       }  
+   }
+   
+   function addUI(){
+       var obj = $scope.deliveryArray[$scope.selectedLorrySize] || [];
+       for(var key in obj){
+           var arr = obj[key];
+           var length = arr.length;
+           for(var index = 0; index < length; index++){
+               var quantityElement = document.getElementById(key+"quantity"+index);
+               if(!quantityElement) return;
+               var bagElement = document.getElementById(key+"bag"+index);
+               var buttonElement = document.getElementById(key+"button"+index);
+               quantityElement.value = arr[index].quantity;
+               bagElement.value = arr[index].bag;
+               buttonElement.innerHTML = "REMOVE";
+           }
+       }  
+   }
     
      $scope.showLorryPopUp = function() {
       $scope.data = {}
@@ -999,12 +1058,14 @@ $scope.shopArray=$scope.cartArray.shops;
         value.quantity = document.getElementById(key+"quantity"+index).value;
         value.bag = document.getElementById(key+"bag"+index).value;
         x[key] = value;
+        var selectedLorrySize = $scope.selectedLorrySize;
         if(!$scope.deliveryArray[selectedLorrySize]){
             $scope.deliveryArray[selectedLorrySize] = {};
             $scope.deliveryArray[selectedLorrySize][key] = [];
         }
         if(!$scope.deliveryArray[selectedLorrySize][key])
             $scope.deliveryArray[selectedLorrySize][key] = [];
+        value["index"] = index;
         $scope.deliveryArray[selectedLorrySize][key].push(value);
         totalQuantity += parseInt(value.quantity);
         var width = totalQuantity/selectedLorrySize;
