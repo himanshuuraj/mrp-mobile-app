@@ -848,7 +848,7 @@ $scope.shopArray=$scope.cartArray.shops;
           delete userInfo.shops[index].$$hashKey;
       userId = window.localStorage.userId;
       var dbRef = loginCred.dbRef;
-      var usersRef = dbRef.child('users');
+      var usersRef = dbRef.child('users/'+ userId);
       var foo = {};
       foo[userId] = userInfo;
       var promise = usersRef.set(foo);
