@@ -1,4 +1,16 @@
 /* Empty. Add your own CSS if you like */
+
+body{
+    font-size:13px;
+}
+
+@media screen and (max-width:770px) {
+    body{
+        font-size:15px;
+    }
+}
+
+
 ion-content{
     background-color: #e9ebee;
 }
@@ -59,4 +71,9 @@ h1,h2,h3{
 
 #shopDiv label {
     background-color:lightgray;
+}
+
+.card{
+    margin-top:10px;
+    margin-bottom: 10px;
 }
