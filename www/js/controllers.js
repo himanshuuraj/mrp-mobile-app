@@ -308,6 +308,9 @@ $scope.submitOrder = function(){
     $scope.cartArray = {};
     $scope.tabArray = ['rice','ravva','broken'];
     $scope.isAgent = window.localStorage.isAgent;
+    var shopInfo = {};
+    if(window.localStorage.shopInfo)
+        shopInfo = JSON.parse(window.localStorage.shopInfo);
     var getShopData = function(){
         var shopsRef = dbRef.child('users/'+userId + '/shops');
         shopsRef.once('value', function(snap) {
@@ -527,6 +530,8 @@ $scope.submitOrder = function(){
         earlySelectedShop["tin"] = $scope.shopDetail.tin;
         window.localStorage.shopName = $scope.shopDetail.name = shop.name;
         window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
+        shopInfo[shop.tin] = shop;
+        window.localStorage.shopInfo = JSON.stringify(shopInfo);
         updateUI();
         //$scope.shopSearchElement = shop.name;
     };
@@ -953,6 +958,9 @@ $scope.submitOrder = function(){
      var dbRef = loginCred.dbRef;
      var ordersRef =  dbRef.child('orders');
      $scope.getImageUrl = loginCred.getImageUrl;
+     var shopInfo = {};
+        if(window.localStorage.shopInfo)
+            shopInfo = JSON.parse(window.localStorage.shopInfo);
     $scope.init = function(){
         var temp = JSON.parse(window.sessionStorage.cartArray);
         $scope.cartArray = temp || [];//[tin];
@@ -1145,14 +1153,6 @@ $scope.submitOrder = function(){
             }
         }
         computeWidth(totalQuantity);
-//        var width = totalQuantity/selectedLorrySize;
-//        $scope.totalQuantity = totalQuantity;
-//        if(width > 100)
-//            progressBarElement.style.backgroundColor = "red";
-//        else
-//            progressBarElement.style.backgroundColor = "green";
-//        progressBarElement.style.width = width.toString()+"%";
-//        console.log($scope.deliveryArray);
     }
     $scope.deliveryArray = [];            
     var userInfo = window.localStorage.userInfo;
@@ -1194,7 +1194,45 @@ $scope.submitOrder = function(){
 //        
 //    };
       $scope.checkoutOrder = function(){       
-        window.sessionStorage.shopArray = JSON.stringify($scope.shopArray);
+        //window.sessionStorage.shopArray = JSON.stringify($scope.deliveryArray);
+        var cartInfo = {};
+        var arr = [];
+        var grossPrice =0;
+        var overAllPrice = 0;
+        var overAllWeight = 0;
+      	for(var key in $scope.deliveryArray[$scope.selectedLorrySize]){
+      		var shopOrder = $scope.deliveryArray[$scope.selectedLorrySize][key] || [];
+      		var shopOrderLength = shopOrder.length;
+      		var totalShopPrice = 0;
+      		var totalWeight = 0;
+      		var x = {"items":{}};
+      		for(var index = 0; index < shopOrderLength; index++){
+      			var shopOrderItem = shopOrder[index];
+      			var y = {};
+      			y["bags"] = shopOrderItem.bag;
+      			y["name"] = shopOrderItem.name;
+      			shopOrderItem.price = parseInt(shopOrderItem.price.toString().match(/[0-9]+/).toString());
+      			shopOrderItem.quantity = parseInt(shopOrderItem.quantity);
+      			y["price"] = shopOrderItem.price;
+      			y["weight"] = shopOrderItem.quantity;
+      			x.items[shopOrderItem.itemType] = x[shopOrderItem.itemType] || {};
+      			x.items[shopOrderItem.itemType][shopOrderItem.productId] = y;
+      			totalShopPrice += shopOrderItem.price;
+      			totalWeight += shopOrderItem.quantity;
+      		}
+      		x["address"] = shopInfo[key].address;
+                                          x["name"] = shopInfo[key].name;
+      		x["totalShopPrice"] = totalShopPrice;
+      		x["totalWeight"] = totalWeight;
+                                         overAllPrice += totalShopPrice;
+                                         overAllWeight += totalWeight;
+      		arr.push(x);
+      	}
+                    cartInfo["grossPrice"] = cartInfo["totalPrice"] = overAllPrice;
+                    cartInfo["totalWeight"] = overAllWeight;
+                    cartInfo["cart"] = arr;
+      	console.log(cartInfo);
+                    window.localStorage.carInfo = JSON.stringify(cartInfo);
         window.location.hash = "#/app/summary";
     }
 
