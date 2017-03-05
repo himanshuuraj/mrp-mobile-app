@@ -1,24 +1,24 @@
 <ion-view view-title="Shop">
   <ion-content ng-init = "init();">
-      <h2 style="margin-top:40px"><center>Order Summary</center></h2>
+      <h3 style="margin-top:40px"><center>Order Summary</center></h3>
       <div class="padding" ng-repeat="shop in shopArray" >
-          <h3 style="margin-left:10px"><b>{{shop.name}}</b></h3>
+          <h4 style="margin-left:10px">{{shop.name}}</h4>
           <hr style="margin-left:10px">
           <div class="row"  style="margin-top: 5px">
              <div class="col span-1-of-4 box">
-                 <p><b><i>Item Name</i></b></p>
+                 <p><i>Item Name</i></p>
              </div>  
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p><b><i>Weight in Quintals</i></b></p>
+                 <p>Weight in Quintals</p>
              </div>      
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p><b><i>Number of Bags</i></b></p>
+                 <p>Number of Bags</p>
              </div>      
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p><b><i>Price</i></b></p>
+                 <p style="padding-left: 25%">Price</p>
             </div>
            </div>
           
@@ -28,59 +28,59 @@
             <div class="row">
              <div class="col span-1-of-4 box">
 <!--                 <h4>Name</h4>-->
-                 <p>{{v.name}}</p>
+                 <p >{{v.name}}</p>
              </div>  
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p>{{v.weight}}</p>
+                <p style="padding-left: 25%">{{v.weight}}</p>
              </div>      
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p>{{v.bags}}</p>
+                 <p style="padding-left: 25%">{{v.bags}}</p>
              </div>      
             <div class="col span-1-of-4 box">
 <!--                 <h4>abc</h4>-->
-                 <p>&#8377;{{v.price}}</p> </div>      
+                 <p style="padding-left: 25%">&#8377;{{v.price}}</p> </div>      
             </div>
             </div>
-
+                <hr style="border-top: 1px dotted">
           <br> 
            </div>
       </div>
        
-      <div class="row" style="margin-top: 5%;margin-left: 5%;">
-          <div class="col">
-              <h3 style="margin-left: 10px;">redeem coupon</h3>
-              <div class="row" style="margin-top: 20px">
+      <div class="row" style="margin-top: 5%;">
+          <div class="col" >
+              <p style="margin-left: 10px;">REDEEM COUPON</p>
+              <div class="row" style="margin-top: 5%;">
                   <div class="col" style="border: 1px solid black;border-radius: 20px;height: 60px;margin-right: 15px">
                         <input class="coupon" type="text" placeholder="COUPON CODE" ng-model="cartArray.couponCode">
                   </div>
                   <div class="col" style="padding: 0">
-                    <button class="button button-block button-calm" style="background-color: lightslategray;width:50%;margin-top:6px" ng-click="applyCoupon()">APPLY</button>
+                    <button class="button button-block button-calm" style="background-color: lightslategray;margin-top:6px" ng-click="applyCoupon()">APPLY</button>
                 </div>
               </div>
           </div>
           
            
-           <div class="col col-50" style="padding-left: 10%;">
+           <div class="col col-50" style="padding-left: 5%;padding-top: 20%;font-size: 75%;margin-bottom: 20%">
                <ul class="priceList">
                    <li>
-                <div class="row" style="margin-top: 20px">
+                <div class="row" style="margin-top: 20px;">
                   <div class="col" style="padding: 0">
-                      <span style="font-size: 20px"><b>TOTAL PRICE</b></span>
+                      <span>TOTAL PRICE</span>
                   </div>
                   <div class="col" style="padding: 0">
-                      <span style="font-size: 20px" id="gross_price"><b>&#8377;{{cartArray.grossPrice}}</b></span>
+                      <span style="padding-left: 20%" id="gross_price">&#8377;{{cartArray.grossPrice}}</span>
                    </div>
                 </div>
                    </li>
                    <li>
                        <div class="row" style="margin-top: 20px">
                   <div class="col" style="padding: 0">
-                        <span style="font-size: 20px">DISCOUNT</span>
+                        <span>DISCOUNT</span>
                   </div>
                   <div class="col" style="padding: 0">
-                       <span style="font-size: 20px" id="discount_amount">&#8377;{{cartArray.discountAmount}}</span>
+                       <span style="padding-left: 20%" id="discount_amount">&#8377;{{cartArray.discountAmount}}</span>
                    </div>
                     </div>
                        
@@ -88,31 +88,31 @@
                    <li>
                        <div class="row" style="margin-top: 20px">
                   <div class="col" style="padding: 0">
-                       <span style="font-size: 20px">TRANSPORT</span>
+                       <span>TRANSPORT</span>
                   </div>
                   <div class="col" style="padding: 0">
-                       <span style="font-size: 20px" id="transp_cost">&#8377;1200</span>
+                       <span style="padding-left: 20%" id="transp_cost">&#8377;1200</span>
                    </div>
                 </div>
                    </li>
                     <li>
                         <div class="row" style="margin-top: 20px">
                   <div class="col" style="padding: 0">
-                       <span style="font-size: 20px">TAX</span>
+                       <span>TAX</span>
                   </div>
                   <div class="col" style="padding: 0">
-                       <span style="font-size: 20px" id="tax">&#8377;2000</span>
+                       <span style="padding-left: 20%" id="tax">&#8377;2000</span>
                    </div>
                 </div>
                    </li>
                    <li>
                          <div class="row" style="margin-top: 20px">
                   <div class="col" style="padding: 0">
-                      <span style="font-size: 20px"><b>GRAND TOTAL</b></span>
+                      <span>GRAND TOTAL</span>
                   </div>
-                  <div class="col" style="padding: 0">
-                      <span style="font-size: 20px" id="grand_total"><b>&#8377;{{cartArray.totalPrice}}</b></span></li>
-                  <li><div class="row" style="margin-top: 30px">
+                  <div class="col" style="padding: 0;">
+                      <span style="padding-left: 20%;" id="grand_total">&#8377;{{cartArray.totalPrice}}</span></li>
+                  <li><div class="row" style="margin-top: 10%;">
                        <button class="button button-block button-calm" style="width: 20%;position: fixed;background-color: #d02139;" ng-click="submitOrder()">Submit</button>
                       </div>  
                   </li>

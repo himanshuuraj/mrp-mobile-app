@@ -160,9 +160,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 })
 
 .controller('summaryCtrl', function($scope,$http,loginCred,$state) {
+    if(window.localStorage.isActive === 'false') {
+                 alert("User not activated. Please contact administrator");
+                 return;
+     }
     $scope.init = function(){
         $scope.cartArray = {
-  "shops" : [ {
+  "shopDetail" : [ {
     "items" : {
       "ravva" : {
         "1KGLalithaBlue" : {
@@ -205,7 +209,12 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         }
       }
     },
-    "name" : "Ram Kirana Stores"
+    "name" : "Ram Kirana Stores",
+    "totalShopPrice" : "9820",
+    "totalShopWeight" : "240",
+    "address" : "Bellandur bangalore",
+    "area":"BANGALORE_RURAL",
+    "city":"Bangalore"
   }, {
     "items" : {
       "ravva" : {
@@ -234,7 +243,12 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         }
       }
     },
-    "name" : "Tom Kirana Stores"
+    "name" : "Tom Kirana Stores",
+    "totalShopPrice" : "9820",
+    "totalShopWeight" : "240",
+    "address" : "Sarjapur bangalore",
+    "area":"BANGALORE_RURAL",
+    "city":"Bangalore"
     
   }],
   "grossPrice" : "35700",
@@ -243,46 +257,49 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     "discountAmount" : "1200"
 }
 
-$scope.shopArray=$scope.cartArray.shops;
+$scope.shopArray=$scope.cartArray.shopDetail;
 
-    };
+$scope.submitOrder = function(){
+    var userInfo = JSON.parse(window.localStorage.userInfo);
+    var dbRef = loginCred.dbRef;
+    var ordersRef =  dbRef.child('orders');
+    var now = new Date();
+    var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    var year = now.getYear();
+    var mathRandom = Math.floor((Math.random())*1000);
+    var orderId= (now.getDate()).toString()  + monthsText[now.getMonth()] + (now.getYear()%10).toString() + '-'+
+            userInfo.name.substring(0,3).toUpperCase() + userInfo.mobile.substring(0,3) +'-'+ mathRandom.toString();
     
-    
-    $scope.submitOrder = function(){
-            
-        var x = {};
-        angular.forEach($scope.cartArray,function(item,index){
-            x[index] = item;
-            delete x[index].$$hashKey;
-        });
-        console.log(x);
-        var newOrder = {
+    var cartArray = $scope.cartArray;
+     var shopLength = cartArray.shopDetail.length;
+      for(var index = 0; index < shopLength; index++)
+          delete cartArray.shopDetail[index].$$hashKey;
+
+    var newOrder = {
                 userid : window.localStorage.userId,
-                orderId : "2016",
-                time : new Date().getTime(),
+                orderId : orderId,
+                time :  now.getTime(),
                 userName : userInfo.name,
-                district : userInfo.shops[0].district,
-                city : userInfo.shops[0].city,
-                state : userInfo.shops[0].state,
-                status : "in-cart",
-                shops : {
-                        0 : {
-                                name : userInfo.shops[0].name,
-                                TIN : userInfo.shops[0].tin,
-                                items : x
-                        }
-                }
-
-        }
+                status : "received",
+                cart :  cartArray
+                };
+                
+                 
+        
         var promise = ordersRef.push(newOrder);
                 promise.then(function(e) {
                     alert("Your order has been successfully placed");
         }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
-    }
-
+};
+    
+}
 })
 
 .controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$timeout) {
+     if(window.localStorage.isActive === 'false') {
+                 alert("User not activated. Please contact administrator");
+                 return;
+     }
     var earlySelectedTab = "rice";
     var userId = window.localStorage.userId;
     var existingShops;
@@ -326,6 +343,10 @@ $scope.shopArray=$scope.cartArray.shops;
     
      $scope.showShopPopUp = function() {
       // Custom popup
+       if(window.localStorage.isActive === 'false') {
+                 alert("User not activated. Please contact administrator");
+                 return;
+     }
       var myPopup = $ionicPopup.show({
         template: '<div class="list">'+
             '<label class="item item-input">'+
@@ -444,30 +465,6 @@ $scope.shopArray=$scope.cartArray.shops;
 
     };
     
-    var saveInCart = function(x){
-        var ordersRef =  dbRef.child('orders');
-
-          var newOrder = {
-            userid : window.localStorage.userId,
-            orderId : "12345",
-            time : "1458903245",
-            userName : "Rama Raju",
-            district :"East Godavari",
-            city : "Kakinda",
-            state : "Andhra Pradesh",
-            status : "in-cart",
-            shops : {
-              0 : {
-                name : window.localStorage.shopName,
-                TIN : window.localStorage.tin,
-                items : x
-              },
-             }
-          };
-          console.log(newOrder);
-          ordersRef.push(newOrder);
-    }
-    
     $scope.getImageUrl = loginCred.getImageUrl;
     
     $scope.getProductItems = function(){
@@ -540,6 +537,7 @@ $scope.shopArray=$scope.cartArray.shops;
         for(var index = 0; index < obj.length; index++){
             var productId = obj[index].productId;
             var quantityElement = document.getElementById(productId + "quantity");
+            if(!quantityElement) return;
             var bagElement = document.getElementById(productId + "bag");
             var buttonElement = document.getElementById(productId + "button");
             quantityElement.value = "";
@@ -632,18 +630,21 @@ $scope.shopArray=$scope.cartArray.shops;
                        var usersRef = dbRef.child('users/'+ e.uid);
                        userId = window.localStorage.userId = e.uid;
                        usersRef.once('value').then(function(data){
-                           showPopUp("signIn successful");
                            data = data.val();
                            console.log(data);
                            if(data){
                                userInfo = data;
                                window.localStorage.userInfo = JSON.stringify(data);
                                window.localStorage.isAgent = data.isAgent;
+                               window.localStorage.isActive = data.active;
                                $rootScope.$broadcast('isAgent',{});
                                if(!userInfo.shops || (userInfo.shops.length == 0))
                                     window.location.hash = "#/app/shop";
-                                else
+                                else if(!data.active){
+                                    alert("User not activated. Please contact administrator")
+                                }else{
                                     window.location.hash = "#/app/search";
+                                }
                            }
                            else{
                                $scope.showUserInputField = true;
@@ -757,6 +758,7 @@ $scope.shopArray=$scope.cartArray.shops;
         var foo = {};
             foo = {
                     email : $scope.userData.username,
+                    active:false,
                     name : $scope.signUpData.name,
                     mobile : $scope.signUpData.mobile,
                     isAgent : $scope.signUpData.isAgent,
@@ -942,7 +944,10 @@ $scope.shopArray=$scope.cartArray.shops;
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
-
+     if(window.localStorage.isActive === 'false') {
+                 alert("User not activated. Please contact administrator");
+                 return;
+     }
      var userId = window.localStorage.userId;
      var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
@@ -994,8 +999,9 @@ $scope.shopArray=$scope.cartArray.shops;
     
     $scope.setSelectedLorrySize = function(lorry){
       earlySelectedLorry = $scope.selectedLorrySize;
-      $scope.selectedLorrySize = lorry;
-      $timeout(function(){updateUI();},0);
+      $scope.selectedLorrySize = selectedLorrySize = lorry;
+      computeWidth(totalQuantity);
+      //$timeout(function(){updateUI();},0);
    };
    
    function updateUI(){
@@ -1009,7 +1015,7 @@ $scope.shopArray=$scope.cartArray.shops;
                totalQuantity += parseInt(arr[index].quantity);
            }
        }
-       var width = totalQuantity/selectedLorrySize;
+       var width = totalQuantity*10/selectedLorrySize;
         if(width > 100)
             progressBarElement.style.backgroundColor = "red";
         else
@@ -1102,7 +1108,16 @@ $scope.shopArray=$scope.cartArray.shops;
         value["index"] = index;
         $scope.deliveryArray[selectedLorrySize][key].push(value);
         totalQuantity += parseInt(value.quantity);
-        var width = totalQuantity/selectedLorrySize;
+        computeWidth(totalQuantity);
+        /*
+         * $scope.deliveryArray = {
+         *      25 : {
+         *              tin :[] 
+         * */
+    };
+    
+    function computeWidth(totalQuantity){
+        var width = totalQuantity*10/selectedLorrySize;
         if(width > 100)
             progressBarElement.style.backgroundColor = "red";
         else
@@ -1110,12 +1125,7 @@ $scope.shopArray=$scope.cartArray.shops;
         progressBarElement.style.width = width.toString()+"%";
         $scope.totalQuantity = totalQuantity;
         console.log($scope.deliveryArray);
-        /*
-         * $scope.deliveryArray = {
-         *      25 : {
-         *              tin :[] 
-         * */
-    };
+    }
     
     $scope.removeItemFromDeliverable = function(key,value,index){
         var x = {};
@@ -1134,14 +1144,15 @@ $scope.shopArray=$scope.cartArray.shops;
                 break;
             }
         }
-        var width = totalQuantity/selectedLorrySize;
-        $scope.totalQuantity = totalQuantity;
-        if(width > 100)
-            progressBarElement.style.backgroundColor = "red";
-        else
-            progressBarElement.style.backgroundColor = "green";
-        progressBarElement.style.width = width.toString()+"%";
-        console.log($scope.deliveryArray);
+        computeWidth(totalQuantity);
+//        var width = totalQuantity/selectedLorrySize;
+//        $scope.totalQuantity = totalQuantity;
+//        if(width > 100)
+//            progressBarElement.style.backgroundColor = "red";
+//        else
+//            progressBarElement.style.backgroundColor = "green";
+//        progressBarElement.style.width = width.toString()+"%";
+//        console.log($scope.deliveryArray);
     }
     $scope.deliveryArray = [];            
     var userInfo = window.localStorage.userInfo;
@@ -1182,9 +1193,18 @@ $scope.shopArray=$scope.cartArray.shops;
 //        var tickElement = document.getElementById(key+"button"+index);
 //        
 //    };
+      $scope.checkoutOrder = function(){       
+        window.sessionStorage.shopArray = JSON.stringify($scope.shopArray);
+        window.location.hash = "#/app/summary";
+    }
+
 })
 
 .controller('orderCtrl', function($scope,$http) {
+    if(window.localStorage.isActive === 'false') {
+                 alert("User not activated. Please contact administrator");
+                 return;
+     }
   $scope.shopArray = ["shop1","shop2","shop3"];
   $scope.showShopInput = false;
   $scope.shop = {
@@ -1196,16 +1216,3 @@ $scope.shopArray=$scope.cartArray.shops;
   $scope.selectedLorry = "17 kg";
 })
         
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-});
