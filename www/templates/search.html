@@ -30,7 +30,7 @@
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:135px;background-color:lightgray;position:relative;">
         <div class = "row" style="height:100%;">
             <div class = "col col-20" style="height:100%;">
-              <img ng-src="{{getImageUrl(key,selectedItem)}}" style="height:100%;max-width: 100%;"/>
+              <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image" style="height:100%;max-width: 100%;"/>
             </div>
             <div class = "col" >
               <div class="row text-left" style="padding:0;">
@@ -80,6 +80,7 @@
     </div> 
 
   </ion-content>
+     
     <ion-footer-bar align-title="center">
         <div class="button-bar">
             <button class="button  button-positive" ng-click="proceedToSaveInCart()" style="margin:0;"><b style="font-size: large">CONTINUE</b></button>

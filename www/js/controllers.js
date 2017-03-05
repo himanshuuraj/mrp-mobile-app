@@ -148,9 +148,12 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
   $scope.loginData = {};
   
   $rootScope.$on('isAgent',function(){
-      $scope.isAgent = window.localStorage.isAgent;
+      if(window.localStorage.isAgent == "true")
+        $scope.isAgent = true;
   });
   $scope.isAgent = false;// window.localStorage.isAgent;
+  if(window.localStorage.isAgent == "true")
+    $scope.isAgent = true;
 
     $scope.signOut = function(){
         window.localStorage.clear();
@@ -295,7 +298,7 @@ $scope.submitOrder = function(){
 }
 })
 
-.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$timeout) {
+.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$timeout,$interval) {
      if(window.localStorage.isActive === 'false') {
                  alert("User not activated. Please contact administrator");
                  return;
@@ -308,6 +311,8 @@ $scope.submitOrder = function(){
     $scope.cartArray = {};
     $scope.tabArray = ['rice','ravva','broken'];
     $scope.isAgent = window.localStorage.isAgent;
+    if(window.localStorage.isAgent == "true")
+      $scope.isAgent = true;
     var shopInfo = {};
     if(window.localStorage.shopInfo)
         shopInfo = JSON.parse(window.localStorage.shopInfo);
@@ -334,7 +339,10 @@ $scope.submitOrder = function(){
     $scope.minusBag = loginCred.minusBag;
     $scope.textInBag = loginCred.textInBag;
      $scope.textInQuantity = loginCred.textInQuantity;
-     var userInfo = JSON.parse(window.localStorage.userInfo);
+     var addToCartElement = document.getElementById("addToCartLogo");
+     var userInfo = {};
+     if(window.localStorage.userInfo)
+        userInfo = JSON.parse(window.localStorage.userInfo);
      $scope.init = function(){
       //TODO - change this to call everytime shop is changed
         $scope.getItemsPrice();
@@ -345,11 +353,6 @@ $scope.submitOrder = function(){
     };
     
      $scope.showShopPopUp = function() {
-      // Custom popup
-       if(window.localStorage.isActive === 'false') {
-                 alert("User not activated. Please contact administrator");
-                 return;
-     }
       var myPopup = $ionicPopup.show({
         template: '<div class="list">'+
             '<label class="item item-input">'+
@@ -416,6 +419,11 @@ $scope.submitOrder = function(){
     };
 
     $scope.addToCart = function(key,value){
+        var addToCartNumber = addToCartElement.innerText;
+        if(addToCartNumber)
+          addToCartNumber = parseInt(addToCartNumber);
+        else
+          addToCartNumber = 0;
         var tickElement = document.getElementById(key+"button");
         if(tickElement.style.backgroundColor == "darkgray")
         {
@@ -440,7 +448,8 @@ $scope.submitOrder = function(){
             delete x.available;
             $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
             $scope.cartArray[$scope.shopDetail.tin].push(x);
-            alert("Added to cart");
+            addToCartNumber++;
+            addToCartElement.innerHTML = addToCartNumber.toString();
         }else{
             tickElement.style.backgroundColor = "darkgray";
             tickElement.className='button icon ion-plus-round';
@@ -452,10 +461,101 @@ $scope.submitOrder = function(){
                     break;
                 }
             }
+            if(addToCartNumber > 0)
+              addToCartNumber--;
+            addToCartElement.innerHTML = addToCartNumber.toString();
         }
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
         console.log($scope.cartArray);
+        doAnimation(key);
     };
+
+    var cln;
+    var timeOfAnimation = 30;
+    var count = 0;
+    var widthObj = {
+        start : 100,
+        end : 50,
+        change : 0,
+        getChange : function(){
+           return this.change/timeOfAnimation;
+        },
+        newCoord : function(){
+          this.start = this.start - this.getChange();
+          return Math.floor(this.start);
+        }
+    };
+    var heightObj = {
+        start : 100,
+        end : 50,
+        change : 0,
+        getChange : function(){
+           return this.change/timeOfAnimation;
+        },
+        newCoord : function(){
+          this.start = this.start - this.getChange();
+          return Math.floor(this.start);
+        }
+    };
+    var topObj = {
+        start : 100,
+        end : 50,
+        change : 0,
+        getChange : function(){
+           return this.change/timeOfAnimation;
+        },
+        newCoord : function(){
+          this.start = this.start - this.getChange();
+          return Math.floor(this.start);
+        }
+    };
+    var leftObj = {
+        start : 100,
+        end : 800,
+        change : 0,
+        getChange : function(){
+          return this.change/timeOfAnimation;
+        },
+        newCoord : function(){
+          this.start = this.start + this.getChange();
+          return Math.floor(this.start);
+        }
+    };
+    function doAnimation(key){
+       var imageButton = document.getElementById(key+"image");
+       cln = imageButton.cloneNode(true);
+       document.body.appendChild(cln);
+       var coord = imageButton.getBoundingClientRect();
+       leftObj.start = coord.left;
+       topObj.start = coord.top;
+       heightObj.start = coord.height;
+       widthObj.start = coord.width;
+       //adToCardButton
+       var coord2 = addToCartElement.getBoundingClientRect();
+       leftObj.end = coord2.left;
+       topObj.end = coord2.top;
+       heightObj.end = coord2.height;
+       widthObj.end = coord2.width;
+
+       leftObj.change = leftObj.end - leftObj.start;
+       topObj.change = topObj.start - topObj.end;
+       heightObj.change = heightObj.start - heightObj.end;
+       widthObj.change = widthObj.start - widthObj.end;
+       cln.style.cssText = "position:fixed;left:"+coord.left+"px;top:"+coord.top+"px;"+
+                  "z-index:99999;height:"+coord.height+"px;width:"+coord.width+"px;";
+       var promise = $interval(function(){
+            cln.style.left = leftObj.newCoord().toString() + "px";
+            cln.style.top = topObj.newCoord().toString() + "px";
+            cln.style.width = widthObj.newCoord().toString() + "px";
+            cln.style.height = heightObj.newCoord().toString() + "px";
+            count++;
+            if(count >=30){
+              count = 0;
+              $interval.cancel(promise);
+              document.body.removeChild(cln);
+            }
+       },20);
+    }
     
     $scope.proceedToSaveInCart = function(){
         var x = {};
@@ -464,8 +564,6 @@ $scope.submitOrder = function(){
         });
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
         window.location.hash = "#/app/cart";
-        window.location.hash = "#/app/cart";
-
     };
     
     $scope.getImageUrl = loginCred.getImageUrl;
@@ -532,7 +630,7 @@ $scope.submitOrder = function(){
         window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
         shopInfo[shop.tin] = shop;
         window.localStorage.shopInfo = JSON.stringify(shopInfo);
-        updateUI();
+        $timeout(function(){updateUI();},0);
         //$scope.shopSearchElement = shop.name;
     };
     
@@ -542,7 +640,7 @@ $scope.submitOrder = function(){
         for(var index = 0; index < obj.length; index++){
             var productId = obj[index].productId;
             var quantityElement = document.getElementById(productId + "quantity");
-            if(!quantityElement) return;
+            if(!quantityElement) continue;
             var bagElement = document.getElementById(productId + "bag");
             var buttonElement = document.getElementById(productId + "button");
             quantityElement.value = "";
