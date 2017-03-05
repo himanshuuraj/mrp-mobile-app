@@ -108,6 +108,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         document.getElementById(key+"quantity"+index).value = (bagNumber * weight)/100 ;
     else
         document.getElementById(key+"quantity").value = (bagNumber * weight)/100;
+       this.computePrice(key);
+
 }
   this.textInQuantity = function(key,weight,index){
    var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
@@ -595,24 +597,39 @@ $scope.submitOrder = function(){
     
     $scope.getPrice = function(key){
         //
-        var type=$scope.selectedItem;
-//        var shopName = "";
-//        var tin = "";
-//        key='10kgLalithaBrown';
-        var arrayName = type + 'PriceArray';
-      //  var orderContext = shop.orderContext; //orderContext = agent/outlet/user
-        var orderContext = 'agent';
+        var type=$scope.selectedItem; var shopContext = 'Agent';
+
+        if(window.localStorage.isAgent=='true')
+            shopContext = 'Agent';
+        else
+            shopContext = 'Outlet';
+        
+             var arrayName = type + 'PriceArray';
+       
         var price = 'N/A';
-        if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][orderContext])
-            price = $scope[arrayName][key][orderContext];   
+        if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][shopContext])
+            price = $scope[arrayName][key][shopContext];   
             
         return price;
+    }
+    
+    $scope.computePrice = function(key) {
+        var bagElement;
+//    if((index === 0)  || index)
+//        bagElement = document.getElementById(key+"bag"+index);
+//    else
+        bagElement = document.getElementById(key+"bag");
+    
+    var price= this.getPrice(key);
+    var bagNumber =  Number(bagElement.value);
+    document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
+        
     }
     
     var earlySelectedShop = {};
     
     $scope.getItemsPrice = function(){
-        var areaId = "areaId";
+        var areaId = 'VIZAG_RURAL_AP';
         var areaRef = dbRef.child('priceList/'+ areaId);
         areaRef.once('value').then(function(areaSnapshot){
             var productsList = areaSnapshot.val();

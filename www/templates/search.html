@@ -1,14 +1,14 @@
 <ion-view view-title="SRI LALITHA ENTERPRISES" ng-init="init();">
   <ion-content>
       
-      <div class="card" ng-show="isAgent" ng-cloak style="margin-top: 20px;">
+      <div class="card" ng-show="isAgent" ng-cloak style="margin-top: 8%;height:8%">
           <div class="row">
-              <div class="col" ng-show="shopDetail.name" style="padding-top: 10px;text-align: center;">
-                  {{shopDetail.name}}/{{shopDetail.tin}}
+              <div class="col" ng-show="shopDetail.name" style="padding-top: 10px;text-align: left;">
+                  {{shopDetail.name}} / {{shopDetail.tin}}
               </div>
-              <div class="col" >
+              <div class="col" style="padding: 0" >
                  
-                      <button class="button button-positive" style="float:right" ng-click="showShopPopUp();">
+                      <button class="button button-positive" style="float:right;width: 62%" ng-click="showShopPopUp();">
                         Select Shop
                       </button>
                   
@@ -19,12 +19,12 @@
               {{shop.name}}
           </div>  -->
       </div>
-      <div class="card" ng-show="!isAgent">
+<!--      <div class="card" ng-show="!isAgent">
           Shop Name :- {{shopDetail.name}}
           Tin Number :- {{shopDetail.tin}}
-      </div>
+      </div>-->
       
-    <div class="button-bar padding">
+    <div class="button-bar padding" style="margin-top: 6%">
       <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:135px;background-color:lightgray;position:relative;">
@@ -44,8 +44,7 @@
                 </p>
               </div>
               <div class="row text-left" style="padding:0;">
-                    <p id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%">
-                        &#8377;1250</p>
+                    <p id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%;font-weight: 900;">&#8377;{{getPrice(key)}}</p>
               </div>
                   
             </div>
@@ -71,6 +70,9 @@
                   <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusBag(key,this.value.master_weight);">
                       <i class="icon ion-minus-circled" style="float:right;"></i>
                   </div>-->
+              </div>
+                <div class="row" style="position:relative;background-color: lightgray;margin-top: 10%">
+                <p style="font-weight: 900;font-style: italic" id="{{key}}computedPrice"></p>
               </div>
             </div>
             <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
