@@ -3,7 +3,7 @@
       
       <div class="card" ng-show="isAgent" ng-cloak style="margin-top: 8%;height:8%">
           <div class="row">
-              <div class="col" ng-show="shopDetail.name" style="padding-top: 10px;text-align: left;">
+              <div class="col-67" ng-show="shopDetail.name" style="padding-top: 10px;text-align: left;">
                   {{shopDetail.name}} / {{shopDetail.tin}}
               </div>
               <div class="col" style="padding: 0" >
@@ -32,14 +32,14 @@
             <div class = "col col-20" style="height:100%;">
               <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image" style="height:100%;max-width: 100%;"/>
             </div>
-            <div class = "col" >
+            <div class = "col col-40" >
               <div class="row text-left" style="padding:0;">
                   <p style="text-align: left;padding:0;" id="{{key}}name">
                       <b>{{value.name.toUpperCase()}}</b>
                   </p>
               </div>
               <div class="row text-left" style="padding:0;">
-                <p style="font-style: italic;padding:0;margin-top: 3px">
+                <p style="font-style: italic;padding:0;margin-top: 3px;font-weight:200">
                     Master Weight: {{value.master_weight}}
                 </p>
               </div>
@@ -48,22 +48,20 @@
               </div>
                   
             </div>
-            <div class="col" style="height:50px;padding:0px;margin-top: 10px;margin-left: ">
-              <div class="row" style="position:relative;background-color: lightgray;">
+            <div class="col" style="height:50px;padding:0px;">
+              <div class="row" >
                   <span>Quintals</span>
-                <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
-                       style="text-align:center;width:100%;border-bottom:1px solid black;margin-left: 10px;margin-top: -12px;background-color: lightgray" placeholder="Quintals"/>
-  <!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addQuantity(key,this.value.master_weight);">
-                      <i class="icon ion-plus-circled"></i>
-                  </div>
-                  <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusQuantity(key,this.value.master_weight);">
-                      <i class="icon ion-minus-circled" style="float:right;"></i>
-                  </div>-->
               </div>
-              <div class="row" style="position:relative;background-color: lightgray;margin-top: 15%">
+                  <div class="row">
+                <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
+                       style="text-align: center;width:50%;border-bottom:1px solid black;background-color: whitesmoke" placeholder="Quintals"/>
+                  </div>
+              <div class="row" style="margin-top: 2%">
                 <span>Bags</span>
+              </div>
+            <div class="row">
                 <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="Bags"
-                       style="text-align:center;width:100%;margin-left: 35px;margin-top: -12px;border-bottom:1px solid black;background-color: lightgray" ng-keyup="textInBag(key,this.value.master_weight);"/>
+                       style="text-align: center;width:50%;border-bottom:1px solid black;background-color: whitesmoke" ng-keyup="textInBag(key,this.value.master_weight);"/>
   <!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight);">
                       <i class="icon ion-plus-circled"></i>
                   </div>
@@ -71,16 +69,26 @@
                       <i class="icon ion-minus-circled" style="float:right;"></i>
                   </div>-->
               </div>
-                <div class="row" style="position:relative;background-color: lightgray;margin-top: 10%">
-                <p style="font-weight: 900;font-style: italic" id="{{key}}computedPrice"></p>
-              </div>
             </div>
-            <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
+<!--                <div class="row" style="position:relative;background-color: lightgray;margin-top: 10%">
+                <p style="font-weight: 900;font-style: italic" id="{{key}}computedPrice"></p>
+              </div>-->
+<div class="col-10">
+    <div class="row">
+         <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
               style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:darkgray;">
             </button>
-        </div>
-    </div> 
+    </div>
+    <div class="row">
+            <p style="font-weight: 900;padding-top:10px;padding-right:10px;position:absolute;bottom:0px;right:0px;height:50px;" id="{{key}}computedPrice"></p>
+    </div>
 
+   
+    
+</div>
+            
+        </div>
+    </div>
   </ion-content>
      
     <ion-footer-bar align-title="center">

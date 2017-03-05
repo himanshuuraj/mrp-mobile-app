@@ -45,7 +45,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         var initWeight = element.value;
         if(initWeight)
             initWeight = parseInt(initWeight);
-        element.value = initWeight + weight;
+        element.value = initWeight + weight/100;
         if(index == undefined)
             this.textInQuantity(key,masterWeight);
         else
@@ -61,7 +61,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     var initWeight = element.value;
     if(initWeight)
         initWeight = parseInt(initWeight);
-    var finalWeight = initWeight - weight;
+    var finalWeight = initWeight - weight/100;
     if(finalWeight < 0)
         return;
     element.value = finalWeight;
@@ -96,6 +96,18 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         this.textInBag(key,master_weight);
     }
 };
+var computePrice = this.computePrice = function(key,index) {
+        var bagElement;
+    if((index === 0)  || index)
+        bagElement = document.getElementById(key+"bag"+index);
+    else
+        bagElement = document.getElementById(key+"bag");
+    
+    var price= this.getPrice(key);
+    var bagNumber =  Number(bagElement.value);
+    document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
+        
+  };
   this.textInBag = function(key,master_weight,index){
     var weight =  master_weight.getWeight();
     var bagElement;
@@ -108,9 +120,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         document.getElementById(key+"quantity"+index).value = (bagNumber * weight)/100 ;
     else
         document.getElementById(key+"quantity").value = (bagNumber * weight)/100;
-       this.computePrice(key);
+   // computePrice(key,index);
 
-}
+};
+
+    
+    
+    
   this.textInQuantity = function(key,weight,index){
    var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
    if((index === 0)  || index)
@@ -343,12 +359,22 @@ $scope.submitOrder = function(){
     $scope.minusQuantity = loginCred.minusQuantity
     $scope.addBag = loginCred.addBag;
     $scope.minusBag = loginCred.minusBag;
-    $scope.textInBag = loginCred.textInBag;
-     $scope.textInQuantity = loginCred.textInQuantity;
      var addToCartElement = document.getElementById("addToCartLogo");
      var userInfo = {};
      if(window.localStorage.userInfo)
         userInfo = JSON.parse(window.localStorage.userInfo);
+    $scope.textInBag = function(key,master_weight,index){
+        var x = loginCred.textInBag;
+        x(key,master_weight,index);
+        $scope.computePrice(key);
+    };
+     $scope.textInQuantity = function(key,master_weight,index){
+        var x = loginCred.textInQuantity;
+        x(key,master_weight,index);
+        $scope.computePrice(key);
+    };
+             
+    
      $scope.init = function(){
       //TODO - change this to call everytime shop is changed
         $scope.getItemsPrice();
@@ -613,14 +639,14 @@ $scope.submitOrder = function(){
         return price;
     }
     
-    $scope.computePrice = function(key) {
+    $scope.computePrice = function(key,index) {
         var bagElement;
-//    if((index === 0)  || index)
-//        bagElement = document.getElementById(key+"bag"+index);
-//    else
+    if((index === 0)  || index)
+        bagElement = document.getElementById(key+"bag"+index);
+    else
         bagElement = document.getElementById(key+"bag");
     
-    var price= this.getPrice(key);
+    var price= $scope.getPrice(key);
     var bagNumber =  Number(bagElement.value);
     document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
         
@@ -634,9 +660,12 @@ $scope.submitOrder = function(){
         areaRef.once('value').then(function(areaSnapshot){
             var productsList = areaSnapshot.val();
             console.log("Fetched list of prices for selected area" + productsList);
+            window.localStorage.brokenPriceArray=JSON.stringify(productsList.broken);
             $scope.brokenPriceArray = productsList.broken;
-            $scope.ravvaPriceArray = productsList.ravva;
-            $scope.ricePriceArray = productsList.rice;
+            window.localStorage.ravvaPriceArray=JSON.stringify(productsList.ravva);
+                    $scope.ravvaPriceArray = productsList.ravva;
+            window.localStorage.ricePriceArray=JSON.stringify(productsList.rice);
+                    $scope.ricePriceArray = productsList.rice;
             $scope.getProductItems();
 
         }).catch(function(){
@@ -1093,38 +1122,6 @@ $scope.submitOrder = function(){
     $scope.deliveryArray = {};
     var selectedLorrySize = $scope.selectedLorrySize = 25;
     var progressBarElement = document.getElementById("progressBar");
-//    $scope.submitOrder = function(){
-//            
-//        var x = {};
-//        angular.forEach($scope.cartArray,function(item,index){
-//            x[index] = item;
-//            delete x[index].$$hashKey;
-//        });
-//        console.log(x);
-//        var newOrder = {
-//                userid : window.localStorage.userId,
-//                orderId : "2016",
-//                time : new Date().getTime(),
-//                userName : userInfo.name,
-//                district : userInfo.shops[0].district,
-//                city : userInfo.shops[0].city,
-//                state : userInfo.shops[0].state,
-//                status : "in-cart",
-//                shops : {
-//                        0 : {
-//                                name : userInfo.shops[0].name,
-//                                TIN : userInfo.shops[0].tin,
-//                                items : x
-//                        }
-//                }
-//
-//        }
-//        var promise = ordersRef.push(newOrder);
-//                promise.then(function(e) {
-//                    showPopUp("submitted");
-//        }).catch(e => console.log(e))
-//    }
-    
     var totalQuantity = $scope.totalQuantity = 0;
     var earlySelectedLorry;
     
@@ -1293,12 +1290,139 @@ $scope.submitOrder = function(){
        return $scope.deliveryArray[selectedLorrySize] || [];
     };
     
-    $scope.addQuantity = loginCred.addQuantity;
-    $scope.minusQuantity = loginCred.minusQuantity
-    $scope.addBag = loginCred.addBag;
-    $scope.minusBag = loginCred.minusBag;
-    $scope.textInBag = loginCred.textInBag;
-    $scope.textInQuantity = loginCred.textInQuantity;
+    $scope.addQuantity = function(key, value, index){
+        
+         var weight = value.master_weight.getWeight();
+        var element;
+        if(index != undefined)
+              element  = document.getElementById(key+"quantity" + index);
+        else
+              element = document.getElementById(key+"quantity");
+        var initWeight = element.value;
+        if(initWeight)
+            initWeight = parseFloat(initWeight);
+        element.value = initWeight + weight/100;
+        if(index == undefined)
+            $scope.textInQuantity(key,value);
+        else
+            $scope.textInQuantity(key,value,index);
+        
+       
+
+    }
+    
+     $scope.minusQuantity = function(key, value, index){
+         
+         var weight = value.master_weight.getWeight();
+    var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"quantity" + index);
+    else
+          element = document.getElementById(key+"quantity");
+    var initWeight = element.value;
+    if(initWeight)
+        initWeight = parseFloat(initWeight);
+    var finalWeight = initWeight - weight/100;
+    if(finalWeight < 0)
+        return;
+    element.value = finalWeight;
+   if((index === 0)  || index)
+        $scope.textInQuantity(key,value,index);
+    else
+        $scope.textInQuantity(key,value);
+        
+        
+       
+    }
+     $scope.addBag = function(key, value, index){
+        var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"bag" + index);
+    else
+          element = document.getElementById(key+"bag");
+    element.value = ++element.value;
+    if((index === 0)  || index)
+        $scope.textInBag(key,value,index);
+    else
+        $scope.textInBag(key,value);
+    
+    }
+     $scope.minusBag = function(key, value, index){
+         var element;
+    if((index === 0)  || index)
+          element  = document.getElementById(key+"bag" + index);
+    else
+          element = document.getElementById(key+"bag");
+    if(!(element.value < 1)){
+     element.value = --element.value;
+     if((index === 0)  || index)
+        $scope.textInBag(key,value,index);
+    else
+        $scope.textInBag(key,value);
+
+    }
+     }
+    
+     $scope.textInBag = function(key,value,index){
+         var weight =  value.master_weight;
+    var bagElement;
+    if((index === 0)  || index)
+        bagElement = document.getElementById(key+"bag"+index);
+    else
+        bagElement = document.getElementById(key+"bag");
+    var bagNumber = parseInt(bagElement.value);
+    if((index === 0)  || index)
+        document.getElementById(key+"quantity"+index).value = (bagNumber * weight.getWeight())/100 ;
+    else
+        document.getElementById(key+"quantity").value = (bagNumber * weight.getWeight())/100;
+        $scope.computePrice(key,value.productId,index,value.itemType);
+    };
+     $scope.textInQuantity = function(key,value,index){
+       var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
+       var weight=value.master_weight;
+    if((index === 0)  || index)
+        quantityElement = document.getElementById(key+"quantity"+index);
+    else
+        quantityElement = document.getElementById(key+"quantity");
+   var quantity = Number(quantityElement.value);
+   var bag;
+   if((index === 0)  || index)
+        bag = document.getElementById(key+"bag"+index);
+    else
+        bag = document.getElementById(key+"bag");
+         weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
+         bag.value =  quantity*100/weight;
+        $scope.computePrice(key,value.productId,index,value.itemType);
+    };
+    $scope.computePrice = function(key,productId,index,type) {
+        var bagElement;
+    if((index === 0)  || index)
+        bagElement = document.getElementById(key+"bag"+index);
+    else
+        bagElement = document.getElementById(key+"bag");
+    
+    var price= $scope.getPrice(productId,type);
+    var bagNumber =  Number(bagElement.value);
+    document.getElementById(key+"computedPrice"+index).innerHTML="&#8377;"+bagNumber*price;
+        
+    }
+    
+    $scope.getPrice = function(key,type){
+          var shopContext = 'Agent';
+        if(window.localStorage.isAgent=='true')
+            shopContext = 'Agent';
+        else
+            shopContext = 'Outlet';     
+             var arrayName = type + 'PriceArray';
+       
+        var price = 'N/A';
+        var obj = JSON.parse(window.localStorage[arrayName]);
+        if(obj && obj[key] && obj[key][shopContext])
+            price = obj[key][shopContext];   
+            
+        return price;
+    }
+    
     $scope.getImageUrl = loginCred.getImageUrl;
     
     $scope.addToDelivery = function(key,value,index){
