@@ -160,6 +160,10 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         window.sessionStorage.clear();
         window.location.hash = "#/app/login";//"/app.login";
     };
+
+    $scope.continue = function(){
+      $rootScope.$broadcast("continue",{});
+    };
 })
 
 .controller('summaryCtrl', function($scope,$http,loginCred,$state) {
@@ -405,6 +409,10 @@ $scope.submitOrder = function(){
             $scope.cartArray[$scope.shopDetail.tin] = [];
     };
     
+    $scope.$on("continue",function(){
+      $scope.proceedToSaveInCart();
+    });
+
     String.prototype.getWeight = function(){
         var x = this.toString();
         return parseInt(x.substring(0,x.length-2));
@@ -631,7 +639,6 @@ $scope.submitOrder = function(){
         shopInfo[shop.tin] = shop;
         window.localStorage.shopInfo = JSON.stringify(shopInfo);
         $timeout(function(){updateUI();},0);
-        //$scope.shopSearchElement = shop.name;
     };
     
     var deleteUI = function(){
