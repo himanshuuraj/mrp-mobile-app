@@ -457,7 +457,7 @@ $scope.submitOrder = function(){
             $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
             $scope.cartArray[$scope.shopDetail.tin].push(x);
             addToCartNumber++;
-            addToCartElement.innerHTML = addToCartNumber.toString();
+            doAnimation(key);
         }else{
             tickElement.style.backgroundColor = "darkgray";
             tickElement.className='button icon ion-plus-round';
@@ -471,11 +471,10 @@ $scope.submitOrder = function(){
             }
             if(addToCartNumber > 0)
               addToCartNumber--;
-            addToCartElement.innerHTML = addToCartNumber.toString();
         }
         window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
         console.log($scope.cartArray);
-        doAnimation(key);
+        addToCartElement.innerHTML = addToCartNumber.toString();
     };
 
     var cln;
@@ -530,6 +529,7 @@ $scope.submitOrder = function(){
         }
     };
     function doAnimation(key){
+       addToCartElement.className = "button button-icon button-clear ion-ios-cart";
        var imageButton = document.getElementById(key+"image");
        cln = imageButton.cloneNode(true);
        document.body.appendChild(cln);
@@ -561,6 +561,7 @@ $scope.submitOrder = function(){
               count = 0;
               $interval.cancel(promise);
               document.body.removeChild(cln);
+              addToCartElement.className += " shakeAnimation";
             }
        },20);
     }
