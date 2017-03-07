@@ -42,14 +42,14 @@
             <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:150px;background-color: whitesmoke">
                  <!--here-->
             <div class = "row" style="height:15%;">
-              <div class="col text-left" style="margin:0;padding-left:4%;">
+              <div class="col col-67 text-left" style="margin:0;padding-left:4%;">
                   <p style="text-align: left;padding:0;padding:0;font-weight: 500" id="{{key}}name">
                       {{value.name.toUpperCase()}}
                   </p>
               </div>
               <div class="col text-left" style="padding:0;font-weight: 100">
                 <p style="font-style: italic;padding:0;margin-top: 3px">
-                    Master Weight: {{value.master_weight}}
+                    Master Wt: {{value.master_weight}}
                 </p>
               </div>
             </div>
@@ -66,7 +66,7 @@
                          </div>
                     <div class="row">
                           <input type="number" id="{{key}}quantity{{$index}}" ng-keyup="textInQuantity(key,this.value,$index);" ng-value="value.quantity"
-                                     style="text-align:center;width:22%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
+                                     style="text-align:center;width:25%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
                              
                     </div>
                     <div class="row">
@@ -87,7 +87,7 @@
                     </div>
                     <div class="row">
                            <input type="number" id="{{key}}bag{{$index}}" ng-keyup="textInBag(key,this.value,$index);"  ng-value="value.bag"
-                                     style="text-align:center;width:22%;background-color: whitesmoke;border-bottom:1px solid black;"/>
+                                     style="text-align:center;width:25%;background-color: whitesmoke;border-bottom:1px solid black;"/>
                              
                     </div>
                     <div class="row">

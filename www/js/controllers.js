@@ -190,98 +190,7 @@ var computePrice = this.computePrice = function(key,index) {
                  return;
      }
     $scope.init = function(){
-        $scope.cartArray = {
-  "shopDetail" : [ {
-    "items" : {
-      "ravva" : {
-        "1KGLalithaBlue" : {
-          "bags" : 30,
-          "discount_price" : 200,
-          "name" : "1 KG Super Fine Ravva",
-          "price" : 120,
-          "weight" : 10
-        },
-        "5KGLalithaGreen" : {
-          "bags" : 80,
-          "discount_price" : 150,
-          "name" : "5 KG Lalitha Green Ravva",
-          "price" : 120,
-          "weight" : 10
-        }
-        
-      },
-      "rice" : {
-        "10KGLalithaBrown" : {
-          "bags" : 500,
-          "discount_price" : 4300,
-          "name" : "10KG Lalitha Brown Rice",
-          "price" : 4500,
-          "weight" : 20
-        },
-        "5KGLalithaGreen" : {
-          "bags" : 400,
-          "discount_price" : 2200,
-          "name" : "5KG Lalitha Green Rice",
-          "price" : 2300,
-          "weight" : 25
-        },
-        "10KGLalithaPink" : {
-          "bags" : 350,
-          "discount_price" : 2200,
-          "name" : "10KG Lalitha Pink Rice",
-          "price" : 2500,
-          "weight" : 250
-        }
-      }
-    },
-    "name" : "Ram Kirana Stores",
-    "totalShopPrice" : "9820",
-    "totalShopWeight" : "240",
-    "address" : "Bellandur bangalore",
-    "area":"BANGALORE_RURAL",
-    "city":"Bangalore"
-  }, {
-    "items" : {
-      "ravva" : {
-        "1KGLalithaBlue" : {
-          "bags" : 30,
-          "discount_price" : 200,
-          "name" : "1 KG Super Fine Ravva",
-          "price" : 120,
-          "weight" : 10
-        }
-      },
-      "rice" : {
-        "10KGLalithaBrown" : {
-          "bags" : 500,
-          "discount_price" : 4300,
-          "name" : "10KG Lalitha Brown Rice",
-          "price" : 4500,
-          "weight" : 20
-        },
-        "5KGLalithaGreen" : {
-          "bags" : 400,
-          "discount_price" : 2200,
-          "name" : "5KG Lalitha Green Rice",
-          "price" : 2300,
-          "weight" : 25
-        }
-      }
-    },
-    "name" : "Tom Kirana Stores",
-    "totalShopPrice" : "9820",
-    "totalShopWeight" : "240",
-    "address" : "Sarjapur bangalore",
-    "area":"BANGALORE_RURAL",
-    "city":"Bangalore"
-    
-  }],
-  "grossPrice" : "35700",
-    "totalPrice" : "34500",
-    "totalWeight" : "14500",
-    "discountAmount" : "1200"
-}
-
+        $scope.cartArray = JSON.parse(window.localStorage.cartInfo);
 $scope.shopArray=$scope.cartArray.shopDetail;
 
 $scope.submitOrder = function(){
@@ -479,7 +388,8 @@ $scope.submitOrder = function(){
             x["itemType"] = $scope.selectedItem;
             x["quantity"] = quantity;
             x["bag"] = bag;
-            x["price"] = "Rs 1200";
+            var priceELement = document.getElementById(key+"computedPrice");
+            x["price"] = priceELement.innerHTML.split(1)[1] ;
             delete x.description;
             delete x.available;
             $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
@@ -1225,14 +1135,15 @@ $scope.submitOrder = function(){
         console.log(value);
         value.quantity = document.getElementById(key+"quantity"+index).value;
         value.bag = document.getElementById(key+"bag"+index).value;
+        value.price = document.getElementById(key+"computedPrice"+index).innerText.trim();
         x[key] = value;
         var selectedLorrySize = $scope.selectedLorrySize;
         if(!$scope.deliveryArray[selectedLorrySize]){
             $scope.deliveryArray[selectedLorrySize] = {};
             $scope.deliveryArray[selectedLorrySize][key] = [];
         }
-        if(!$scope.deliveryArray[selectedLorrySize][key])
-            $scope.deliveryArray[selectedLorrySize][key] = [];
+//        if(!$scope.deliveryArray[selectedLorrySize][key])
+//            $scope.deliveryArray[selectedLorrySize][key] = [];
         value["index"] = index;
         $scope.deliveryArray[selectedLorrySize][key].push(value);
         totalQuantity += parseInt(value.quantity);
@@ -1447,12 +1358,14 @@ $scope.submitOrder = function(){
         var grossPrice =0;
         var overAllPrice = 0;
         var overAllWeight = 0;
+
       	for(var key in $scope.deliveryArray[$scope.selectedLorrySize]){
       		var shopOrder = $scope.deliveryArray[$scope.selectedLorrySize][key] || [];
       		var shopOrderLength = shopOrder.length;
       		var totalShopPrice = 0;
-      		var totalWeight = 0;
-      		var x = {"items":{}};
+      		var totalWeight = 0;            var x = {"items":{}};
+
+                
       		for(var index = 0; index < shopOrderLength; index++){
       			var shopOrderItem = shopOrder[index];
       			var y = {};
@@ -1462,8 +1375,11 @@ $scope.submitOrder = function(){
       			shopOrderItem.quantity = parseInt(shopOrderItem.quantity);
       			y["price"] = shopOrderItem.price;
       			y["weight"] = shopOrderItem.quantity;
-      			x.items[shopOrderItem.itemType] = x[shopOrderItem.itemType] || {};
-      			x.items[shopOrderItem.itemType][shopOrderItem.productId] = y;
+      			x.items[shopOrderItem.itemType] = x.items[shopOrderItem.itemType] || {};
+                        var t = shopOrderItem.itemType;
+      			//var b = x.items[t];
+                        var pid = shopOrderItem.productId;
+                        x.items[t][pid] = y;
       			totalShopPrice += shopOrderItem.price;
       			totalWeight += shopOrderItem.quantity;
       		}
@@ -1477,9 +1393,9 @@ $scope.submitOrder = function(){
       	}
                     cartInfo["grossPrice"] = cartInfo["totalPrice"] = overAllPrice;
                     cartInfo["totalWeight"] = overAllWeight;
-                    cartInfo["cart"] = arr;
+                    cartInfo["shopDetail"] = arr;
       	console.log(cartInfo);
-                    window.localStorage.carInfo = JSON.stringify(cartInfo);
+                    window.localStorage.cartInfo = JSON.stringify(cartInfo);
         window.location.hash = "#/app/summary";
     }
 
