@@ -210,7 +210,7 @@ $scope.submitOrder = function(){
           delete cartArray.shopDetail[index].$$hashKey;
 
     var newOrder = {
-                userid : window.localStorage.userId,
+                uid : window.localStorage.uid,
                 orderId : orderId,
                 time :  now.getTime(),
                 userName : userInfo.name,
@@ -235,7 +235,7 @@ $scope.submitOrder = function(){
                  return;
      }
     var earlySelectedTab = "rice";
-    var userId = window.localStorage.userId;
+    var uid = window.localStorage.uid;
     var existingShops;
     var dbRef = loginCred.dbRef;
     $scope.shopDetail = {name : "",tin : ""};
@@ -248,7 +248,7 @@ $scope.submitOrder = function(){
     if(window.localStorage.shopInfo)
         shopInfo = JSON.parse(window.localStorage.shopInfo);
     var getShopData = function(){
-        var shopsRef = dbRef.child('users/'+userId + '/shops');
+        var shopsRef = dbRef.child('users/'+uid + '/shops');
         shopsRef.once('value', function(snap) {
                      existingShops = snap.val();
                      if(!$scope.isAgent){
@@ -667,7 +667,7 @@ $scope.submitOrder = function(){
   var showPopUp = loginCred.showPopup;
   $scope.isChecked = true;
   var userInfo;
-  var userId;
+  var uid;
   $scope.signUpData = {
       isAgent : true,
       shop :{
@@ -694,8 +694,12 @@ $scope.submitOrder = function(){
      
       var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
         promise.then(function(e) {
-                       var usersRef = dbRef.child('users/'+ e.uid);
-                       userId = window.localStorage.userId = e.uid;
+            
+                      var authMobileRef = dbRef.child('authMobileMap/'+ e.uid);
+                      authMobileRef.once('value').then(function(data){
+                         var uid = data.val();
+                            var usersRef = dbRef.child('users/'+ uid);
+                       uid = window.localStorage.uid = uid;
                        usersRef.once('value').then(function(data){
                            data = data.val();
                            console.log(data);
@@ -718,6 +722,9 @@ $scope.submitOrder = function(){
                                $scope.$apply();
                            }
                        }).catch(function(e){console.log(e)});	
+                      }).catch(function(e){console.log(e)});	
+                      
+                     
         }).catch(
                 function(e){
                     showPopUp("Username password doesnt match");
@@ -732,18 +739,22 @@ $scope.submitOrder = function(){
       }
       var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
       promise.then(function(e) {
-         var userId=e.uid;
- 	 var usersRef = dbRef.child('users/' + userId);
-                     window.localStorage.userId = userId;
-                    usersRef.once('value', function(snap){
-                           if(snap){
-                               $scope.showUserInputField = true;
-                               $scope.$apply();                                   //proceed to load the main page
-                           }else{                             
-                               showPopUp("User could not be created.");
-                               //load the form page to enter profile info
-                           }
-                    });  	
+         var authId=e.uid;
+        window.localStorage.authId = e.uid;
+        $scope.showUserInputField = true;
+        $scope.$apply();  
+         //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
+ 	 var usersRef = dbRef.child('users/' + authId);
+                    // window.localStorage.userId = userId;
+//                    usersRef.once('value', function(snap){
+//                           if(snap){
+//                               
+//                               $scope.$apply();                                   //proceed to load the main page
+//                           }else{                             
+//                               showPopUp("User could not be created.");
+//                               //load the form page to enter profile info
+//                           }
+//                    });  	
  	 }).catch(e => console.log(e))
       
   };
@@ -819,9 +830,9 @@ $scope.submitOrder = function(){
   }
   
   $scope.fillSignUpData = function(){
+      var authId = window.localStorage.authId;
       if(!validateField())
           return;
-      var usersRef = dbRef.child('users/'+ window.localStorage.userId );
         var foo = {};
             foo = {
                     email : $scope.userData.username,
@@ -830,6 +841,7 @@ $scope.submitOrder = function(){
                     mobile : $scope.signUpData.mobile,
                     isAgent : $scope.signUpData.isAgent,
                     address : $scope.signUpData.address,
+                    authId : authId,
                     shops : [{
                             name: $scope.signUpData.shop.name,
                             proprietor_name : $scope.signUpData.shop.proprietor_name,
@@ -849,6 +861,14 @@ $scope.submitOrder = function(){
              if($scope.signUpData.isAgent){
                 foo.shops = [];
             }
+            var uid = $scope.signUpData.mobile
+            var authIdMobileMapRef = dbRef.child('authMobileMap/' + authId);
+            var promiseFromAuthMobile = authIdMobileMapRef.set(uid);
+            promiseFromAuthMobile.then(function(e){
+                console.log("Successfully added mobile mapping to the auth id");
+                window.localstorage.uid=uid;
+            }).catch(e => console.log("Could not add mobile mapping"));
+            var usersRef = dbRef.child('users/'+ uid );
             var promise = usersRef.set(foo);
             promise.then(function(e) {
                     showPopUp("Please Login Again");
@@ -980,11 +1000,11 @@ $scope.submitOrder = function(){
       var shopLength = userInfo.shops.length;
       for(var index = 0; index < shopLength; index++)
           delete userInfo.shops[index].$$hashKey;
-      userId = window.localStorage.userId;
+      var uid = window.localStorage.uid;
       var dbRef = loginCred.dbRef;
-      var usersRef = dbRef.child('users/'+ userId);
+      var usersRef = dbRef.child('users/'+ uid);
       var foo = {};
-      foo[userId] = userInfo;
+      foo[uid] = userInfo;
       var promise = usersRef.update(userInfo);
       promise.then(function(e) {
                 console.log( e);
@@ -1015,7 +1035,7 @@ $scope.submitOrder = function(){
                  alert("User not activated. Please contact administrator");
                  return;
      }
-     var userId = window.localStorage.userId;
+     var uid = window.localStorage.uid;
      var userInfo = JSON.parse(window.localStorage.userInfo);
      var dbRef = loginCred.dbRef;
      var ordersRef =  dbRef.child('orders');

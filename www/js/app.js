@@ -64,15 +64,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-//    .state('app.playlists', {
-//      url: '/playlists',
-//      views: {
-//        'menuContent': {
-//          templateUrl: 'templates/playlists.html',
-//          controller: 'PlaylistsCtrl'
-//        }
-//      }
-//    })
+
     .state('app.login', {
       url: '/login',
       views: {
@@ -83,15 +75,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     });
 
-//  .state('app.single', {
-//    url: '/playlists/:playlistId',
-//    views: {
-//      'menuContent': {
-//        templateUrl: 'templates/playlist.html',
-//        controller: 'PlaylistCtrl'
-//      }
-//    }
-//  });
   
   $ionicConfigProvider.scrolling.jsScrolling(false);
  
