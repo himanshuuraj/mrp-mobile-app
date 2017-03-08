@@ -682,11 +682,22 @@ $scope.submitOrder = function(){
         }, function (error) {
             console.log("The toast was not shown due to " + error);
         });
-    }
+    };
     
-  $scope.signIn = function(){
-      //$scope.showUserInputField = true;
-      if(!$scope.userData.password || !$scope.userData.username){
+    $scope.onClickAnchorTag = function() {
+        var anchorText = document.getElementById('toggle').text;
+        if(anchorText=='SignUp'){
+            document.getElementById('toggle').text='Login';
+             document.getElementById('myOption').textContent = 'SignUp';
+        }else{
+             document.getElementById('toggle').text='SignUp';
+                         document.getElementById('myOption').textContent = 'Login';
+        }
+    };
+    $scope.onClickButton = function() { 
+    var buttonText = document.getElementById('myOption').textContent;
+    if(buttonText == 'Login') {
+        if(!$scope.userData.password || !$scope.userData.username){
           //showPopUp("Please fill the required info");
           $scope.showToast('this is a test', 'long', 'center');
           return;
@@ -730,7 +741,34 @@ $scope.submitOrder = function(){
                     showPopUp("Username password doesnt match");
                     console.log(e);
                 });
-  };
+    }else {
+        if(!$scope.userData.password || !$scope.userData.username){
+          showPopUp("Please fill the required info");
+          return;
+      }
+      var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
+      promise.then(function(e) {
+         var authId=e.uid;
+        window.localStorage.authId = e.uid;
+        $scope.showUserInputField = true;
+        $scope.$apply();  
+         //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
+ 	 var usersRef = dbRef.child('users/' + authId);
+                    // window.localStorage.userId = userId;
+//                    usersRef.once('value', function(snap){
+//                           if(snap){
+//                               
+//                               $scope.$apply();                                   //proceed to load the main page
+//                           }else{                             
+//                               showPopUp("User could not be created.");
+//                               //load the form page to enter profile info
+//                           }
+//                    });  	
+ 	 }).catch(e => console.log(e))
+      
+        
+    }
+    }
   
   $scope.signUp = function(){
       if(!$scope.userData.password || !$scope.userData.username){

@@ -20,70 +20,100 @@
             </div>
             <div class="row">
                 <div class="col">
-                  <button class="button button-block button-positive" ng-click="signIn()" style="background-color: #99b3ff;">Login</button>
-              </div>
-            </div>
-          
+                    <span style="color: white"><input type="checkbox">Remember me</span>
+                  <button id="myOption" value="login" class="button button-block button-positive" ng-click="onClickButton()" style="background-color: #99b3ff">Login</button>
+                  <a href="#" id="toggle" style="color: white; text-decoration: none" ng-click="onClickAnchorTag()">SignUp</a>
+                </div>
+      </div>
       </div>
       
       
-      <div  style="position:fixed;bottom:10%;display:block;width:60%;left:20%;">
-             <button class="button button-block button-positive" ng-click="signUp()" style="background-color: #99b3ff;">SignUp</button>
-       </div>
+<!--      <div  style="position:fixed;bottom:10%;display:block;width:60%;left:20%;">
+             <button class="button button-block button-positive" value="signUp" ng-click="signUp()" style="background-color: #99b3ff;">SignUp</button>
+       </div>-->
   </ion-content>
     
     
     <ion-content ng-show="showUserInputField" style="background-color: white;" id="abc">
       <div class="padding" >
           <div class="list list-inset">
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Name" ng-model="signUpData.name">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="tel" placeholder="Mobile Number" ng-model="signUpData.mobile">
               </label>
+              </div>
+             
                    <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)">is Agent</ion-checkbox>
+                   <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Address" ng-model="signUpData.address">
               </label>
+                   </div>
           </div>
           <div class="padding" ng-hide="isChecked">
                   <center>Shop</center>
               </div>
           <div class="list list-inset" ng-hide="isChecked">
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Name" ng-model="signUpData.shop.name">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Proprietor Name" ng-model="signUpData.shop.proprietor_name">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Mobile" ng-model="signUpData.shop.mobile">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Pan" ng-model="signUpData.shop.pan">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Tin" ng-model="signUpData.shop.tin">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="State" ng-model="signUpData.shop.state">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="District" ng-model="signUpData.shop.district">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="City" ng-model="signUpData.shop.city">
               </label>
+              </div>
+              <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Address" ng-model="signUpData.shop.address">
               </label>
+              </div>
+                  <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Tax Type "ng-model="signUpData.shop.tax_id.type">
               </label>
+                  </div>
+                      <div class="row" style="margin-top: 2%">
               <label class="item item-input">
                   <input type="text" placeholder="Tax Value" ng-model="signUpData.shop.tax_id.value">
               </label>
+                      </div>
             </div>
           <button class="button button-block button-positive" ng-click="fillSignUpData()">Submit</button>
       </div>
