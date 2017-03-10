@@ -229,6 +229,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             alert("Your order has been successfully placed");
             window.sessionStorage.removeItem(cartArray);
             window.localStorage.removeItem(cartInfo);
+            window.location.hash = "#/app/search";
         }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
     };
     $scope.showConfirmPopUp = function() {
