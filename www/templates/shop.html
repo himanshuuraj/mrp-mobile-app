@@ -36,130 +36,107 @@
                          <button class="button button-positive" ng-click="showShopInput = false;">Cancel</button>
                   </div>
               </div>
-        
-              <div class="row" style="margin-top: 3px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">NAME :</span>
-                      <span class="star" style="color: red">*</span>
-                   </div>
-                     
-                  <div class="col">
-                      
-                      <label class="item item-input" style="background-color: lightgray">
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Name</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
                   <input type="text" placeholder="Name" ng-model="shop.name">
               </label>
-                      </div>
-                  
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px; float: left">PROPRIETOR NAME :</span>
-                      
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="Proprietor Name" ng-model="shop.proprietor_name">
-              </label>
-                  </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">MOBILE :</span>
-                      <span class="star" style="color: red">*</span>
+        
+                  <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Proprietor Name</strong></span>
+                  <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                  <input type="text" placeholder="Propritor Name" ng-model="shop.proprietorname">
+                  </label>
                   </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
+                  </div>
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Mobile</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
                   <input type="text" placeholder="Mobile" ng-model="shop.mobile">
               </label>
-                      </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">PAN :</span>
-                      
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
+              </div>
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Pan</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
                   <input type="text" placeholder="Pan" ng-model="shop.pan">
               </label>
-                  </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">TIN :</span>
-                      
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
+              </div>
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Tin</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
                   <input type="text" placeholder="Tin" ng-model="shop.tin">
               </label>
+              </div>
+              </div>
+              <div class="row" style="margin-top: 1%">
+                  <div class="col">
+                      <span class="row"><strong>Address</strong></span> 
+                      <div id="shopnumber">
+                      <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                  <input type="text" placeholder="House/Door/Shop Number" ng-model="shop.shopnumber">
+              </label>
+                      </div>
+                      <div id="selectstreet">
+                      <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                           <input type="text" placeholder="Street Name" ng-model="shop.streetname">
+                           </label>
+                      </div>
+                      <div id="selectlandmark">
+                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">   
+                              <input type="text" placeholder="Landmark" ng-model="shop.landmark">
+                       </label>
+                      </div>
+                      <div id="selectarea">
+                      <select value="Area" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
+                          <option value="notselected">Area</option>
+                      </select>
+                      </div>
+                      <div id="selectdistrict">
+                           <select value="Discrict" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
+                          <option value="notselected">District</option>
+                      </select>
+                      </div>
+                      <div id="selectstate">
+                           <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
+                          <option value="notselected" selected>State</option>
+                          <option value="andhra pradesh">Andhra Pradesh</option>
+                          <option value="karnataka">Karnataka</option>
+                          <option value="tamilnadu">Tamilnadu</option>
+                          <option value="telangana">Telangana</option>
+                      </select>
+                      </div>
+                      <div id="selectpin">
+                      <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                           <input type="text" placeholder="Pincode" ng-model="shop.pincode">
+                           </label>
+                      </div>
+                           
                   </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">STATE :</span>
-                      <span class="star" style="color: red">*</span>
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="State" ng-model="shop.state">
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Tax Type</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                  <input type="text" placeholder="Taxtype" ng-model="shop.taxtype">
               </label>
-                  </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">DISTRICT :</span>
-                      <span class="star" style="color: red">*</span>
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="District" ng-model="shop.district">
-              </label>
-                  </div>
               </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">CITY :</span>
-                      <span class="star" style="color: red">*</span>
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="City" ng-model="shop.city">
+              <div class="row" style="margin-top: 1%">
+                   <div class="col">
+                       <span class="row"><strong>Tax Value</strong></span>
+              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
+                  <input type="text" placeholder="Tax Value" ng-model="shop.taxvalue">
               </label>
-                      </div>
-                  </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">ADDRESS :</span>
-                      <span class="star" style="color: red">*</span>
-                      </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="Address" ng-model="shop.address">
-              </label>
-                      </div>
-                  </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">TAX TYPE :</span>
-                      <span class="star" style="color: red">*</span>
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="Tax Type "ng-model="shop.tax_id.type">
-              </label>
-                      </div>
-                  </div>
-              <div class="row" style="margin-top: 1px">
-                  <div class="col-33" style="margin-top: 18px">
-                      <span style="padding-left: 20px">TAX VALUE :</span>
-                      <span class="star" style="color: red">*</span>
-                  </div>
-                  <div class="col">
-                      <label class="item item-input" style="background-color: lightgray">
-                  <input type="text" placeholder="Tax Value" ng-model="shop.tax_id.value">
-              </label>
-                  </div>
+              </div>
               </div>
               </div>
             <div class="padding">
