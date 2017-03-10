@@ -96,7 +96,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         this.textInBag(key,master_weight);
     }
 };
-var computePrice = this.computePrice = function(key,index) {
+  var computePrice = this.computePrice = function(key,index) {
         var bagElement;
     if((index === 0)  || index)
         bagElement = document.getElementById(key+"bag"+index);
@@ -124,9 +124,6 @@ var computePrice = this.computePrice = function(key,index) {
 
 };
 
-    
-    
-    
   this.textInQuantity = function(key,weight,index){
    var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
    if((index === 0)  || index)
@@ -655,7 +652,9 @@ $scope.submitOrder = function(){
    };
    $scope.shopArray = $scope.shopArray || [];
    $scope.filterSearchedArray = function(shop){
-      return shop.name.includes($scope.shopSearchElement.name);
+       if($scope.shopSearchElement.name === "" || $scope.shopSearchElement.name === undefined)
+           return true;
+      return shop.name.includes($scope.shopSearchElement.name.toLowerCase());
   }
 })
 

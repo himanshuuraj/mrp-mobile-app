@@ -15,20 +15,12 @@
                   
               </div>
           </div>
-          
-<!--          <div class="row" ng-repeat="shop in shopArray" ng-click="getShopItem(shop)">
-              {{shop.name}}
-          </div>  -->
       </div>
-<!--      <div class="card" ng-show="!isAgent">
-          Shop Name :- {{shopDetail.name}}
-          Tin Number :- {{shopDetail.tin}}
-      </div>-->
       
     <div class="button-bar padding" style="margin-top: 6%">
       <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
-    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()"  style="height:135px;background-color:lightgray;position:relative;">
+    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="height:135px;background-color:lightgray;position:relative;">
         <div class = "row" style="height:100%;">
             <div class = "col col-20" style="height:100%;">
               <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image" style="height:100%;max-width: 100%;"/>
