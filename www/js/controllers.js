@@ -777,7 +777,7 @@ $scope.submitOrder = function(){
 //                               //load the form page to enter profile info
 //                           }
 //                    });  	
- 	 }).catch(e => console.log(e))
+ 	 }).catch(e => console.log(e));
       
         
     }
@@ -966,6 +966,7 @@ $scope.submitOrder = function(){
   $scope.showShopInput = false;
   var showPopUp = loginCred.showPopup;
   var userId;
+  $scope.editType = false;
   $scope.shop = {
       tax_id : {}
   };
@@ -1024,10 +1025,10 @@ $scope.submitOrder = function(){
           showPopUp('Enter Shop Tin');
           return 0;
       }
-      if(!$scope.shop.state){
+      /*if(!$scope.shop.state){
           showPopUp('Enter Shop State');
           return 0;
-      }
+      }*/
       if(!$scope.shop.district){
           showPopUp('Enter Shop District');
           return 0;
@@ -1054,6 +1055,10 @@ $scope.submitOrder = function(){
   $scope.addNewShop = function(){
       if(!validateShop())
           return;
+      if($scope.editType){
+          $scope.editShop();
+          return;
+      }
       userInfo["shops"] = userInfo["shops"] || [];
       console.log($scope.shop);
       userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
@@ -1074,25 +1079,59 @@ $scope.submitOrder = function(){
       promise.then(function(e) {
                 console.log( e);
                     window.localStorage.userInfo = JSON.stringify(userInfo);
-                    if(type){
+                    if(type == 'add'){
                         showPopUp("Shop added successfully");
-                        $scope.shopArray.push(JSON.parse(JSON.stringify($scope.shop)));
                         $scope.shop = {
                             tax_id : {}
                         };
                         $scope.showShopInput = false;
-                    }else{
+                    }
+                    else if(type == 'edit'){
+                        showPopUp("Shop edited successfully");
+                        $scope.shop = {
+                            tax_id : {}
+                        };
+                        $scope.showShopInput = false;
+                    }
+                    else{
                         showPopUp("Shop deleted successfully");
-                        for(var index = 0; index < $scope.shopArray.length; index++){
+                        /*for(var index = 0; index < $scope.shopArray.length; index++){
                             if($scope.shopArray[index].tin == tin){
                                 $scope.shopArray.splice(index,1);
                                 break;
                             }
-                        }
+                        }*/
                     }
+                    $scope.shopArray = userInfo.shops || [];
+                    $scope.editType = false;
+                    $scope.showShopInput = false
                     $scope.$apply();
+                    window.localStorage.userInfo = JSON.stringify(userInfo);
+
         }).catch(e => showPopUp("Please try again"));
   }
+
+  $scope.showEditBox = function(shop){
+        $scope.shop = shop;
+        console.log(shop);
+        $scope.showShopInput = true;
+        $scope.editType = true;
+  };
+
+  $scope.editShop = function(){
+    console.log(userInfo);
+    var length = userInfo.shops.length;
+    for(var index = 0; index < length; index++){
+        var shop = userInfo.shops[index];
+        if($scope.shop.tin == shop.tin){
+            userInfo.shops[index] = $scope.shop;
+            break;
+        }
+    }
+    saveShop('edit');
+  };
+
+
 })
 
 .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
