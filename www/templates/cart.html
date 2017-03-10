@@ -36,7 +36,7 @@
           <div style="position:absolute;top:0;left:0;background-color: red;height:100%;" id="progressBar"></div>
       </div>-->
       
-      <div class="padding" ng-repeat = "(key,data) in cartArray" ng-drag="true" ng-drag-data="$index" data-allow-transform="true"
+      <div class="padding" ng-repeat = "(key,data) in cartArray"
           style="background-color:lightgray;position:relative;">
       {{key}}
             <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:150px;background-color: whitesmoke">

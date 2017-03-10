@@ -181,59 +181,76 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     };
 })
 
-.controller('summaryCtrl', function($scope,$http,loginCred,$state) {
+.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup) {
     if(window.localStorage.isActive === 'false') {
                  alert("User not activated. Please contact administrator");
                  return;
      }
     $scope.init = function(){
         $scope.cartArray = JSON.parse(window.localStorage.cartInfo);
-$scope.shopArray=$scope.cartArray.shopDetail;
-
-$scope.submitOrder = function(){
-    var userInfo = JSON.parse(window.localStorage.userInfo);
-    var dbRef = loginCred.dbRef;
-    var now = new Date();
-    var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    var year = now.getYear();
-    var mathRandom = Math.floor((Math.random())*1000);
-    var orderId= (now.getDate()).toString()  + monthsText[now.getMonth()] + (now.getYear()%10).toString() + '-'+
+        $scope.shopArray=$scope.cartArray.shopDetail;
+    };
+    $scope.submitOrder = function(){
+        var userInfo = JSON.parse(window.localStorage.userInfo);
+        var dbRef = loginCred.dbRef;
+        var now = new Date();
+        var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+        var year = now.getYear();
+        var mathRandom = Math.floor((Math.random())*1000);
+        var orderId= (now.getDate()).toString()  + monthsText[now.getMonth()] + (now.getYear()%10).toString() + '-'+
             userInfo.name.substring(0,3).toUpperCase() + userInfo.mobile.substring(0,3) +'-'+ mathRandom.toString();
-    
-    var cartArray = $scope.cartArray;
-     var shopLength = cartArray.shopDetail.length;
-      for(var index = 0; index < shopLength; index++)
-          delete cartArray.shopDetail[index].$$hashKey;
 
-    var ordersRef =  dbRef.child('orders/' + orderId);
+        var cartArray = $scope.cartArray;
+        var shopLength = cartArray.shopDetail.length;
+        for(var index = 0; index < shopLength; index++)
+            delete cartArray.shopDetail[index].$$hashKey;
 
-    var newOrder = {
-                uid : window.localStorage.uid,
-                time :  now.getTime(),
-                userName : userInfo.name,
-                status : "received",
-                cart :  cartArray
-                };
-                
-                 
+        var ordersRef =  dbRef.child('orders/' + orderId);
+
+        var newOrder = {
+            uid : window.localStorage.uid,
+            time :  now.getTime(),
+            userName : userInfo.name,
+            status : "received",
+            cart :  cartArray
+        };
+
+
         var usersRef = dbRef.child('users/' + window.localStorage.uid );
-       
+
         usersRef.once('value', function(data){
             var userValue = data.val();
-            userValue["orders"] = userValue["orders"] || []; 
+            userValue["orders"] = userValue["orders"] || [];
             userValue["orders"].push(orderId);
-               var promise = usersRef.update(userValue);
+            var promise = usersRef.update(userValue);
         });
-        
-                
-             
+
+
+
         var promise = ordersRef.set(newOrder);
-                promise.then(function(e) {
-                    alert("Your order has been successfully placed");
+        promise.then(function(e) {
+            alert("Your order has been successfully placed");
         }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
-};
-    
-}
+    };
+    $scope.showConfirmPopUp = function() {
+        var myPopup = $ionicPopup.show({
+            template: 'Do you want to place the order?',
+            title: 'Confirm Order',
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel' }, {
+                    text: '<b>Place</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        $scope.submitOrder();
+                    }
+                }
+            ]
+        });
+        myPopup.then(function(res) {
+            console.log('Tapped!', res);
+        });
+    };
 })
 
 .controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$timeout,$interval) {
