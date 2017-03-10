@@ -14,27 +14,27 @@
       
       <div class = "card" style="position:relative;height:20%;background-color: whitesmoke;margin-top: 10%">
           <img src="img/lorry.png" style="height:100%;width:100%;"/>
-<!--           <img src="img/lorry.png" style="width:100%;height:100%;"/>-->
-<!--            <div ng-repeat="(key,product) in getDeliveryArray()">
-                {{key}}
-                <div ng-repeat="value in product track by $index">
-                    
-                   
-                   
-                </div>
-            </div>-->
-<div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
-    <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
+          <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
+        <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
           <div style="position:absolute;top:0;left:0px;background-color: red;height:102%;" id="progressBar"></div>
-      </div>
-    
-</div>
         </div>
+
+        </div>
+      </div>
       
-      <div class="padding" style="text-align:right"><p>Lorry loaded with <b>{{totalQuantity}} Quintals</b><p></div>
-<!--      <div class="card" style="position:relative;display:block;height:20px;">
-          <div style="position:absolute;top:0;left:0;background-color: red;height:100%;" id="progressBar"></div>
-      </div>-->
+      <div class="padding">
+          <div class="row">
+              <div class="col">
+
+              </div>
+              <div class="col">
+                  Total Quantity <b>{{totalQuantity}} Quintals</b>
+              </div>
+              <div class="col">
+                  Lorry Size <b>{{selectedLorrySize}}</b>
+              </div>
+          </div>
+      </div>
       
       <div class="padding" ng-repeat = "(key,data) in cartArray"
           style="background-color:lightgray;position:relative;">
