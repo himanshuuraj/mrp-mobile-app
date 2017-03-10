@@ -215,7 +215,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             cart :  cartArray
         };
 
-
         var usersRef = dbRef.child('users/' + window.localStorage.uid );
 
         usersRef.once('value', function(data){
@@ -225,11 +224,11 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var promise = usersRef.update(userValue);
         });
 
-
-
         var promise = ordersRef.set(newOrder);
         promise.then(function(e) {
             alert("Your order has been successfully placed");
+            window.sessionStorage.removeItem(cartArray);
+            window.localStorage.removeItem(cartInfo);
         }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
     };
     $scope.showConfirmPopUp = function() {
