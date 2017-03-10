@@ -828,8 +828,10 @@ $scope.submitOrder = function(){
           showPopUp('Enter Shop Mobile');
           return 0;
       }else{
-          if($scope.signUpData.shop.mobile != 10)
+          if($scope.signUpData.shop.mobile.length != 10) {
+              showPopUp('Mobile Number Not Correct');
               return 0;
+          }
       }
       if(!$scope.signUpData.shop.pan){
           showPopUp('Enter Shop Pan');
