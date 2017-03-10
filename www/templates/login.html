@@ -44,16 +44,6 @@
       </div>
       </div>
 
- 
-     
-    
-      
-  
-      
-      
-<!--      <div  style="position:fixed;bottom:10%;display:block;width:60%;left:20%;">
-             <button class="button button-block button-positive" value="signUp" ng-click="signUp()" style="background-color: #99b3ff;">SignUp</button>
-       </div>-->
   </ion-content>
 
     
@@ -89,11 +79,10 @@
                        <div class="col">
                            <span class="row"><strong>Address</strong></span>    
                                   <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                  <input type="text" placeholder="Address" ng-model="signUpData.shop.address">
+                                     <input type="text" placeholder="Address" ng-model="signUpData.address">
                                   </label>
                        </div>
                    </div>
-              <div>
           <div class="padding" ng-hide="isChecked">
               <center><b>Shop</b></center>
           <div class="list list-inset" ng-hide="isChecked">
@@ -138,57 +127,22 @@
               </label>
               </div>
               </div>
-<!--              <div class="row" style="margin-top: 1%">
-                  <div class="col">
-                      <span class="row"><strong>State</strong></span>
-                      <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
-                          <option value="notselected" selected>Not Selected</option>
-                          <option value="andhra pradesh">Andhra Pradesh</option>
-                          <option value="karnataka">Karnataka</option>
-                          <option value="tamilnadu">Tamilnadu</option>
-                          <option value="telangana">Telangana</option>
-                      </select>
-                      
-              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                  <input type="text" placeholder="State" ng-model="signUpData.shop.state">
-              </label>
-              </div>
-              </div>-->
-<!--              <div class="row" style="margin-top: 1%">
-                  <div class="col">
-                      <span class="row" ><strong>District</strong></span>
-                      <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
-                          <option value="notselected">not selected</option>
-                      </select>-->
-<!--              <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                  <input type="text" placeholder="District" ng-model="signUpData.shop.district">
-              </label>-->
-<!--              </div>
-              </div>-->
-<!--              <div class="row" style="margin-top: 1%">
-                  <div class="col">
-                      <span class="row"><strong>City</strong></span>
-                      <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
-                          <option value="notselected">not selected</option>
-                      </select>
-              </div>
-              </div>-->
               <div class="row" style="margin-top: 1%">
                   <div class="col">
                       <span class="row"><strong>Address</strong></span> 
                       <div id="shopnumber">
                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                  <input type="text" placeholder="House/Door/Shop Number" ng-model="signUpData.address">
+                  <input type="text" placeholder="House/Door/Shop Number" ng-model="signUpData.shop.shopnumber">
               </label>
                       </div>
                       <div id="selectstreet">
                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                           <input type="text" placeholder="Street Name" ng-model="signUpData.address">
+                           <input type="text" placeholder="Street Name" ng-model="signUpData.shop.street">
                            </label>
                       </div>
                       <div id="selectlandmark">
                        <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">   
-                              <input type="text" placeholder="Landmark" ng-model="signUpData.address">
+                              <input type="text" placeholder="Landmark" ng-model="signUpData.shop.landmark">
                        </label>
                       </div>
                       <div id="selectarea">
@@ -212,7 +166,7 @@
                       </div>
                       <div id="selectpin">
                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
-                           <input type="text" placeholder="Pincode" ng-model="signUpData.address">
+                           <input type="text" placeholder="Pincode" ng-model="signUpData.shop.pincode">
                            </label>
                       </div>
                            
@@ -237,7 +191,6 @@
             </div>
               </div>
           <button class="button button-block button-positive" ng-click="fillSignUpData()">Submit</button>
-      </div>
       </div>
     
     

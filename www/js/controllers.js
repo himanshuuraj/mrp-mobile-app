@@ -884,6 +884,18 @@ $scope.submitOrder = function(){
   
   $scope.fillSignUpData = function(){
       var authId = window.localStorage.authId;
+      
+      var fulladdress= "Sarjapur ; Bangalore"
+//      var fulladdress = $scope.signUpData.shop.shopnumber + " ; " +
+//              $scope.signUpData.shop.street + " ; " +  
+//              $scope.signUpData.shop.landmark + " ; " +  
+//              $scope.signUpData.shop.area + " ; " +  
+//              $scope.signUpData.shop.district + " ; " +  
+//                            $scope.signUpData.shop.city + " ; " +  
+//              $scope.signUpData.shop.state + " ; " +  
+//                 $scope.signUpData.shop.pincode + " ; " ; 
+//              
+      
       if(!validateField())
           return;
         var foo = {};
