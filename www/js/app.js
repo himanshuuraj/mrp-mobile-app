@@ -46,11 +46,11 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    .state('app.order', {
-      url: '/order',
+    .state('app.orders', {
+      url: '/orders',
       views: {
         'menuContent': {
-          templateUrl: 'templates/order.html',
+          templateUrl: 'templates/orders.html',
           controller: 'orderCtrl'
         }
       }

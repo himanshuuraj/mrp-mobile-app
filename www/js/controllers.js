@@ -193,7 +193,6 @@ $scope.shopArray=$scope.cartArray.shopDetail;
 $scope.submitOrder = function(){
     var userInfo = JSON.parse(window.localStorage.userInfo);
     var dbRef = loginCred.dbRef;
-    var ordersRef =  dbRef.child('orders');
     var now = new Date();
     var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     var year = now.getYear();
@@ -206,9 +205,10 @@ $scope.submitOrder = function(){
       for(var index = 0; index < shopLength; index++)
           delete cartArray.shopDetail[index].$$hashKey;
 
+    var ordersRef =  dbRef.child('orders/' + orderId);
+
     var newOrder = {
                 uid : window.localStorage.uid,
-                orderId : orderId,
                 time :  now.getTime(),
                 userName : userInfo.name,
                 status : "received",
@@ -216,8 +216,18 @@ $scope.submitOrder = function(){
                 };
                 
                  
+        var usersRef = dbRef.child('users/' + window.localStorage.uid );
+       
+        usersRef.once('value', function(data){
+            var userValue = data.val();
+            userValue["orders"] = userValue["orders"] || []; 
+            userValue["orders"].push(orderId);
+               var promise = usersRef.update(userValue);
+        });
         
-        var promise = ordersRef.push(newOrder);
+                
+             
+        var promise = ordersRef.set(newOrder);
                 promise.then(function(e) {
                     alert("Your order has been successfully placed");
         }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
@@ -708,6 +718,10 @@ $scope.submitOrder = function(){
                       var authMobileRef = dbRef.child('authMobileMap/'+ e.uid);
                       authMobileRef.once('value').then(function(data){
                          var uid = data.val();
+                         if(uid == null) {
+                             alert("User not found. Please signup");
+                             return;
+                         }
                             var usersRef = dbRef.child('users/'+ uid);
                        uid = window.localStorage.uid = uid;
                        usersRef.once('value').then(function(data){
@@ -1460,19 +1474,12 @@ $scope.submitOrder = function(){
 
 })
 
-.controller('orderCtrl', function($scope,$http) {
-    if(window.localStorage.isActive === 'false') {
-                 alert("User not activated. Please contact administrator");
-                 return;
-     }
-  $scope.shopArray = ["shop1","shop2","shop3"];
-  $scope.showShopInput = false;
-  $scope.shop = {
-      tax_id : {}
-  };
-  $scope.createNewShop = function(){
-      $scope.showShopInput = true;
-  };
-  $scope.selectedLorry = "17 kg";
+.controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
+    var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+    usersRef.once('value', function(data){
+        console.log(data.val());
+        $scope.ordersArray = data.val().orders;
+        $scope.$apply();
+    })
 })
         
