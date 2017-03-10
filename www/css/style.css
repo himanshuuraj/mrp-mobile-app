@@ -1,11 +1,4 @@
 /* Empty. Add your own CSS if you like */
-.ricelogo {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),URL(https://iso.500px.com/wp-content/uploads/2014/07/2048-12.jpg); 
-    background-size: cover; 
-   background-position: center;
-    height: 300px;
-    width: 300px;
-}
 body{
     font-size:13px;
 }
