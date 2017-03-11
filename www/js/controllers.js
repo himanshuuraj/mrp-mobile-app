@@ -617,7 +617,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     $scope.setSearchedShop = function(shop){
         earlySelectedShop["tin"] = $scope.shopDetail.tin;
         window.localStorage.shopName = $scope.shopDetail.name = shop.name;
-        window.localstorage.areaId = $scope.shopDetail.areaId;
+        window.localStorage.areaId = $scope.shopDetail.areaId=shop.areaId
         window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
         shopInfo[shop.tin] = shop;
         window.localStorage.shopInfo = JSON.stringify(shopInfo);
@@ -700,7 +700,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
   $scope.signUpData = {
       isAgent : true,
       shop :{
-         tax_id : {}
       }
   };
  
@@ -911,7 +910,9 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
   $scope.fillSignUpData = function(){
       var authId = window.localStorage.authId;
       
-      var areaId = $scope.signUpData.shop.area;
+      var shops = [];
+      if(!$scope.signUpData.isAgent){
+          var areaId = $scope.signUpData.shop.area;
       var areaName = $scope.areasObj[areaId].displayName;
       var district = $scope.areasObj[areaId].district;
       var state = $scope.areasObj[areaId].state;
@@ -923,6 +924,23 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
               district + " ; " +  
                 state  + "; " +  
                 $scope.signUpData.shop.pincode; 
+        
+        shops = [{
+                            name: $scope.signUpData.shop.name,
+                            proprietor_name : $scope.signUpData.shop.proprietor_name,
+                            mobile : $scope.signUpData.shop.mobile,
+                            pan : $scope.signUpData.shop.pan,
+                            tin : $scope.signUpData.shop.tin,
+                            state : state,
+                            areaId : areaId,
+                            areaName : areaName,
+                            district : district,
+                            city : $scope.signUpData.shop.city,
+                            address : fulladdress,
+                            taxType : $scope.signUpData.shop.taxType
+                    }];
+          
+      } 
               
       
       if(!validateField())
@@ -936,20 +954,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                     isAgent : $scope.signUpData.isAgent,
                     address : $scope.signUpData.address,
                     authId : authId,
-                    shops : [{
-                            name: $scope.signUpData.shop.name,
-                            proprietor_name : $scope.signUpData.shop.proprietor_name,
-                            mobile : $scope.signUpData.shop.mobile,
-                            pan : $scope.signUpData.shop.pan,
-                            tin : $scope.signUpData.shop.tin,
-                            state : state,
-                            areaId : areaId,
-                            areaName : areaName,
-                            district : district,
-                            city : $scope.signUpData.shop.city,
-                            address : fulladdress,
-                            taxType : $scope.signUpData.shop.taxType
-                    }]
+                    shops : shops
             };
              if($scope.signUpData.isAgent){
                 foo.shops = [];
@@ -989,6 +994,28 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 })
 
 .controller('shopCtrl', function($scope,$http,loginCred,$state) {
+    
+    $scope.onInit = function(){
+         var areasRef = loginCred.dbRef.child('areas' );
+      $scope.areasObj = {};
+      areasRef.once('value', function(data){
+          console.log(data.val());
+          var areas = $scope.areasObj = data.val();
+          var foo=[];
+          for(var area in areas){
+              foo.push({
+                  id: area,
+                  name: areas[area].displayName
+              })
+              
+          }
+          $scope.areas = foo;
+          $scope.$apply();
+                    console.log($scope.areas);
+
+      })
+    }
+    
   var userInfo = {};
   if(window.localStorage.userInfo)
       userInfo = JSON.parse(window.localStorage.userInfo);
@@ -998,7 +1025,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
   var userId;
   $scope.editType = false;
   $scope.shop = {
-      tax_id : {}
   };
   
   $scope.removeShop = function(tin){
@@ -1071,14 +1097,14 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
           showPopUp('Enter Shop address');
           return 0;
       }*/
-      if(!$scope.shop.tax_id.type){
-          showPopUp('Enter shop tax id');
-          return 0;
-      }
-      if(!$scope.shop.tax_id.value){
-          showPopUp('Enter shop tax id');
-          return 0;
-      }
+//      if(!$scope.shop.tax_id.type){
+//          showPopUp('Enter shop tax id');
+//          return 0;
+//      }
+//      if(!$scope.shop.tax_id.value){
+//          showPopUp('Enter shop tax id');
+//          return 0;
+//      }
       return 1;
   }
   
@@ -1089,6 +1115,24 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
           $scope.editShop();
           return;
       }
+      var areaId = $scope.shop.areaId;
+      var areaName = $scope.areasObj[areaId].displayName;
+      var district = $scope.areasObj[areaId].district;
+      var state = $scope.areasObj[areaId].state;
+
+      var fulladdress = $scope.shop.shopnumber + " ; " +
+              $scope.shop.street + " ; " +  
+              $scope.shop.city + " ; " +  
+              areaName + " ; " +  
+              district + " ; " +  
+                state  + "; " +  
+                $scope.shop.pincode; 
+        
+       $scope.shop.district= district;
+       $scope.shop.state=state;
+       $scope.shop.areaName = areaName;
+        
+        $scope.shop.address = fulladdress;
       userInfo["shops"] = userInfo["shops"] || [];
       console.log($scope.shop);
       userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
@@ -1124,9 +1168,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                             }
                         }*/
                     }
-                    $scope.shop = {
-                        tax_id : {}
-                    };
+                    
                     $scope.shopArray = userInfo.shops || [];
                     $scope.editType = false;
                     $scope.showShopInput = false;
@@ -1435,10 +1477,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
     var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
     $scope.orderStatusArray = {};  $scope.ordersArray = [];
-    usersRef.once('value', function(data){
+    $scope.loadOrders = function(){
+        usersRef.once('value' ,
+     function(data){
         $scope.ordersArray = data.val().orders;
         $scope.$apply();
     })
+    }
     
      $scope.onClickOrder = function(orderId){
          
@@ -1503,5 +1548,37 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
            
 
    
+   
 })
+
+
+
+    .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
+        var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+
+        var areas = [];
+        usersRef.once('value', function(data){
+            var userobj = data.val();
+            var shops = userobj.shops;
+            if(shops!=null){
+                for(i=0;i<shops.length;i++){
+                    areas.push(shops[i].areaId);
+                }
+            }
+        })
+        $scope.loadPrices = function(){
+           
+           $scope.pricesForAreas ={};
+           for(j=0;j<areas.length;j++){
+               var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
+               ordersRef.once('value', function(data){
+                    $scope.pricesForAreas[areas[j]] = data.val();
+                   
+               })
+           }
+           console.log($scope.pricesForAreas);
+           
+        }
+            
+    })
         
