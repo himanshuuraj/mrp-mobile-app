@@ -1,29 +1,29 @@
 
-<ion-view view-title="SRI LALITHA ENTERPRISES" ng-init="init();">
-  <ion-content>
-      
+<ion-view cache-view="false" view-title="SRI LALITHA ENTERPRISES" ng-init="init();">
+  <ion-content ng-init="init();">
+
       <div class="card" ng-show="{{isAgent}}" ng-cloak style="margin-top: 8%;height:8%">
           <div class="row">
               <div class="col-67" ng-show="shopDetail.name" style="padding-top: 10px;text-align: left;">
                   Selected shop : {{shopDetail.name}}
               </div>
               <div class="col" style="padding: 0" >
-                 
+
                       <button class="button button-positive" style="float:right;width: 62%" ng-click="showShopPopUp();">
                         Change
                       </button>
-                  
+
               </div>
           </div>
       </div>
-      
+
     <div class="button-bar padding" style="margin-top: 10%">
-      <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
+        <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
-    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="height:135px;background-color:lightgray;position:relative;">
+    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="min-height:135px;height:auto;background-color:lightgray;position:relative;">
         <div class = "row" style="height:100%;">
             <div class = "col col-20" style="height:100%;">
-              <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image" style="height:100%;max-width: 100%;"/>
+              <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image" style="height:100%;max-height:120px;max-width: 100%;"/>
             </div>
             <div class = "col col-40" >
               <div class="row text-left" style="padding:0;">
@@ -37,16 +37,16 @@
                 </p>
               </div>
               <div class="row text-left" style="padding:0;">
-                    <p id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%;font-weight: 900;">&#8377;{{getPrice(key)}}</p>
+                    <p id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%;font-weight: 900;">₹​ {{getPrice(key)}}</p>
               </div>
-                  
+
             </div>
             <div class="col" style="height:50px;padding:0px;">
               <div class="row" >
                   <span>Quintals</span>
               </div>
                   <div class="row">
-                <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);" 
+                <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);"
                        style="text-align: center;width:50%;border-bottom:1px solid black;background-color: whitesmoke" placeholder="Quintals"/>
                   </div>
               <div class="row" style="margin-top: 2%">
@@ -55,17 +55,8 @@
             <div class="row">
                 <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="Bags"
                        style="text-align: center;width:50%;border-bottom:1px solid black;background-color: whitesmoke" ng-keyup="textInBag(key,this.value.master_weight);"/>
-  <!--                <div style="position:absolute;display:block;left:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="addBag(key,this.value.master_weight);">
-                      <i class="icon ion-plus-circled"></i>
-                  </div>
-                  <div style="position:absolute;display:block;right:0;top:0;width:20%;height:100%;font-size:40px;" ng-click="minusBag(key,this.value.master_weight);">
-                      <i class="icon ion-minus-circled" style="float:right;"></i>
-                  </div>-->
               </div>
             </div>
-<!--                <div class="row" style="position:relative;background-color: lightgray;margin-top: 10%">
-                <p style="font-weight: 900;font-style: italic" id="{{key}}computedPrice"></p>
-              </div>-->
 <div class="col-10">
     <div class="row">
          <button class="button icon ion-plus-round" id="{{key}}button" ng-click="addToCart(key,value)"
@@ -76,14 +67,14 @@
             <p style="font-weight: 900;padding-top:10px;padding-right:10px;position:absolute;bottom:0px;right:0px;height:50px;" id="{{key}}computedPrice"></p>
     </div>
 
-   
-    
+
+
 </div>
-            
+
         </div>
     </div>
   </ion-content>
-     
+
     <ion-footer-bar align-title="center">
         <div class="button-bar">
             <button class="button  button-positive" ng-click="proceedToSaveInCart()" style="margin:0;"><b style="font-size: large">CONTINUE</b></button>

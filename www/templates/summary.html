@@ -1,4 +1,4 @@
-<ion-view view-title="Shop">
+<ion-view view-title="Shop" cache-view="false">
   <ion-content ng-init = "init();">
       <h3 style="margin-top:40px"><center>Order Summary</center></h3>
       <div class="padding" ng-repeat="shop in shopArray" >
@@ -119,8 +119,6 @@
                        <button class="button button-block button-calm" style="width: 20%;position: fixed;background-color: #d02139;" ng-click="showConfirmPopUp()">Submit</button>
                       </div>  
                   </li>
-                   
-                   
                </ul>
           </div>
       </div>

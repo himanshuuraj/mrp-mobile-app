@@ -7,11 +7,13 @@
 angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-    
+
+    $ionicConfigProvider.views.forwardCache(true);
   //$ionicConfigProvider.views.swipeBackEnabled(false);
   $stateProvider
 
     .state('app', {
+        cache: false,
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
@@ -19,6 +21,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })
 
   .state('app.search', {
+    cache: false,
     url: '/search',
     views: {
       'menuContent': {
@@ -29,6 +32,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })
 
   .state('app.shop', {
+      cache: false,
       url: '/shop',
       views: {
         'menuContent': {
@@ -38,6 +42,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
     .state('app.cart', {
+      cache: false,
       url: '/cart',
       views: {
         'menuContent': {
@@ -47,6 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
     .state('app.orders', {
+      cache: false,
       url: '/orders',
       views: {
         'menuContent': {
@@ -56,6 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
      .state('app.summary', {
+      cache: false,
       url: '/summary',
       views: {
         'menuContent': {
@@ -66,6 +73,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     })
 
     .state('app.login', {
+        cache: false,
       url: '/login',
       views: {
         'menuContent': {
@@ -111,12 +119,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    
     //$ionicConfigProvider.views.swipeBackEnabled(false);
-//    if(window.localStorage.userId)
-//        $state.go('app.search', {arg:'arg'});
-//    else
-        $state.go('app.login', {arg:'arg'});
+   if(window.localStorage.userId)
+       window.location.hash = "#/app/search";
+   else
+      window.location.hash = "#/app/login";
+
   });
   
     //$ionicConfigProvider.views.swipeBackEnabled(false);

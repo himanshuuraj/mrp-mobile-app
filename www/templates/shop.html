@@ -1,5 +1,7 @@
 <ion-view view-title="SHOPS" ng-init="onInit()">
   <ion-content>
+<ion-view cache-view="false" view-title="SHOPS">
+  <ion-content ng-init="init();">
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
         <ion-list>
           <div ng-repeat="shop in shopArray">
@@ -9,14 +11,15 @@
                     <div class="col col-10" ng-click="toggleGroup(shop)" style="cursor:pointer;">
                         <i class="icon" ng-class="isGroupShown(shop) ? 'ion-minus' : 'ion-plus'"></i>
                     </div>
-                    <div class="col col-50">
+
+                    <div class="col" class="wrapWord" ng-click="toggleGroup(shop)" title="{{shop.name}}">
                         {{shop.name}}
                     </div>
                     <div class="col col-10">
-                        <i class="icon ion-plus-circled" ng-click="removeShop(shop.tin)"></i>
+                        <i class="icon ion-edit" ng-click="showEditBox(shop);"></i>
                     </div>
-                    <div class="col col-20">
-                        <span ng-click="showEditBox(shop);"><u></u>Edit</u></span>
+                    <div class="col col-10">
+                        <i class="icon icon ion-trash-b" ng-click="showConfirmRemoveShop(shop.tin)"></i>
                     </div>
                 </div>
             </ion-item>
@@ -34,7 +37,7 @@
                     </div>
             </ion-item>
           </div>
-        </ion-list>   
+        </ion-list>
       </div>
       <div class="padding"><center>
             <button class="button  button-positive icon icon-left ion-plus" ng-hide="showShopInput" ng-click="showShopInput = true;">
@@ -42,7 +45,7 @@
             </button>
           </center>
       </div>
-  
+
       <div id="shopDiv" class="padding" ng-show="showShopInput">
           <div class="list list-inset">
               <div class="row padding">
@@ -50,7 +53,7 @@
                         <h4><center>New Shop</center></h4>
                   </div>
                   <div class="col">
-                         <button class="button button-positive" ng-click="showShopInput = false;">Cancel</button>
+                         <button class="button button-positive" ng-click="closeEditBox();">Cancel</button>
                   </div>
               </div>
           <div class="list list-inset" ng-hide="isChecked">
@@ -70,7 +73,7 @@
                   <input type="text" placeholder="Proprietor Name" ng-model="shop.proprietor_name">
               </label>
               </div>
-                  </div>
+              </div>
               <div class="row" style="margin-top: 1%">
                   <div class="col">
                       <span class="row"><strong>Mobile</strong></span>
@@ -107,7 +110,7 @@
                     </div>
               <div class="row" style="margin-top: 1%">
                   <div class="col">
-                      <span class="row"><strong>Address</strong></span> 
+                      <span class="row"><strong>Address</strong></span>
                       <div id="shopnumber">
                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">
                           <input type="text" placeholder="House/Door/Shop Number" ng-model="shop.shopnumber">
@@ -136,7 +139,7 @@
                            <input type="text" placeholder="Pincode" ng-model="shop.pincode">
                            </label>
                       </div>
-                           
+
                   </div>
               </div>
                     
@@ -147,6 +150,6 @@
                      <b ng-show="editType">Edit</b>
                  </button>
             </div>
-      </div> 
+      </div>
   </ion-content>
 </ion-view>

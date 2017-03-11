@@ -1,5 +1,5 @@
-<ion-view view-title="ORDER HISTORY" ng-init="loadOrders()">
-  <ion-content>
+<ion-view cache-view="false" view-title="ORDER HISTORY" ng-init="loadOrders()">
+  <ion-content ng-init="init();">
       <div class="padding">
         <ion-list>
           <div ng-repeat = "order in ordersArray ">
@@ -28,7 +28,7 @@
                   </div>
                </div>
           </div>
-        </ion-list>   
+        </ion-list>
       </div>
   </ion-content>
 </ion-view>
