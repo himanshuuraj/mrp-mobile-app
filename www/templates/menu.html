@@ -28,23 +28,23 @@
 <!--        <ion-item menu-close href="#/app/login">
           Login
         </ion-item>-->
-        <div class="row" style="margin-top: 2%">
-        <ion-item menu-close href="#/app/search">
-          Items
+        <div class="col">
+        <ion-item menu-close href="#/app/search" style="color: black">
+            <img src="img/list.png" width="15px" height="15px"><span style="padding-left: 10px">Items</span>
+        </ion-item>
+        <ion-item menu-close href="#/app/shop" style="color:black">
+          <img src="img/shop.png" width="20px" height="20px"><span style="padding-left: 10px">Shop</span>
+        </ion-item>
+         <ion-item menu-close href="#/app/cart" style="color:black">
+             <img src="img/cart.png" width="24px" height="24px"><span style="padding-left: 10px">Cart</span>
+        </ion-item>
+        <ion-item menu-close href="#/app/orders" style="color: black">
+         <img src="img/lorry.png" width="24px" height="24px"><span style="padding-left: 10px">Orders</span>
+        </ion-item>
+        <ion-item menu-close ng-click="signOut();" style="color: black">
+         <img src="img/signout.png" width="20px" height="20px"><span style="padding-left: 10px">Sign Out</span>
         </ion-item>
         </div>
-        <ion-item ng-show="isAgent" menu-close href="#/app/shop">
-          Shop
-        </ion-item>
-         <ion-item menu-close href="#/app/cart">
-          Cart
-        </ion-item>
-        <ion-item menu-close href="#/app/orders">
-          Orders
-        </ion-item>
-        <ion-item menu-close ng-click="signOut();">
-          SignOut
-        </ion-item>
 <!--      <ion-item menu-close href="#/app/playlists">
           Playlists
         </ion-item>-->
