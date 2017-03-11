@@ -2,8 +2,31 @@
   <ion-content>
       <div class="padding">
         <ion-list>
-          <div ng-repeat="order in ordersArray">
-              <span>{{order}}</span>
+          <div ng-repeat = "order in ordersArray ">
+              
+              <ion-item class="item-stable">
+                  <div class="row" ng-click="onClickOrder(order)" style="cursor:pointer;background-color: darkgray">
+                      {{order}}
+                  </div>                
+              </ion-item>
+              
+              
+               
+              <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded" style="display: none;" >
+                  <div class="row" style="margin: 5%">
+                      STATUS : {{value.status}}
+                  </div>
+                  <div ng-repeat="msgs in value.updates" class="row">
+                          <ion-item class="row" >
+                              <div class="col">
+                                  {{msgs.timestamp}}
+                              </div>
+                              <div class="col" style="word-wrap: break-word">
+                                  {{msgs.message}}
+                              </div>
+                           </ion-item>
+                  </div>
+               </div>
           </div>
         </ion-list>   
       </div>

@@ -1,5 +1,5 @@
 
-<ion-view><!-- hide-nav-bar="true"-->
+<ion-view ng-init="initOnSignup();"><!-- hide-nav-bar="true"-->
   
     <ion-header-bar>
       
@@ -146,23 +146,24 @@
                        </label>
                       </div>
                       <div id="selectarea">
-                      <select value="Area" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
-                          <option value="notselected">Area</option>
+                          <select name="Area" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px " required="true">
+                          <option value="">Please Select Area</option>
                       </select>
                       </div>
                       <div id="selectdistrict">
-                           <select value="Discrict" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
+                          <span id="selectdistrictValue"></span>
+<!--                           <select value="Discrict" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
                           <option value="notselected">District</option>
-                      </select>
+                      </select>-->
                       </div>
                       <div id="selectstate">
-                           <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
+<!--                           <select value="State" style="background-color: lightgray; margin-top: 3px; width: 70%; height:40px; border: 1px ">
                           <option value="notselected" selected>State</option>
                           <option value="andhra pradesh">Andhra Pradesh</option>
                           <option value="karnataka">Karnataka</option>
                           <option value="tamilnadu">Tamilnadu</option>
                           <option value="telangana">Telangana</option>
-                      </select>
+                      </select>-->
                       </div>
                       <div id="selectpin">
                       <label class="row item item-input" style="background-color: lightgray; margin-top: 3px; width: 70%">

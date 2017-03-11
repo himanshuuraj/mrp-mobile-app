@@ -898,6 +898,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
       return 1;
   }
   
+  $scope.initOnSignup = function(){
+      var areasRef = loginCred.dbRef.child('areas' );
+      areasRef.once('value', function(data){
+          console.log(data.val());
+      })
+  }
+  
   $scope.fillSignUpData = function(){
       var authId = window.localStorage.authId;
       
@@ -1422,10 +1429,74 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
 .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
     var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+    $scope.orderStatusArray = {};  $scope.ordersArray = [];
     usersRef.once('value', function(data){
-        console.log(data.val());
         $scope.ordersArray = data.val().orders;
         $scope.$apply();
     })
+    
+     $scope.onClickOrder = function(orderId){
+         
+        var x= document.getElementById(orderId +'expanded');
+         if (x.style.display === 'none') {
+             x.style.display = 'block';
+        } else {
+            x.style.display = 'none';
+        }
+       
+//          if ($scope.isOrderShown(orderId)) {
+//             $scope.expandedOrder = null;
+//           } else {
+//                $scope.expandedOrder = orderId;
+//           }
+//        
+        if($scope.orderStatusArray[orderId] != null){
+                return ;
+        }
+             var orderUpdatesRef = loginCred.dbRef.child('orders/'+ orderId);
+             var foo=[];
+             orderUpdatesRef.once('value', function(data){
+                 var order = data.val();
+                var updates = order.updates;
+                var monthNames = [
+                    "January", "February", "March",
+                    "April", "May", "June", "July",
+                    "August", "September", "October",
+                    "November", "December"
+                  ];
+                
+                if(updates != null) {
+                    for(var ob in updates){
+                    var d = new Date(updates[ob].timestamp);
+                    var singleMsg = {
+                        timestamp : d.getDate() + '-'+monthNames[d.getMonth()] + '-' + d.getFullYear()+' '+ d.getHours() + ':'+ d.getMinutes(),                     
+                        message : updates[ob].updateMsg,
+                        messageType : updates[ob].msgType
+                    }
+                    foo.push(singleMsg);                  
+                    }
+                  $scope.orderStatusArray[orderId] = {
+                      updates:foo,
+                      status:order.status
+                  }
+                  $scope.$apply();                   
+                }
+                
+                  
+            }) 
+                   
+        }
+        
+         $scope.isOrderShown = function(orderId) {
+            return $scope.expandedOrder === orderId;
+        };
+        
+        $scope.getOrderStatus = function(orderId) {
+            var a = { orderId : $scope.orderStatusArray[orderId]}
+            return a;
+        }
+           
+
+   
 })
         
