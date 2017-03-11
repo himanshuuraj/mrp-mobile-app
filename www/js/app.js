@@ -73,6 +73,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'loginCtrl'
         }
       }
+    })
+    
+     .state('app.prices', {
+      url: '/prices',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/prices.html',
+          controller: 'pricesCtrl'
+        }
+      }
     });
 
   

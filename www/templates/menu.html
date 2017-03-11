@@ -29,25 +29,25 @@
           Login
         </ion-item>-->
         <div class="col">
-        <ion-item menu-close href="#/app/search" style="color: black">
+        <ion-item menu-close ng-click="redirect('search');" style="color: black">
             <img src="img/list.png" width="15px" height="15px"><span style="padding-left: 10px">Items</span>
         </ion-item>
-        <ion-item menu-close href="#/app/shop" style="color:black">
+        <ion-item menu-close ng-click="redirect('shop');" style="color:black">
           <img src="img/shop.png" width="20px" height="20px"><span style="padding-left: 10px">Shop</span>
         </ion-item>
-         <ion-item menu-close href="#/app/cart" style="color:black">
+         <ion-item menu-close ng-click="redirect('cart');" style="color:black">
              <img src="img/cart.png" width="24px" height="24px"><span style="padding-left: 10px">Cart</span>
         </ion-item>
-        <ion-item menu-close href="#/app/orders" style="color: black">
+        <ion-item menu-close ng-click="redirect('orders');" style="color: black">
          <img src="img/lorry.png" width="24px" height="24px"><span style="padding-left: 10px">Orders</span>
         </ion-item>
         <ion-item menu-close ng-click="signOut();" style="color: black">
          <img src="img/signout.png" width="20px" height="20px"><span style="padding-left: 10px">Sign Out</span>
         </ion-item>
+        <ion-item menu-close ng-click="redirect('prices');" style="color: black">
+         <img src="img/signout.png" width="20px" height="20px"><span style="padding-left: 10px">Prices</span>
+        </ion-item>
         </div>
-<!--      <ion-item menu-close href="#/app/playlists">
-          Playlists
-        </ion-item>-->
       </ion-list>
         
     </ion-content>

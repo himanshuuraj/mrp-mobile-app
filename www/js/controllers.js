@@ -179,6 +179,12 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     $scope.continue = function(){
       $rootScope.$broadcast("continue",{});
     };
+    
+    $scope.redirect = function(type){
+        type = "#/app/"+type;
+        window.location.hash = type;
+    };
+    
 })
 
 .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup) {
@@ -967,6 +973,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 window.localstorage.uid=uid;
             }).catch(e => console.log("Could not add mobile mapping"));
             var usersRef = dbRef.child('users/'+ uid );
+            //TODO bug fix this
             var promise = usersRef.set(foo);
             promise.then(function(e) {
                     showPopUp("Please Login Again");
@@ -1554,7 +1561,14 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
 
     .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
+       
+        $scope.loadPrices = function(){
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+        
+        var internalVsDisplay = loginCred.dbRef.child('internalVsDisplay');
+        internalVsDisplay.once('value', function(data){
+             $scope.intVsDisp=  data.val();
+        })
 
         var areas = [];
         usersRef.once('value', function(data){
@@ -1565,18 +1579,68 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                     areas.push(shops[i].areaId);
                 }
             }
-        })
-        $scope.loadPrices = function(){
-           
-           $scope.pricesForAreas ={};
+            $scope.pricesForAreas ={};
            for(j=0;j<areas.length;j++){
+               
+               (function(j){
                var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
                ordersRef.once('value', function(data){
-                    $scope.pricesForAreas[areas[j]] = data.val();
+                   console.log(areas[j]);
+                   var items = data.val();
+                   var riceArray = items['rice'];
+                   var ravvaArray = items['ravva'];
+                   var brokenArray = items['broken'];
+                   var foobar ={};
+                   var bar=[]
+                   for(product in riceArray){
+                       var displayNameOfProduct = $scope.intVsDisp[product];
+                       if(displayNameOfProduct ==null)
+                           displayNameOfProduct = product;
+                        
+                         var foo={
+                             name:displayNameOfProduct,
+                             price:riceArray[product].Agent
+                         };
+                         bar.push(foo);
+                   }
+                   foobar['Rice']= bar;
+                                      var bar=[]
+
+                   for(product in ravvaArray){
+                       var displayNameOfProduct = $scope.intVsDisp[product];
+                       if(displayNameOfProduct ==null)
+                           displayNameOfProduct = product;
+                          var foo={
+                             name:displayNameOfProduct,
+                             price:ravvaArray[product].Agent
+                         };
+                         bar.push(foo);
+                   }
+                   foobar['Ravva']= bar;
+                                      var bar=[]
+
+                   for(product in brokenArray){
+                       var displayNameOfProduct = $scope.intVsDisp[product];
+                       if(displayNameOfProduct ==null)
+                           displayNameOfProduct = product;
+                         var foo={
+                             name:displayNameOfProduct,
+                             price:brokenArray[product].Agent
+                         };
+                         bar.push(foo);
+                   }
+                   foobar['Broken']= bar;
                    
-               })
+                    $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
+                    $scope.$apply();
+                    console.log($scope.pricesForAreas);
+                    
+                   
+               })})(j);
            }
-           console.log($scope.pricesForAreas);
+         })
+        
+           
            
         }
             

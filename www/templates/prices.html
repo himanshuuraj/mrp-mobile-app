@@ -1,8 +1,17 @@
-<ion-view view-title="ORDER HISTORY" ng-init="loadPrices()">
-  <ion-content>
+<ion-view view-title="ORDER HISTORY" >
+  <ion-content ng-init="loadPrices()">
       <div class="padding">
         <ion-list>
-            
+            <div ng-repeat="(area,product) in pricesForAreas">
+                {{area}} 
+                <div ng-repeat="(itemType, items ) in product">
+                    <div>{{itemType}}</div>
+                    <div ng-repeat="key in items">
+                        <span>{{key.name}}</span>--<span>{{key.price}}</span>
+
+                    </div>
+                </div>
+            </div>
         </ion-list>   
       </div>
   </ion-content>
