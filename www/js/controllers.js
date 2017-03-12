@@ -157,7 +157,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
                 alert("Your order has been successfully placed");
-                window.sessionStorage.removeItem(cartArray);
+                window.localStorage.removeItem(cartArray);
                 window.localStorage.removeItem(cartInfo);
                 window.location.hash = "#/app/search";
             }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
@@ -201,8 +201,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         if(window.localStorage.isAgent == "true")
             $scope.isAgent = true;
         var shopInfo = {};
-        if(window.sessionStorage.shopInfo)
-            shopInfo = JSON.parse(window.sessionStorage.shopInfo);
+        if(window.localStorage.shopInfo)
+            shopInfo = JSON.parse(window.localStorage.shopInfo);
         var getShopData = function(){
             var shopsRef = dbRef.child('users/'+uid + '/shops');
             shopsRef.once('value', function(snap) {
@@ -245,8 +245,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             if(window.localStorage.shopName){
                 $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
             }
-            if(window.sessionStorage.cartArray){
-                $scope.cartArray = JSON.parse(window.sessionStorage.cartArray);
+            if(window.localStorage.cartArray){
+                $scope.cartArray = JSON.parse(window.localStorage.cartArray);
                 $timeout(function(){updateUI()},0);
             }
             $rootScope.$broadcast("cached",{});
@@ -387,7 +387,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 }
                 updateCart();
             }
-            window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
+            window.localStorage.cartArray = JSON.stringify($scope.cartArray);
             console.log($scope.cartArray);
         };
 
@@ -486,7 +486,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             angular.forEach($scope.cartArray[$scope.shopDetail.tin],function(item,index){
                 x[index] = item;
             });
-            window.sessionStorage.cartArray = JSON.stringify($scope.cartArray);
+            window.localStorage.cartArray = JSON.stringify($scope.cartArray);
             window.location.hash = "#/app/cart";
         };
 
@@ -571,7 +571,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             window.localStorage.areaId = $scope.shopDetail.areaId=shop.areaId
             window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
             shopInfo[shop.tin] = shop;
-            window.sessionStorage.shopInfo = JSON.stringify(shopInfo);
+            window.localStorage.shopInfo = JSON.stringify(shopInfo);
             $scope.getItemsPrice();
             $timeout(function(){updateUI();},0);
         };
@@ -1184,8 +1184,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         var ordersRef =  dbRef.child('orders');
         $scope.getImageUrl = loginCred.getImageUrl;
         var shopInfo = {};
-        if(window.sessionStorage.shopInfo)
-            shopInfo = JSON.parse(window.sessionStorage.shopInfo);
+        if(window.localStorage.shopInfo)
+            shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.deliveryArray = {};
         var selectedLorrySize = $scope.selectedLorrySize = 25;
         var progressBarElement = document.getElementById("progressBar");
@@ -1197,7 +1197,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         var myPopUp = loginCred.showPopup;
 
         $scope.init = function(){
-            var temp = JSON.parse(window.sessionStorage.cartArray);
+            var temp = JSON.parse(window.localStorage.cartArray);
             $scope.cartArray = temp || [];
             console.log($scope.cartArray);
             $timeout(function () {
@@ -1397,7 +1397,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             }
         }
         $scope.checkoutOrder = function(){
-            //window.sessionStorage.shopArray = JSON.stringify($scope.deliveryArray);
+            //window.localStorage.shopArray = JSON.stringify($scope.deliveryArray);
             var cartInfo = {};
             var arr = [];
             var grossPrice =0;
@@ -1448,6 +1448,10 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             console.log(cartInfo);
             window.localStorage.cartInfo = JSON.stringify(cartInfo);
             window.location.hash = "#/app/summary";
+        }
+
+        $scope.getShopName = function(tin){
+            return shopInfo[tin].name;
         }
 
     })
