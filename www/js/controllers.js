@@ -764,18 +764,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 window.localStorage.authId = e.uid;
                 $scope.showUserInputField = true;
                 $scope.$apply();
-                //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
-                var usersRef = dbRef.child('users/' + authId);
-                // window.localStorage.userId = userId;
-//                    usersRef.once('value', function(snap){
-//                           if(snap){
-//
-//                               $scope.$apply();                                   //proceed to load the main page
-//                           }else{
-//                               showPopUp("User could not be created.");
-//                               //load the form page to enter profile info
-//                           }
-//                    });
             }).catch(e => console.log(e))
 
         };

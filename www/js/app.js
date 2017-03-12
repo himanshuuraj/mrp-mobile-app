@@ -120,7 +120,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       StatusBar.styleDefault();
     }
     //$ionicConfigProvider.views.swipeBackEnabled(false);
-   if(window.localStorage.userId)
+   if(window.localStorage.userInfo)
        window.location.hash = "#/app/search";
    else
       window.location.hash = "#/app/login";
