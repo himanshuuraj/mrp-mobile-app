@@ -29,12 +29,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             });
         };
         var computePrice = this.computePrice = function(key,index) {
-            var bagElement;
-            if((index === 0)  || index)
-                bagElement = document.getElementById(key+"bag"+index);
-            else
-                bagElement = document.getElementById(key+"bag");
-
+            var bagElement = document.getElementById(key+"bag");
             var price= this.getPrice(key);
             var bagNumber =  Number(bagElement.value);
             document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
@@ -96,7 +91,12 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
         $rootScope.$on('cached',function (data) {
             $timeout(function(){
+                var hidden = document.querySelector('[nav-bar="cached"]');
+                if(hidden)
+                var hiddenParent = hidden.parentNode;
+                hiddenParent.removeChild(hidden);
                 var x = document.querySelector('[nav-bar="active"]');
+                if(x)
                 x.querySelector("#naviconIcon").className = "button button-icon button-clear ion-navicon";
             },1000);
 
