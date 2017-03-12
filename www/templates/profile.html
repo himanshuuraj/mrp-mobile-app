@@ -1,0 +1,19 @@
+<ion-view view-title="MY PROFILE" >
+  <ion-content ng-init="loadUserProfile()">
+      <div class="padding" ng-hide="editProfile">
+        <ion-list>
+            <div class="row" style="margin-top: 5%">
+                <div class="col-90">  </div>
+                <div class="col-10"><i class="icon ion-edit" ng-click="showEditBox(shop);"></i></div>
+            </div>
+            <div class="card" style="background-color: whitesmoke;margin-top: 5%"ng-repeat="(key,value) in userProfile">
+                    <div class="row" style="padding-left: 5%;">
+                        <div class="col-25" >{{key}}</div>
+                            <div class="col" >{{value}}</div>
+                    </div>
+                    
+            </div>
+        </ion-list>   
+      </div>
+  </ion-content>
+</ion-view>

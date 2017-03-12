@@ -83,6 +83,17 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
     
+    .state('app.profile', {
+        cache: false,
+      url: '/profile',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/profile.html',
+          controller: 'profileCtrl'
+        }
+      }
+    })
+    
      .state('app.prices', {
       url: '/prices',
       views: {

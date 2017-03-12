@@ -963,6 +963,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         if(window.localStorage.userInfo)
             userInfo = JSON.parse(window.localStorage.userInfo);
         $scope.shopArray = userInfo.shops || [];
+        $scope.showShopInput = false;
         var showPopUp = loginCred.showPopup;
         var userId;
         $scope.editType = false;
@@ -1618,5 +1619,28 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
               $rootScope.$broadcast("cached",{});
          };
      })
+     
+     
+     .controller('profileCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
+       $scope.userProfile={};
+        $scope.loadUserProfile = function(){
+             var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+             usersRef.once('value', function(data){
+                 console.log(data.val());
+                 var userObj = data.val();
+                 
+                 $scope.userProfile['Name'] = userObj['name'];
+                 $scope.userProfile['Email'] = userObj['email'];
+                 $scope.userProfile['Is Agent'] = userObj['isAgent'];
+                 $scope.userProfile['Address'] = userObj['address'];
+                 $scope.userProfile['Mobile'] = userObj['mobile'];
+                 $scope.$apply();
+
+             })
+            
+            $rootScope.$broadcast("cached",{});
+        };
+       
+             })
 
             

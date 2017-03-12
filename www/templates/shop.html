@@ -16,7 +16,7 @@
                     <div class="col col-10">
                         <i class="icon ion-edit" ng-click="showEditBox(shop);"></i>
                     </div>
-                    <div class="col col-10">
+                    <div class="col col-10" ng-show="addShopEnabled">
                         <i class="icon icon ion-trash-b" ng-click="showConfirmRemoveShop(shop.tin)"></i>
                     </div>
                 </div>
@@ -119,8 +119,8 @@
           </div>
           <div class="padding">
                  <button class="button button-block button-positive" ng-click="addNewShop()">
-                     <b ng-hide="editType">Submit</b>
-                     <b ng-show="editType">Edit</b>
+                     <b ng-hide="editType">SUBMIT</b>
+                     <b ng-show="editType">DONE</b>
                  </button>
             </div>
       </div>
