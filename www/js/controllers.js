@@ -1518,86 +1518,87 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
      .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
        
          $scope.loadPrices = function(){
-          var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+            var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
          
-         var internalVsDisplay = loginCred.dbRef.child('internalVsDisplay');
-         internalVsDisplay.once('value', function(data){
-              $scope.intVsDisp=  data.val();
-         })
+             var internalVsDisplay = loginCred.dbRef.child('internalVsDisplay');
+             internalVsDisplay.once('value', function(data){
+                  $scope.intVsDisp=  data.val();
+             })
   
-          var areas = [];
-          usersRef.once('value', function(data){
-             var userobj = data.val();
-             var shops = userobj.shops;
-             if(shops!=null){
-                 for(i=0;i<shops.length;i++){
-                      areas.push(shops[i].areaId);
+              var areas = [];
+              usersRef.once('value', function(data){
+                 var userobj = data.val();
+                 var shops = userobj.shops;
+                 if(shops!=null){
+                     for(i=0;i<shops.length;i++){
+                          areas.push(shops[i].areaId);
+                      }
                   }
-              }
 
- 
-             $scope.pricesForAreas ={};
-             for(j=0;j<areas.length;j++){
-                
-                (function(j){
-                 var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
-                 ordersRef.once('value', function(data){
-                    console.log(areas[j]);
-                    var items = data.val();
-                    var riceArray = items['rice'];
-                    var ravvaArray = items['ravva'];
-                    var brokenArray = items['broken'];
-                    var foobar ={};
-                    var bar=[]
-                    for(product in riceArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
-                        if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
-                         
-                          var foo={
-                              name:displayNameOfProduct,
-                              price:riceArray[product].Agent
-                          };
-                          bar.push(foo);
-                    }
-                    foobar['Rice']= bar;
-                                       var bar=[]
- 
-                    for(product in ravvaArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
-                        if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
-                           var foo={
-                              name:displayNameOfProduct,
-                              price:ravvaArray[product].Agent
-                          };
-                          bar.push(foo);
-                    }
-                    foobar['Ravva']= bar;
-                                       var bar=[]
- 
-                    for(product in brokenArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
-                        if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
-                          var foo={
-                              name:displayNameOfProduct,
-                              price:brokenArray[product].Agent
-                          };
-                          bar.push(foo);
-                    }
-                    foobar['Broken']= bar;
-                    
-                     $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
-                     $scope.$apply();
-                     console.log($scope.pricesForAreas);
-                     $rootScope.$broadcast("cached",{});
-                     
-                })})(j);
-             }
-          })
-          
-         }})
+
+                 $scope.pricesForAreas ={};
+                 for(j=0;j<areas.length;j++){
+
+                    (function(j){
+                     var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
+                     ordersRef.once('value', function(data){
+                        console.log(areas[j]);
+                        var items = data.val();
+                        var riceArray = items['rice'];
+                        var ravvaArray = items['ravva'];
+                        var brokenArray = items['broken'];
+                        var foobar ={};
+                        var bar=[]
+                        for(product in riceArray){
+                            var displayNameOfProduct = $scope.intVsDisp[product];
+                            if(displayNameOfProduct ==null)
+                                displayNameOfProduct = product;
+
+                              var foo={
+                                  name:displayNameOfProduct,
+                                  price:riceArray[product].Agent
+                              };
+                              bar.push(foo);
+                        }
+                        foobar['Rice']= bar;
+                                           var bar=[]
+
+                        for(product in ravvaArray){
+                            var displayNameOfProduct = $scope.intVsDisp[product];
+                            if(displayNameOfProduct ==null)
+                                displayNameOfProduct = product;
+                               var foo={
+                                  name:displayNameOfProduct,
+                                  price:ravvaArray[product].Agent
+                              };
+                              bar.push(foo);
+                        }
+                        foobar['Ravva']= bar;
+                                           var bar=[]
+
+                        for(product in brokenArray){
+                            var displayNameOfProduct = $scope.intVsDisp[product];
+                            if(displayNameOfProduct ==null)
+                                displayNameOfProduct = product;
+                              var foo={
+                                  name:displayNameOfProduct,
+                                  price:brokenArray[product].Agent
+                              };
+                              bar.push(foo);
+                        }
+                        foobar['Broken']= bar;
+
+                         $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
+                         $scope.$apply();
+                         console.log($scope.pricesForAreas);
+
+
+                    })})(j);
+                 }
+              })
+              $rootScope.$broadcast("cached",{});
+         };
+     })
           
          
             

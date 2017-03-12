@@ -161,15 +161,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
     width: 80%;
 }
 
-img.lalithaBrand{
-    position:fixed;
-    left:0px;
-    top:0px;
-}
-
-.loginscreen {
-    height:100%;
-    background: url('img/lalithaLoginImage.jpg');
-    background-size:100% 100%; 
-    background-repeat: no-repeat;
+#shopDiv input::-webkit-input-placeholder {
+    color:gray;
+    font-size:12px;
 }
