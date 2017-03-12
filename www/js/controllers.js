@@ -187,6 +187,11 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
         });
 
+        $scope.redirect = function(type){
+            type = "#/app/"+type;
+            window.location.hash = type;
+        }
+
     })
 
     .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope) {
@@ -656,7 +661,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
             shopInfo[shop.tin] = shop;
             window.sessionStorage.shopInfo = JSON.stringify(shopInfo);
-            $scope.getItemsPrice();I
+            $scope.getItemsPrice();
             $timeout(function(){updateUI();},0);
         };
 
