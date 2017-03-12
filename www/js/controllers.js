@@ -826,10 +826,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                     return 0;
                 }
             }
-            if(!$scope.signUpData.shop.pan){
-                showPopUp('Enter Shop Pan');
-                return 0;
-            }
+
             if(!$scope.signUpData.shop.tin){
                 showPopUp('Enter Shop Tin');
                 return 0;
@@ -959,6 +956,10 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         $scope.shop = {
         };
 
+        $scope.showNewShopEdit = function () {
+            $scope.showShopInput = true;
+        };
+
         $scope.showConfirmRemoveShop = function(tin) {
             var myPopup = $ionicPopup.show({
                 template: 'Do you want to delete the shop?',
@@ -1026,38 +1027,14 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                     return 0;
                 }
             }
-            if(!$scope.shop.pan){
-                showPopUp('Enter Shop Pan');
-                return 0;
-            }
             if(!$scope.shop.tin){
                 showPopUp('Enter Shop Tin');
                 return 0;
             }
-            /*if(!$scope.shop.state){
-             showPopUp('Enter Shop State');
-             return 0;
-             }
-             if(!$scope.shop.district){
-             showPopUp('Enter Shop District');
-             return 0;
-             }
-             if(!$scope.shop.city){
-             showPopUp('Enter Shop City');
-             return 0;
-             }
-             if(!$scope.shop.address){
-             showPopUp('Enter Shop address');
-             return 0;
-             }*/
-//      if(!$scope.shop.tax_id.type){
-//          showPopUp('Enter shop tax id');
-//          return 0;
-//      }
-//      if(!$scope.shop.tax_id.value){
-//          showPopUp('Enter shop tax id');
-//          return 0;
-//      }
+            if(!$scope.shop.areaId){
+                showPopUp('Enter Shop Tin');
+                return 0;
+            }
             return 1;
         }
 

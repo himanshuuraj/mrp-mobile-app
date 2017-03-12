@@ -37,7 +37,7 @@
 
         <div class="padding" ng-repeat = "(key,data) in cartArray"
              style="background-color:lightgray;position:relative;">
-            <center><b>getShopName(key)</b></center>
+            <center><b>{{getShopName(key)}}</b></center>
             <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:150px;background-color: whitesmoke">
                 <!--here-->
                 <div class = "row" style="height:15%;">
