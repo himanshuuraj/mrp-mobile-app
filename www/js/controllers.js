@@ -21,7 +21,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         this.showPopup = function(msg,title) {
             title = title || "Alert";
             var alertPopup = $ionicPopup.alert({
-                title: 'Alert!',
+                title: title,
                 template: msg
             });
             alertPopup.then(function(res) {
@@ -680,18 +680,31 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         };
 
         $scope.onClickAnchorTag = function() {
-            var anchorText = document.getElementById('toggle').text;
-            if(anchorText=='SignUp'){
-                document.getElementById('toggle').text='Login';
-                document.getElementById('myOption').textContent = 'SignUp';
+            var anchorText = document.getElementById('toggle').textContent;
+            if(anchorText=='SIGN UP'){
+                document.getElementById('toggle').textContent='SIGN IN';
+                document.getElementById('myOption').textContent = 'SIGN UP';
+                document.getElementById('backgroundContent').style.background = '';
+                document.getElementById('welcomeDiv').style.display='block';
+                document.getElementById('loginDiv').style.marginTop='10%';
+
+                
             }else{
-                document.getElementById('toggle').text='SignUp';
-                document.getElementById('myOption').textContent = 'Login';
+                document.getElementById('toggle').textContent='SIGN UP';
+                document.getElementById('myOption').textContent = 'SIGN IN';
+                //document.getElementById('backgroundContent').style.background = "url('img/lalithaLoginImage.jpg')";
+                document.getElementById('backgroundContent').style.cssText = "height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;";
+                document.getElementById('welcomeDiv').style.display='none';
+                document.getElementById('loginDiv').style.marginTop='65%';
+
             }
+        };
+         $scope.onForgotPassword = function() {
+            showPopUp("Please contact administrator", "oops!!" );
         };
         $scope.onClickButton = function() {
             var buttonText = document.getElementById('myOption').textContent;
-            if(buttonText == 'Login') {
+            if(buttonText == 'SIGN IN') {
                 if(!$scope.userData.password || !$scope.userData.username){
                     //showPopUp("Please fill the required info");
                     $scope.showToast('this is a test', 'long', 'center');
@@ -908,7 +921,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var usersRef = dbRef.child('users/'+ uid );
             var promise = usersRef.set(foo);
             promise.then(function(e) {
-                showPopUp("Please Login Again");
+                showPopUp("Please click the SIGN IN button below to login", "CONGRATULATIONS!!");
                 $scope.showUserInputField = false;
                 window.localStorage.clear();
                 window.sessionStorage.clear();
@@ -1402,7 +1415,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var overAllPrice = 0;
             var overAllWeight = 0;
             if(!Object.keys($scope.deliveryArray).length){
-                myPopUp("No item in Lorry","Message");
+                myPopUp("Lorry is empty. Please add items to lorry","Message");
                 return;
             }
 
@@ -1526,31 +1539,90 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
 
     })
-    .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
-        var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+ 
+     .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
+       
+         $scope.loadPrices = function(){
+          var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+         
+         var internalVsDisplay = loginCred.dbRef.child('internalVsDisplay');
+         internalVsDisplay.once('value', function(data){
+              $scope.intVsDisp=  data.val();
+         })
+  
+          var areas = [];
+          usersRef.once('value', function(data){
+             var userobj = data.val();
+             var shops = userobj.shops;
+             if(shops!=null){
+                 for(i=0;i<shops.length;i++){
+                      areas.push(shops[i].areaId);
+                  }
+              }
 
-        var areas = [];
-        usersRef.once('value', function(data){
-            var userobj = data.val();
-            var shops = userobj.shops;
-            if(shops!=null){
-                for(i=0;i<shops.length;i++){
-                    areas.push(shops[i].areaId);
-                }
-            }
-        })
-        $scope.loadPrices = function(){
-
-            $scope.pricesForAreas ={};
-            for(j=0;j<areas.length;j++){
-                var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
-                ordersRef.once('value', function(data){
-                    $scope.pricesForAreas[areas[j]] = data.val();
-
-                })
-            }
-            console.log($scope.pricesForAreas);
-            $rootScope.$broadcast("cached",{});
-        };
-
-    })
+ 
+             $scope.pricesForAreas ={};
+             for(j=0;j<areas.length;j++){
+                
+                (function(j){
+                 var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
+                 ordersRef.once('value', function(data){
+                    console.log(areas[j]);
+                    var items = data.val();
+                    var riceArray = items['rice'];
+                    var ravvaArray = items['ravva'];
+                    var brokenArray = items['broken'];
+                    var foobar ={};
+                    var bar=[]
+                    for(product in riceArray){
+                        var displayNameOfProduct = $scope.intVsDisp[product];
+                        if(displayNameOfProduct ==null)
+                            displayNameOfProduct = product;
+                         
+                          var foo={
+                              name:displayNameOfProduct,
+                              price:riceArray[product].Agent
+                          };
+                          bar.push(foo);
+                    }
+                    foobar['Rice']= bar;
+                                       var bar=[]
+ 
+                    for(product in ravvaArray){
+                        var displayNameOfProduct = $scope.intVsDisp[product];
+                        if(displayNameOfProduct ==null)
+                            displayNameOfProduct = product;
+                           var foo={
+                              name:displayNameOfProduct,
+                              price:ravvaArray[product].Agent
+                          };
+                          bar.push(foo);
+                    }
+                    foobar['Ravva']= bar;
+                                       var bar=[]
+ 
+                    for(product in brokenArray){
+                        var displayNameOfProduct = $scope.intVsDisp[product];
+                        if(displayNameOfProduct ==null)
+                            displayNameOfProduct = product;
+                          var foo={
+                              name:displayNameOfProduct,
+                              price:brokenArray[product].Agent
+                          };
+                          bar.push(foo);
+                    }
+                    foobar['Broken']= bar;
+                    
+                     $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
+                     $scope.$apply();
+                     console.log($scope.pricesForAreas);
+                     $rootScope.$broadcast("cached",{});
+                     
+                })})(j);
+             }
+          })
+          
+         }})
+          
+         
+            

@@ -24,14 +24,13 @@
 
         <div class="padding">
             <div class="row">
+                <div class="row">
                 <div class="col">
-
+                    Lorry loaded<b>{{totalQuantity}} Quintals</b>
                 </div>
                 <div class="col">
-                    Total Quantity <b>{{totalQuantity}} Quintals</b>
+                    Capacity of Lorry <b>{{selectedLorrySize}}</b> tonnes
                 </div>
-                <div class="col">
-                    Lorry Size <b>{{selectedLorrySize}}</b>
                 </div>
             </div>
         </div>
@@ -66,7 +65,7 @@
                         </div>
                         <div class="row">
                             <input type="number" id="{{key}}quantity{{value.productId}}" ng-keyup="textInQuantity(key,this.value,$index);" ng-value="value.quantity"
-                                   style="text-align:center;width:25%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
+                                   style="text-align:center;width:30%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
 
                         </div>
                         <div class="row">
@@ -87,7 +86,7 @@
                         </div>
                         <div class="row">
                             <input type="number" id="{{key}}bag{{value.productId}}" ng-keyup="textInBag(key,this.value,$index);"  ng-value="value.bag"
-                                   style="text-align:center;width:25%;background-color: whitesmoke;border-bottom:1px solid black;"/>
+                                   style="text-align:center;width:30%;background-color: whitesmoke;border-bottom:1px solid black;"/>
 
                         </div>
                         <div class="row">
@@ -103,7 +102,7 @@
                         </div>
                         <div class="row" style="margin-top: 10%">
                             <button class="button" style="background-color: darkgrey" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
-                                ADD
+                                ADD TO LORRY
                             </button>
                         </div>
 

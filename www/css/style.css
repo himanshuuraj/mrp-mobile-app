@@ -131,7 +131,12 @@ input.animateInput {
     background-position: -98% 0;
     background-size: 98% 100%;
     background-repeat: no-repeat;
-    color: white;
+    color: black;
+    font-size: 16px;
+    
+}
+input.animateInput::-webkit-input-placeholder {
+    color:black
 }
 input.animateInput:focus, input.animateInput:valid {
     box-shadow: none;
@@ -139,7 +144,7 @@ input.animateInput:focus, input.animateInput:valid {
     background-position: 0 0;
 }
 input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-webkit-input-placeholder {
-    color: #1abc9c;
+    color: black;
     font-size: 11px;
     -webkit-transform: translateY(-20px);
     transform: translateY(-20px);
@@ -154,4 +159,17 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 
 .popup-container .popup{
     width: 80%;
+}
+
+img.lalithaBrand{
+    position:fixed;
+    left:0px;
+    top:0px;
+}
+
+.loginscreen {
+    height:100%;
+    background: url('img/lalithaLoginImage.jpg');
+    background-size:100% 100%; 
+    background-repeat: no-repeat;
 }
