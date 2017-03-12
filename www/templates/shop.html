@@ -1,4 +1,4 @@
-<ion-view view-title="SHOPS" ng-init="onInit()">
+<ion-view view-title="SHOPS"  ng-init="onInit()">
   <ion-content ng-init="init();">
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
         <ion-list>
@@ -44,15 +44,13 @@
           </center>
       </div>
 
-      <div id="shopDiv" class="padding" ng-show="showShopInput">
-          <div class="list list-inset">
-              <div class="row padding">
-                  <div class="col" style="background-color: darkgray;max-height:50px;">
+      <div id="shopDiv" style="padding:0" ng-show="showShopInput">
+          <div class="list list-inset" style="padding: 0">
+              <div class="row" style="padding:0">
+<!--                  <div class="col" style="background-color: darkgray;max-height:50px;">
                         <h4><center>New Shop</center></h4>
-                  </div>
-                  <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
-                         <button class="button button-block button-positive" ng-click="closeEditBox();" style="margin:0;">Cancel</button>
-                  </div>
+                  </div>-->
+                  
               </div>
           </div>
 
@@ -106,7 +104,7 @@
               </div>
           </div>
           <span class="row" style="padding-left: 5%;padding-top: 5%">Please Select Area</span>
-          <div id="selectarea" style="background-color: lightgray; margin-top: 5%; width: 70%; height:40px; border: 1px ">
+          <div id="selectarea" style="background-color: lightgray; margin-top: 5%; margin-left: 15%;width: 70%; height:40px; border: 1px ">
               <select ng-model="shop.areaId"
                       ng-options="item.id as item.name for item in areas">
                   <option value="">Select Area</option>
@@ -118,10 +116,19 @@
               </div>
           </div>
           <div class="padding">
-                 <button class="button button-block button-positive" ng-click="addNewShop()">
+              <div class="row">
+                    <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
+                         <button class="button button-block button-positive" ng-click="closeEditBox();" style="margin:0;">Cancel</button>
+                    </div>
+                    <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
+                        <button class="button button-block button-positive" style="margin: 0;" ng-click="addNewShop()">
                      <b ng-hide="editType">SUBMIT</b>
                      <b ng-show="editType">DONE</b>
-                 </button>
+                    </button>
+                    </div>
+                  
+              </div>
+                 
             </div>
       </div>
   </ion-content>

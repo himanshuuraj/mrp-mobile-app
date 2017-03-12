@@ -832,7 +832,10 @@ angular.module('starter.controllers', ['ngCordova'])
                     $scope.$apply();
                     //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
                     var usersRef = dbRef.child('users/' + authId);
-                }).catch(e => console.log(e));
+                }).catch(function(e){
+                    console.log(e);
+                    showPopUp(e)
+                });
             }
         }
 
