@@ -733,6 +733,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                                 window.localStorage.isActive = data.active;
                                 $rootScope.$broadcast('isAgent',{});
                                 if(!userInfo.isAgent){
+                                    window.localStorage.shopName = userInfo.shops[0].name;
                                     window.localStorage.areaId = userInfo.shops[0].areaId;
                                     window.localStorage.tin = userInfo.shops[0].tin;
                                 }
@@ -1439,6 +1440,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         }
 
         $scope.getShopName = function(tin){
+            if(window.localStorage.isAgent == "true")
+                return window.localStorage.shopName;
             return shopInfo[tin].name;
         }
 
