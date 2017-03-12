@@ -117,6 +117,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
     })
 
     .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope) {
+        var showPopUp = loginCred.showPopup;
         if(window.localStorage.isActive === 'false') {
             alert("User not activated. Please contact administrator");
             return;
@@ -150,7 +151,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 status : "received",
                 cart :  cartArray
             };
-            return;
 
             var usersRef = dbRef.child('users/' + window.localStorage.uid );
 
@@ -163,11 +163,11 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
-                alert("Your order has been successfully placed");
-                window.localStorage.removeItem(cartArray);
-                window.localStorage.removeItem(cartInfo);
+                showPopUp("Your order has been successfully placed. <br><hr> You can track your order from the orders page","Congratulations");
+               // window.localStorage.removeItem(cartArray);
+                window.localStorage.removeItem(window.localStorage.cartInfo);
                 window.location.hash = "#/app/search";
-            }).catch(function(e){ console.log(e);alert('Some problem occured while submitting the order')})
+            }).catch(function(e){ console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")})
         };
         $scope.showConfirmPopUp = function() {
             var myPopup = $ionicPopup.show({
@@ -1121,6 +1121,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
         $scope.closeEditBox = function(){
             $scope.showShopInput = false;
+            $scope.$apply();
         };
 
         $scope.editShop = function(){
