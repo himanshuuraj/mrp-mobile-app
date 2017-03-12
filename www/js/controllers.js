@@ -458,6 +458,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 addToCartElement = activeElement.querySelector("button.button-icon.button-clear.ion-ios-cart");
         }
         function doAnimation(key){
+            initializeAddToCartElement();
             var imageButton = document.getElementById(key+"image");
             cln = imageButton.cloneNode(true);
             document.body.appendChild(cln);
@@ -633,6 +634,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 totalItemInCart += $scope.cartArray[key].length;
             }
             if(totalItemInCart != 0){
+                if(!addToCartElement)
+                    initializeAddToCartElement();
                 addToCartElement.innerHTML = totalItemInCart;
             }
 

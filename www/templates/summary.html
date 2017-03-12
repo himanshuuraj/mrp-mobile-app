@@ -1,134 +1,110 @@
 <ion-view view-title="Shop" cache-view="false">
-  <ion-content ng-init = "init();">
-      <h3 style="margin-top:40px"><center>Order Summary</center></h3>
-      <div class="padding" ng-repeat="shop in shopArray" >
-          <h4 style="margin-left:10px">{{shop.name}}</h4>
-          <hr style="margin-left:10px">
-          <div class="row"  style="margin-top: 5px">
-             <div class="col span-1-of-4 box">
-                 <p><i>Item Name</i></p>
-             </div>  
-            <div class="col span-1-of-4 box">
-<!--                 <h4>abc</h4>-->
-                 <p>Weight in Quintals</p>
-             </div>      
-            <div class="col span-1-of-4 box">
-<!--                 <h4>abc</h4>-->
-                 <p>Number of Bags</p>
-             </div>
-              <div class="col span-1-of-4 box">
-                  <!--                 <h4>abc</h4>-->
-                  <p>Quintal Price</p>
-              </div>
-            <div class="col span-1-of-4 box">
-<!--                 <h4>abc</h4>-->
-                 <p style="padding-left: 25%">Price</p>
+    <ion-content ng-init = "init();">
+        <h3 style="margin-top:40px"><center>Order Summary</center></h3>
+        <div class="padding" ng-repeat="shop in shopArray" >
+            <h4 style="margin-left:10px">{{shop.name}}</h4>
+            <hr style="margin-left:10px">
+            <div class="row"  style="margin-top: 5px">
+                <div class="col">
+                    <span><i>Item Name</i></span>
+                </div>
+                <div class="col">
+                    <span>Weight in Quintals</span>
+                </div>
+                <div class="col">
+                    <span>Number of Bags</span>
+                </div>
+                <div class="col">
+                    <span>Quintal Price</span>
+                </div>
+                <div class="col">
+                    <span>Price</span>
+                </div>
+
             </div>
 
-           </div>
-          
-           <div ng-repeat="(key,item) in shop.items" >
-            <div ng-repeat="(k,v) in item" >
-
-            <div class="row">
-             <div class="col span-1-of-4 box">
-<!--                 <h4>Name</h4>-->
-                 <p >{{v.name}}</p>
-             </div>  
-            <div class="col span-1-of-4 box">
-<!--                 <h4>abc</h4>-->
-                <p style="padding-left: 25%">{{v.weight}}</p>
-             </div>      
-            <div class="col span-1-of-4 box">
-<!--                 <h4>abc</h4>-->
-                 <p style="padding-left: 25%">{{v.bags}}</p>
-             </div>
-            <div class="col span-1-of-4 box">
-                 <p style="padding-left: 25%">&#8377;{{v.quintalWeightPrice}}</p> </div>
-            </div>
-            <div class="col span-1-of-4 box">
-                 <p style="padding-left: 25%">&#8377;{{v.price}}</p> </div>      
-            </div>
-            </div>
-                <hr style="border-top: 1px dotted">
-          <br> 
-           </div>
-      </div>
-       
-      <div class="row" style="margin-top: 5%;">
-          <div class="col" >
-              <p style="margin-left: 10px;">REDEEM COUPON</p>
-              <div class="row" style="margin-top: 5%;">
-                  <div class="col" style="border: 1px solid black;border-radius: 20px;height:50%;margin-right: 15px">
-                        <input class="coupon" type="text" placeholder="COUPON CODE" ng-model="cartArray.couponCode">
-                  </div>
-                  <div class="col" style="padding: 0">
-                    <button class="button button-block button-calm" style="background-color: lightslategray;" ng-click="applyCoupon()">APPLY</button>
-                </div>
-              </div>
-              <div class="row" style="margin-top:5%">
-                 <textarea style="margin-top: 122%" rows="4" placeholder="Special instructions. Example: &quot;Do not deliver the order on Sunday&quot;"></textarea>
-              </div>
-          </div>
-          
-           
-           <div class="col col-50" style="padding-left: 5%;padding-top: 20%;font-size: 75%;margin-bottom: 20%">
-               <ul class="priceList">
-                   <li>
-                <div class="row" style="margin-top: 20px;">
-                  <div class="col" style="padding: 0">
-                      <span>TOTAL PRICE</span>
-                  </div>
-                  <div class="col" style="padding: 0">
-                      <span style="padding-left: 20%" id="gross_price">&#8377;{{cartArray.grossPrice}}</span>
-                   </div>
-                </div>
-                   </li>
-                   <li>
-                       <div class="row" style="margin-top: 20px">
-                  <div class="col" style="padding: 0">
-                        <span>DISCOUNT</span>
-                  </div>
-                  <div class="col" style="padding: 0">
-                       <span style="padding-left: 20%" id="discount_amount">&#8377;{{cartArray.discountAmount}}</span>
-                   </div>
+            <div ng-repeat="(key,item) in shop.items" >
+                <div ng-repeat="(k,v) in item" >
+                    <div class="row">
+                        <div class="col">
+                            <span>{{v.name}}</span>
+                        </div>
+                        <div class="col">
+                            <span>{{v.weight}}</span>
+                        </div>
+                        <div class="col">
+                            <span>{{v.bags}}</span>
+                        </div>
+                        <div class="col">
+                            <span>&#8377;{{v.quintalWeightPrice}}</span>
+                        </div>
+                        <div class="col">
+                            <p style="padding-left: 25%">&#8377;{{v.price}}</p>
+                        </div>
                     </div>
-                       
-                   </li>
-                   <li>
-                       <div class="row" style="margin-top: 20px">
-                  <div class="col" style="padding: 0">
-                       <span>TRANSPORT</span>
-                  </div>
-                  <div class="col" style="padding: 0">
-                       <span style="padding-left: 20%" id="transp_cost">&#8377;1200</span>
-                   </div>
                 </div>
-                   </li>
-                    <li>
-                        <div class="row" style="margin-top: 20px">
-                  <div class="col" style="padding: 0">
-                       <span>TAX</span>
-                  </div>
-                  <div class="col" style="padding: 0">
-                       <span style="padding-left: 20%" id="tax">&#8377;2000</span>
-                   </div>
-                </div>
-                   </li>
-                   <li>
-                         <div class="row" style="margin-top: 20px">
-                  <div class="col" style="padding: 0">
-                      <span>GRAND TOTAL</span>
-                  </div>
-                  <div class="col" style="padding: 0;">
-                      <span style="padding-left: 20%;" id="grand_total">&#8377;{{cartArray.totalPrice}}</span></li>
-                  <li><div class="row" style="margin-top: 10%;">
-                       <button class="button button-block button-calm" style="width: 20%;position: fixed;background-color: #d02139;" ng-click="showConfirmPopUp()">Submit</button>
-                      </div>  
-                  </li>
-               </ul>
-          </div>
-      </div>
+            </div>
+            <hr style="border-top: 1px dotted">
+            <br>
+        </div>
+        </div>
 
-  </ion-content>
+        <div class="row" style="margin-top: 5%;">
+            <div class="col" >
+                <p style="margin-left: 10px;">REDEEM COUPON</p>
+                <div class="row" style="margin-top: 5%;">
+                    <div class="col" style="border: 1px solid black;border-radius: 20px;height:50%;margin-right: 15px">
+                        <input class="coupon" type="text" placeholder="COUPON CODE" ng-model="cartArray.couponCode">
+                    </div>
+                    <div class="col" style="padding: 0">
+                        <button class="button button-block button-calm" style="background-color: lightslategray;margin-top:0;" ng-click="applyCoupon()">APPLY</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5%">
+                    <textarea style="" rows="4" placeholder="Special instructions. Example: &quot;Do not deliver the order on Sunday&quot;"></textarea>
+                </div>
+            </div>
+
+
+            <div class="col" style="padding-left: 5%;font-size: 75%;margin-bottom: 20%">
+                <ul class="priceList">
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>TOTAL PRICE</span>
+                            </div>
+                            <div class="col" style="padding: 0">
+                                <span style="padding-left: 20%" id="gross_price">&#8377;{{cartArray.grossPrice}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>DISCOUNT</span>
+                            </div>
+                            <div class="col" style="padding: 0">
+                                <span style="padding-left: 20%" id="discount_amount">&#8377;0</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>GRAND TOTAL</span>
+                            </div>
+                            <div class="col" style="padding: 0;">
+                                <span style="padding-left: 20%;" id="grand_total">&#8377;{{cartArray.totalPrice}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li><div class="row" style="margin-top: 10%;left:70%;">
+                        <button class="button button-block button-calm" style="width: 20%;position: fixed;background-color: #d02139;" ng-click="showConfirmPopUp()">Submit</button>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </ion-content>
 </ion-view>
