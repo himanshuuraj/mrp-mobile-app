@@ -17,13 +17,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var x = this.toString();
             return parseInt(x.substring(0,x.length-2));
         }
-        this.moveToUrl = function(urlToMove){
-            var currentUrl = window.location.href.toString();
-            var index = currentUrl.indexOf("/app/");
-            currentUrl = currentUrl.substring(0,index);
-            currentUrl += '/app/' + urlToMove;
-            window.location.href = currentUrl;
-        };
 
         this.showPopup = function(msg,title) {
             title = title || "Alert";
@@ -34,67 +27,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             alertPopup.then(function(res) {
                 console.log('Thank you for not eating my delicious ice cream cone');
             });
-        };
-        this.addQuantity = function(key,masterWeight,index){
-            var weight = masterWeight.getWeight();
-            var element;
-            if(index != undefined)
-                element  = document.getElementById(key+"quantity" + index);
-            else
-                element = document.getElementById(key+"quantity");
-            var initWeight = element.value;
-            if(initWeight)
-                initWeight = parseInt(initWeight);
-            element.value = initWeight + weight/100;
-            if(index == undefined)
-                this.textInQuantity(key,masterWeight);
-            else
-                this.textInQuantity(key,masterWeight,index);
-        };
-        this.minusQuantity = function(key,masterWeight,index){
-            var weight = masterWeight.getWeight();
-            var element;
-            if((index === 0)  || index)
-                element  = document.getElementById(key+"quantity" + index);
-            else
-                element = document.getElementById(key+"quantity");
-            var initWeight = element.value;
-            if(initWeight)
-                initWeight = parseInt(initWeight);
-            var finalWeight = initWeight - weight/100;
-            if(finalWeight < 0)
-                return;
-            element.value = finalWeight;
-            if((index === 0)  || index)
-                this.textInQuantity(key,masterWeight,index);
-            else
-                this.textInQuantity(key,masterWeight);
-        };
-        this.addBag = function(key,master_weight,index){
-            var element;
-            if((index === 0)  || index)
-                element  = document.getElementById(key+"bag" + index);
-            else
-                element = document.getElementById(key+"bag");
-            element.value = ++element.value;
-            if((index === 0)  || index)
-                this.textInBag(key,master_weight,index);
-            else
-                this.textInBag(key,master_weight);
-        };
-        this.minusBag = function(key,master_weight,index){
-            var element;
-            if((index === 0)  || index)
-                element  = document.getElementById(key+"bag" + index);
-            else
-                element = document.getElementById(key+"bag");
-            if(!(element.value < 1)){
-                element.value = --element.value;
-                if((index === 0)  || index)
-                    this.textInBag(key,master_weight,index);
-                else
-                    this.textInBag(key,master_weight);
-            }
         };
         var computePrice = this.computePrice = function(key,index) {
             var bagElement;
@@ -110,33 +42,16 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         };
         this.textInBag = function(key,master_weight,index){
             var weight =  master_weight.getWeight();
-            var bagElement;
-            if((index === 0)  || index)
-                bagElement = document.getElementById(key+"bag"+index);
-            else
-                bagElement = document.getElementById(key+"bag");
+            var bagElement = document.getElementById(key+"bag");
             var bagNumber = parseInt(bagElement.value);
-            if((index === 0)  || index)
-                document.getElementById(key+"quantity"+index).value = (bagNumber * weight)/100 ;
-            else
-                document.getElementById(key+"quantity").value = (bagNumber * weight)/100;
-            // computePrice(key,index);
-
+            document.getElementById(key+"quantity").value = (bagNumber * weight)/100;
         };
 
         this.textInQuantity = function(key,weight,index){
-            var quantityElement = !index?document.getElementById(key+"quantity"):document.getElementById(key+"quantity"+index);
-            if((index === 0)  || index)
-                quantityElement = document.getElementById(key+"quantity"+index);
-            else
-                quantityElement = document.getElementById(key+"quantity");
+            var quantityElement = document.getElementById(key+"quantity");
             var quantity = Number(quantityElement.value);
-            var bag;
-            if((index === 0)  || index)
-                bag = document.getElementById(key+"bag"+index);
-            else
-                bag = document.getElementById(key+"bag");
-            weight = weight.getWeight();//Number(weight.substring(0,weight.length - 2));
+            var bag = document.getElementById(key+"bag");
+            weight = weight.getWeight();
             bag.value =  quantity*100/weight;
         };
         this.getImageUrl = function(key,selectedItem){
@@ -307,10 +222,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 console.log(existingShops);
             });
         }
-        $scope.addQuantity = loginCred.addQuantity;
-        $scope.minusQuantity = loginCred.minusQuantity
-        $scope.addBag = loginCred.addBag;
-        $scope.minusBag = loginCred.minusBag;
         var addToCartElement = document.getElementById("addToCartLogo");
         var userInfo = {};
         if(window.localStorage.userInfo)

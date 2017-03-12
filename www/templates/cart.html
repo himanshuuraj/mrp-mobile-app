@@ -6,8 +6,8 @@
                 <div class="col-75" style="height:40px;float:right">
                     Lorry Size is {{selectedLorrySize}} tonnes
                 </div>
-                <div class="col" style="height:40px;">
-                    <button class="button button-positive" ng-click="showLorryPopUp();">Change</button>
+                <div class="col" style="height:40px;padding:0;">
+                    <button class="button button-positive" ng-click="showLorryPopUp();" style="min-height: 0px;">Change</button>
                 </div>
             </div>
         </div>
@@ -96,62 +96,6 @@
                             </div>
 
                         </div>
-
-                        <!--                <div class="col" style="margin-left: -5%;margin-top: -5%">
-                                            <div class="row">
-                                            <div class="col">
-                                            <div class="row">
-                                                <span style="padding:0;font-weight: 200">Quintals</span>
-                                            </div>
-                                            <div class="row">
-                                                <div style="font-size:20px;" ng-click="addQuantity(key,this.value.master_weight,$index);">
-                                                            <i class="icon ion-plus-circled" ></i>
-                                                </div>
-
-                                            </div>
-                                            <div class="row">
-                                                  <input type="number" id="{{key}}quantity{{$index}}" ng-keyup="textInQuantity(key,this.value.master_weight);" ng-value="value.quantity"
-                                                             style="text-align:center;width:50%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
-
-                                            </div>
-                                            <div class="row">
-                                                 <div style="font-size:20px;" ng-click="minusQuantity(key,this.value.master_weight,$index)">
-                                                            <i class="icon ion-minus-circled"></i>
-                                                </div>
-                                          </div>
-                                            </div>
-
-
-                                                <div class="col" style="margin-left: -20%">
-                                            <div>
-                                                <span style="padding:0;font-weight: 200">Bags</span>
-                                            </div>
-                                            <div class="row">
-                                                <div style="font-size:20px;" ng-click="addBag(key,this.value.master_weight,$index);">
-                                                    <i class="icon ion-plus-circled"></i>
-                                             </div>
-                                            </div>
-                                            <div class="row">
-                                                   <input type="number" id="{{key}}bag{{$index}}" ng-keyup="textInBag(key,this.value.master_weight);"  ng-value="value.bag"
-                                                             style="text-align:center;width:50%;background-color: whitesmoke;border-bottom:1px solid black;"/>
-
-                                            </div>
-                                            <div class="row">
-                                               <div style="font-size:20px;" ng-click="minusBag(key,this.value.master_weight,$index);">
-                                              <i class="icon ion-minus-circled" ></i>
-                                          </div>
-                                            </div>
-
-
-                                        </div>
-                                            </div>
-
-
-                                        </div>-->
-
-                        <!--                <button class="button ion-arrow-up-c" id="{{key}}button{{$index}}" ng-click="addToDelivery(key,value,$index)"
-                                                      style="position:absolute;right:0px;top:0px;height:50px;background-color:darkgray;">
-                                              </button>-->
                     </div>
                     <div class="col">
                         <div class="row" style="margin-top: 10%">
