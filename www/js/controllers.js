@@ -749,6 +749,9 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                                     window.localStorage.shopName = userInfo.shops[0].name;
                                     window.localStorage.areaId = userInfo.shops[0].areaId;
                                     window.localStorage.tin = userInfo.shops[0].tin;
+                                    var x ={};
+                                    x[userInfo.shops[0].tin] = userInfo.shops[0];
+                                          window.localStorage.shopInfo = JSON.stringify(x);
                                 }
                                 if(!userInfo.shops || (userInfo.shops.length == 0))
                                     window.location.hash = "#/app/shop";
@@ -1459,8 +1462,6 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         }
 
         $scope.getShopName = function(tin){
-            if(window.localStorage.isAgent == "true")
-                return window.localStorage.shopName;
             return shopInfo[tin].name;
         }
 
@@ -1512,12 +1513,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                         }
                         foo.push(singleMsg);
                     }
-                    $scope.orderStatusArray[orderId] = {
+                   
+                }
+                 $scope.orderStatusArray[orderId] = {
                         updates:foo,
                         status:order.status
                     }
                     $scope.$apply();
-                }
 
 
             })
@@ -1550,6 +1552,14 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                  var shops = userobj.shops;
                  if(shops!=null){
                      for(i=0;i<shops.length;i++){
+                         var found=false;
+                         for(ky=0;ky<areas.length;ky++){
+                             if(areas[ky]==shops[i].areaId){
+                                 found=true;
+                                 break;
+                             }
+                         }
+                         if(!found)
                           areas.push(shops[i].areaId);
                       }
                   }
@@ -1622,23 +1632,48 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
      
      
      .controller('profileCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
-       $scope.userProfile={};
+       $scope.userProfile={}; var  usersRef ;var userObj;$scope.userProfileView={};
+       var showPopup = loginCred.showPopup;
+       $scope.onEditProfile = function() {
+           $scope.editProfile=true;
+       }
         $scope.loadUserProfile = function(){
-             var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+            usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
              usersRef.once('value', function(data){
                  console.log(data.val());
-                 var userObj = data.val();
+                 userObj = data.val();
                  
-                 $scope.userProfile['Name'] = userObj['name'];
-                 $scope.userProfile['Email'] = userObj['email'];
-                 $scope.userProfile['Is Agent'] = userObj['isAgent'];
-                 $scope.userProfile['Address'] = userObj['address'];
-                 $scope.userProfile['Mobile'] = userObj['mobile'];
+                 $scope.userProfileView['Name'] = userObj['name'];
+                 $scope.userProfileView['Email'] = userObj['email'];
+                 $scope.userProfileView['Is Agent'] = userObj['isAgent'];
+                 $scope.userProfileView['Address'] = userObj['address'];
+                 $scope.userProfileView['Mobile'] = userObj['mobile'];
                  $scope.$apply();
 
              })
             
-            $rootScope.$broadcast("cached",{});
+           $rootScope.$broadcast("cached",{});
+        };
+        
+        $scope.updateProfile = function(){
+           
+            userObj['name'] = $scope.userProfile['name'];
+            userObj['address'] = $scope.userProfile['address'];
+                          
+            var promise = usersRef.update(userObj);
+            promise.then(function(data){
+                  $scope.editProfile=false;
+                $scope.userProfileView['Name'] = userObj['name'];
+                $scope.userProfileView['Address'] = userObj['address'];
+                $scope.$apply();
+                showPopup('User information updated successfully', 'Success');
+                
+            }).catch(function(e){ console.log(e);showPopUp('Some problem occured while updating the user information',"Failed!!")})
+
+        };
+        
+        $scope.cancel = function(){
+            $scope.editProfile = false;
         };
        
              })

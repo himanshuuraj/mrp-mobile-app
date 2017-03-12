@@ -3,10 +3,14 @@
       <div class="padding" ng-hide="editProfile">
         <ion-list>
             <div class="row" style="margin-top: 5%">
-                <div class="col-90">  </div>
-                <div class="col-10"><i class="icon ion-edit" ng-click="showEditBox(shop);"></i></div>
+                <div class="col col-75">  </div>
+                <div class="col">
+                    <button class="button icon icon-left ion-edit" ng-click="onEditProfile();">
+                        Edit
+                     </button>
+                </div>
             </div>
-            <div class="card" style="background-color: whitesmoke;margin-top: 5%"ng-repeat="(key,value) in userProfile">
+            <div class="card" style="background-color: whitesmoke;margin-top: 5%"ng-repeat="(key,value) in userProfileView  ">
                     <div class="row" style="padding-left: 5%;">
                         <div class="col-25" >{{key}}</div>
                             <div class="col" >{{value}}</div>
@@ -14,6 +18,34 @@
                     
             </div>
         </ion-list>   
+      </div>
+      <div class="padding" ng-show="editProfile">
+          
+            <div class="list list-inset">
+                <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <input type="text" class="animateInput" placeholder="Name" ng-model="userProfile.name" required="" style="width: 98%;">
+                    </div>
+                </div>              
+                <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <input type="text" class="animateInput" placeholder="Address" ng-model="userProfile.address" required="" style="width: 98%;">
+                    </div>
+                </div>
+                
+            </div>
+          <div class="row">
+              <div class="col">
+                 <button class="button button-block button-stable" ng-click="cancel()">
+                 Cancel
+                 </button>
+              </div>
+              <div class="col">
+                  <button class="button button-block button-positive" ng-click="updateProfile()">
+                 UPDATE
+                 </button>
+              </div>
+            </div>
       </div>
   </ion-content>
 </ion-view>
