@@ -91,13 +91,20 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
         $rootScope.$on('cached',function (data) {
             $timeout(function(){
-                var hidden = document.querySelector('[nav-bar="cached"]');
-                if(hidden)
-                var hiddenParent = hidden.parentNode;
-                hiddenParent.removeChild(hidden);
+               /* var hidden = document.querySelector('[nav-bar="cached"]');
+                var hiddenParent;
+                if(hidden) {
+                    var y = hidden.querySelector("#naviconIcon");
+                    if(y){
+                        var z = y.parentNode;
+                        z.removeChild(y);
+                    }
+                    //hiddenParent = hidden.parentNode;
+                    //hiddenParent.removeChild(hidden);
+                }*/
                 var x = document.querySelector('[nav-bar="active"]');
                 if(x)
-                x.querySelector("#naviconIcon").className = "button button-icon button-clear ion-navicon";
+                    x.querySelector("#naviconIcon").className = "button button-icon button-clear ion-navicon";
             },1000);
 
         });
@@ -1186,7 +1193,9 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         var myPopUp = loginCred.showPopup;
 
         $scope.init = function(){
-            var temp = JSON.parse(window.localStorage.cartArray);
+            var temp = [];
+            if(window.localStorage.cartArray)
+                temp = JSON.parse(window.localStorage.cartArray);
             $scope.cartArray = temp || [];
             console.log($scope.cartArray);
             $timeout(function () {

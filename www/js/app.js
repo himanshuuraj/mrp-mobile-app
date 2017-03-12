@@ -8,8 +8,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
-    $ionicConfigProvider.views.forwardCache(true);
-  //$ionicConfigProvider.views.swipeBackEnabled(false);
+    $ionicConfigProvider.views.forwardCache(false);
+  $ionicConfigProvider.views.swipeBackEnabled(false);
   $stateProvider
 
     .state('app', {
