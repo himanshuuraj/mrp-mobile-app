@@ -8,16 +8,14 @@
                   {{shopDetail.name}}
               </div>
               <div class="col" style="padding: 0" >
-
-                      <button class="button button-positive"  ng-click="showShopPopUp();" style="min-height: 0px;">
+                    <button class="button button-positive"  ng-click="showShopPopUp();" style="min-height: 0px;">
                         Change
                       </button>
-
               </div>
           </div>
       </div>
 
-    <div class="button-bar padding" style="margin-top: 10%">
+    <div class="button-bar padding" style="">
         <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="min-height:135px;height:auto;background-color:lightgray;position:relative;">

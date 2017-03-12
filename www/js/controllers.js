@@ -229,7 +229,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 console.log(existingShops);
             });
         }
-        var addToCartElement = document.getElementById("addToCartLogo");
+
         var userInfo = {};
         if(window.localStorage.userInfo)
             userInfo = JSON.parse(window.localStorage.userInfo);
@@ -450,8 +450,14 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 return Math.floor(this.start);
             }
         };
+        var addToCartElement;
+        function initializeAddToCartElement() {
+            addToCartElement = document.getElementById("addToCartLogo");
+            var activeElement = document.querySelector('[nav-bar="active"]');
+            if (activeElement)
+                addToCartElement = activeElement.querySelector("button.button-icon.button-clear.ion-ios-cart");
+        }
         function doAnimation(key){
-            addToCartElement.className = "button button-icon button-clear ion-ios-cart";
             var imageButton = document.getElementById(key+"image");
             cln = imageButton.cloneNode(true);
             document.body.appendChild(cln);
@@ -483,6 +489,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                     count = 0;
                     $interval.cancel(promise);
                     document.body.removeChild(cln);
+                    if(!addToCartElement)
+                        initializeAddToCartElement();
                     addToCartElement.className += " shakeAnimation";
                     updateCart();
                 }
@@ -624,8 +632,10 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             for(var key in $scope.cartArray){
                 totalItemInCart += $scope.cartArray[key].length;
             }
-            if(totalItemInCart != 0)
-                document.getElementById("addToCartLogo").innerHTML = totalItemInCart;
+            if(totalItemInCart != 0){
+                addToCartElement.innerHTML = totalItemInCart;
+            }
+
         }
         var updateUI = function(){
             deleteUI();
@@ -1519,8 +1529,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             return a;
         };
     })
- 
      .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
+
        
          $scope.loadPrices = function(){
             var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );

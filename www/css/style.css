@@ -161,7 +161,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
     width: 80%;
 }
 
-#shopDiv input::-webkit-input-placeholder {
+#shopDiv input::-webkit-input-placeholder, #showShopInputinput::-webkit-input-placeholder {
     color:gray;
     font-size:12px;
 }
