@@ -292,7 +292,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             window.localStorage.shopName = $scope.shopDetail.name = userInfo.shops[0].name;
             window.localStorage.tin = $scope.shopDetail.tin = userInfo.shops[0].tin;
             $scope.cartArray[$scope.shopDetail.tin] = [];
-        }else{
+        }
+        else{
             $scope.shopArray = userInfo.shops || [];
             if(!window.localStorage.tin)
                 $scope.showShopPopUp();
@@ -1391,7 +1392,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             var grossPrice =0;
             var overAllPrice = 0;
             var overAllWeight = 0;
-            if(!Object.keys($scope.cartArray).length){
+            if(!Object.keys($scope.deliveryArray).length){
                 myPopUp("No item in Lorry","Message");
                 return;
             }
@@ -1444,7 +1445,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
 
     })
 
-    .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout) {
+    .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope) {
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
         $scope.orderStatusArray = {};  $scope.ordersArray = [];
         $scope.loadOrders = function(){
@@ -1510,11 +1511,13 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
             return a;
         }
 
-
+        $scope.init = function(){
+            $rootScope.$broadcast("cached",{});
+        };
 
 
     })
-    .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
+    .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
 
         var areas = [];
@@ -1538,7 +1541,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 })
             }
             console.log($scope.pricesForAreas);
-
-        }
+            $rootScope.$broadcast("cached",{});
+        };
 
     })
