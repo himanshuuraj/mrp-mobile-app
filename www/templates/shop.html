@@ -47,11 +47,11 @@
       <div id="shopDiv" class="padding" ng-show="showShopInput">
           <div class="list list-inset">
               <div class="row padding">
-                  <div class="col" style="background-color: darkgray">
+                  <div class="col" style="background-color: darkgray;max-height:50px;">
                         <h4><center>New Shop</center></h4>
                   </div>
-                  <div class="col">
-                         <button class="button button-block button-positive" ng-click="closeEditBox();">Cancel</button>
+                  <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
+                         <button class="button button-block button-positive" ng-click="closeEditBox();" style="margin:0;">Cancel</button>
                   </div>
               </div>
           <div class="list list-inset" ng-hide="isChecked">

@@ -1452,7 +1452,8 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
                 function(data){
                     $scope.ordersArray = data.val().orders;
                     $scope.$apply();
-                })
+                });
+            $rootScope.$broadcast("cached",{});
         }
 
         $scope.onClickOrder = function(orderId){
@@ -1508,13 +1509,7 @@ angular.module('starter.controllers', ['ngDraggable','ngCordova'])
         $scope.getOrderStatus = function(orderId) {
             var a = { orderId : $scope.orderStatusArray[orderId]}
             return a;
-        }
-
-        $scope.init = function(){
-            $rootScope.$broadcast("cached",{});
         };
-
-
     })
  
      .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout){
