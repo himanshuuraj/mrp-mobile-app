@@ -125,8 +125,58 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.init = function(){
             $scope.cartArray = JSON.parse(window.localStorage.cartInfo);
             $scope.shopArray=$scope.cartArray.shopDetail;
+            $scope.applyDiscount();
             $rootScope.$broadcast("cached",{});
         };
+        
+        $scope.applyDiscount = function(){
+            var shopArray = $scope.shopArray;
+            var totaldiscountedPrice = 0;
+            shopArray.forEach(function(shop){
+      
+                    
+                var items = shop.items;
+                var riceObject = items.rice;
+                var ravvaObject = items.ravva;
+                var brokenObject = items.broken;
+                var shopRiceWeight = 0;var shopRavvaWeight = 0; var shopBrokenWeight= 0;
+                for(var productId in riceObject){
+                    shopRiceWeight += riceObject[productId].weight;
+                }
+                for(var productId in ravvaObject){
+                    shopRavvaWeight += ravvaObject[productId].weight;
+                }
+                for(var productId in brokenObject){
+                    shopBrokenWeight += brokenObject[productId].weight;
+                }
+                var ricediscount=0, ravvadiscount=0;
+                
+                if(shopRiceWeight >=35 && shop.areaId =='EG_PDP'){
+                                         ricediscount=35;
+
+                }
+                if(shopRavvaWeight >=35 && shop.areaId =='EG_PDP'){
+                                         ravvadiscount=25;
+
+                }
+                 for(var productId in riceObject){
+                        riceObject[productId]['discountedQuintalPrice']=  riceObject[productId].quintalWeightPrice - ricediscount;
+                       riceObject[productId]['price']= riceObject[productId].discountedQuintalPrice * riceObject[productId]['weight'];
+                       totaldiscountedPrice += ricediscount*riceObject[productId]['weight']
+                }
+                        for(var productId in ravvaObject){
+                                    ravvaObject[productId]['discountedQuintalPrice']=  ravvaObject[productId].quintalWeightPrice - ravvadiscount;
+                                    ravvaObject[productId]['price']= ravvaObject[productId].discountedQuintalPrice * ravvaObject[productId]['weight']
+                                                           totaldiscountedPrice += ravvadiscount*ravvaObject[productId]['weight'];
+                        }                
+                   
+                              
+                
+            })
+            document.getElementById('discount_amount').innerHTML = "&#8377;"+totaldiscountedPrice.toString();
+            $scope.cartArray["discount_amount"] = totaldiscountedPrice;
+            $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - totaldiscountedPrice;
+        }
         $scope.submitOrder = function(){
             var userInfo = JSON.parse(window.localStorage.userInfo);
             var dbRef = loginCred.dbRef;
@@ -544,12 +594,7 @@ angular.module('starter.controllers', ['ngCordova'])
         }
 
         $scope.computePrice = function(key,index) {
-            var bagElement;
-            if((index === 0)  || index)
-                bagElement = document.getElementById(key+"bag"+index);
-            else
-                bagElement = document.getElementById(key+"bag");
-
+            var bagElement = document.getElementById(key+"bag");
             var price= $scope.getPrice(key);
             var bagNumber =  Number(bagElement.value);
             document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
