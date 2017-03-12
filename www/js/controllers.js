@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngDraggable','ngCordova'])
+angular.module('starter.controllers', ['ngCordova'])
 
     .service('loginCred', function($ionicPopup) {
         var config = {
