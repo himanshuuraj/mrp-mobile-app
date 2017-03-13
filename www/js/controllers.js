@@ -248,7 +248,7 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
                          "You can track your order from the orders page","Yay!!");
-               // window.localStorage.removeItem(cartArray);
+                window.localStorage.removeItem("cartArray");
                 window.localStorage.removeItem("cartInfo");
                 window.location.hash = "#/app/search";
             }).catch(function(e){ console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")})
