@@ -723,7 +723,7 @@ angular.module('starter.controllers', ['ngCordova'])
             updateCart();
         }
 
-        $http.get("https://mrps-orderform.firebaseio.com/products.json")
+        $http.get("https://stage-db-b035c.firebaseio.com/products.json")
             .success(function(data){
                 console.log(data);
                 $scope.brokenArray = data.broken;
