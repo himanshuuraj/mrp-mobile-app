@@ -182,12 +182,12 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 var ricediscount=0, ravvadiscount=0;
                 
-                if(shopRiceWeight >=35 && shop.areaId =='EG_PDP'){
-                                         ricediscount=35;
+                if(shopRiceWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' || shop.areaId =='EG_TUNI')){
+                                         ricediscount=25;
 
                 }
-                if(shopRavvaWeight >=35 && shop.areaId =='EG_PDP'){
-                                         ravvadiscount=25;
+                if(shopRavvaWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' || shop.areaId =='EG_TUNI')){
+                                         ravvadiscount=20;
 
                 }
                  for(var productId in riceObject){
