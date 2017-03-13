@@ -244,7 +244,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
-                showPopUp("Your order has been successfully placed. <br><hr> You can track your order from the orders page","Congratulations");
+                showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
+                         "You can track your order from the orders page","Yay!!");
                // window.localStorage.removeItem(cartArray);
                 window.localStorage.removeItem("cartInfo");
                 window.location.hash = "#/app/search";
@@ -1275,12 +1276,12 @@ angular.module('starter.controllers', ['ngCordova'])
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.deliveryArray = {};
-        var selectedLorrySize = $scope.selectedLorrySize = 25;
+        var selectedLorrySize = $scope.selectedLorrySize = 10;
         var progressBarElement = document.getElementById("progressBar");
         var totalQuantity = $scope.totalQuantity = 0;
         var earlySelectedLorry;
         $scope.deliveryArray = [];
-        $scope.lorryArray = [17,21,25];
+        $scope.lorryArray = [3.5,7,10,17,21,25];
 
         var myPopUp = loginCred.showPopup;
 
@@ -1488,16 +1489,49 @@ angular.module('starter.controllers', ['ngCordova'])
         }
         $scope.checkoutOrder = function(){
             //window.localStorage.shopArray = JSON.stringify($scope.deliveryArray);
-            var cartInfo = {};
-            var arr = [];
-            var grossPrice =0;
-            var overAllPrice = 0;
-            var overAllWeight = 0;
+           
             if(!Object.keys($scope.deliveryArray).length){
                 myPopUp("Lorry is empty. Please add items to lorry","Message");
                 return;
             }
-
+            
+            if($scope.totalQuantity > $scope.selectedLorrySize*10){
+            
+                lorryOverloadedPopup();
+           
+            }else{
+                massageDataToSummaryCtrl();
+            }
+        } 
+        
+        var lorryOverloadedPopup = function(){
+             var myPopup   = $ionicPopup.show({
+                template: 
+                '<p>Lorry overloaded!!. Do you want to continue ?</p>',
+                title: 'Confirmation',
+                scope: $scope,
+                buttons: [
+                    {   text: 'No',                        
+                    }, {
+                        text: '<b>Yes</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            massageDataToSummaryCtrl();
+                        }
+                    }
+                ]
+            });
+            myPopup.then(function(res) {
+                console.log('Tapped!', res);
+            });
+        }
+        
+         var massageDataToSummaryCtrl=  function () {
+              var cartInfo = {};
+                var arr = [];
+            var grossPrice =0;
+            var overAllPrice = 0;
+            var overAllWeight = 0;
             for(var key in $scope.deliveryArray){
                 var shopOrder = $scope.deliveryArray[key] || [];
                 var shopOrderLength = shopOrder.length;
@@ -1535,10 +1569,12 @@ angular.module('starter.controllers', ['ngCordova'])
             cartInfo["grossPrice"] = cartInfo["totalPrice"] = overAllPrice;
             cartInfo["totalWeight"] = overAllWeight;
             cartInfo["shopDetail"] = arr;
+            cartInfo["selectedLorrySize"] = $scope.selectedLorrySize;
             console.log(cartInfo);
             window.localStorage.cartInfo = JSON.stringify(cartInfo);
             window.location.hash = "#/app/summary";
         }
+        
 
         $scope.getShopName = function(tin){
             return shopInfo[tin].name;
