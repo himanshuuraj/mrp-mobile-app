@@ -1550,14 +1550,14 @@ angular.module('starter.controllers', ['ngCordova'])
                     y["price"] = shopOrderItem.price;
                     y["weight"] = shopOrderItem.quantity;
                     y["masterWeightPrice"] = Math.round((shopOrderItem.price/parseInt(shopOrderItem.bag)) * 100) / 100;
-                    y["quintalWeightPrice"] = Math.round((shopOrderItem.price/shopOrderItem.quantity)*100)/100;
+                    y["quintalWeightPrice"] = Math.round((shopOrderItem.price/Number(shopOrderItem.quantity))*100)/100;
                     x.items[shopOrderItem.itemType] = x.items[shopOrderItem.itemType] || {};
                     var t = shopOrderItem.itemType;
                     //var b = x.items[t];
                     var pid = shopOrderItem.productId;
                     x.items[t][pid] = y;
                     totalShopPrice += shopOrderItem.price;
-                    totalWeight += shopOrderItem.quantity;
+                    totalWeight += Number(shopOrderItem.quantity);
                 }
                 x["address"] = shopInfo[key].address;
                 x["name"] = shopInfo[key].name;
