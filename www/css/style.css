@@ -166,6 +166,6 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
     font-size:12px;
 }
 
-.title{
-    margin-left:40px;
+.bar .title.title-left{
+    text-align:center
 }

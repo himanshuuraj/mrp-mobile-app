@@ -66,7 +66,7 @@
           </div>
           <div class="row">
               <div class="col">
-                  <input type="text" class="animateInput" placeholder="Mobile" ng-model="shop.mobile" required="" style="width: 98%;">
+                  <input type="tel" class="animateInput" placeholder="Mobile" ng-model="shop.mobile" required="" style="width: 98%;">
               </div>
           </div>
           <div class="row">
@@ -79,16 +79,18 @@
                   <input type="text" class="animateInput" placeholder="Tin" ng-model="shop.tin" required="" style="width: 98%;">
               </div>
           </div>
-          <div class="row" style="margin-top: 1%">
-              <div class="col">
-                  <span class="row" style="font-style: bold"><strong>Tax Type(CST/VAT)</strong></span>
-                  <select ng-model="shop.taxType">
-                      <option value="VAT">VAT</option>
-                      <option value="CST">CST</option>
-                  </select>
-              </div>
+          <div style="background-color: lightgray; margin-top: 2%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+                  <label class = "item item-input item-select">
+                    <div class = "input-label">
+                       Tax Type
+                    </div>
+                    <select ng-model="shop.taxType">
+                        <option value="VAT">VAT</option>
+                          <option value="CST">CST</option>
+                    </select>
+                 </label>
           </div>
-          <div class="row">
+          <div class="row" style="margin-top:5%;">
               <div class="col">
                   <input type="text" class="animateInput" placeholder="House/Door/Shop Number" ng-model="shop.shopnumber" required="" style="width: 98%;">
               </div>
@@ -103,12 +105,17 @@
                   <input type="text" class="animateInput" placeholder="City/Town/Village Name" ng-model="shop.city" required="" style="width: 98%;">
               </div>
           </div>
-          <span class="row" style="padding-left: 5%;padding-top: 5%">Please Select Area</span>
-          <div id="selectarea" style="background-color: lightgray; margin-top: 5%; margin-left: 15%;width: 70%; height:40px; border: 1px ">
-              <select ng-model="shop.areaId"
+          <div id="selectarea" style="background-color: lightgray; margin-top: 5%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+              <label class = "item item-input item-select">
+                <div class = "input-label">
+                   Select Area
+                </div>
+
+                <select ng-model="shop.areaId"
                       ng-options="item.id as item.name for item in areas">
-                  <option value="">Select Area</option>
-              </select>
+                   <option value="">--No Area--</option>
+                </select>
+             </label>
           </div>
           <div class="row">
               <div class="col">

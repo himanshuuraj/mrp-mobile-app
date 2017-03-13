@@ -88,7 +88,13 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.continue = function(){
             $rootScope.$broadcast("continue",{});
         };
-
+        var addToCartElement;
+        function initializeAddToCartElement() {
+            addToCartElement = document.getElementById("addToCartLogo");
+            var activeElement = document.querySelector('[nav-bar="active"]');
+            if (activeElement)
+                addToCartElement = activeElement.querySelector("button.button-icon.button-clear.ion-ios-cart");
+        }
         $rootScope.$on('cached',function (data) {
             $timeout(function(){
                /* var hidden = document.querySelector('[nav-bar="cached"]');
@@ -105,9 +111,34 @@ angular.module('starter.controllers', ['ngCordova'])
                 var x = document.querySelector('[nav-bar="active"]');
                 if(x)
                     x.querySelector("#naviconIcon").className = "button button-icon button-clear ion-navicon";
+                initializeAddToCartElement();
+                updateCart();
             },1000);
+            
 
         });
+        
+        var updateCart = function(){
+            var totalItemInCart = 0;
+            var x = window.localStorage.cartArray || "{}";
+            if(x)
+                x = JSON.parse(x);
+            for(var key in x){
+                totalItemInCart += x[key].length;
+            }
+            
+            if(!addToCartElement)
+                initializeAddToCartElement();
+            if(addToCartElement){
+                if(totalItemInCart === 0)
+                    addToCartElement.innerHTML = "";
+                else
+                    addToCartElement.innerHTML = totalItemInCart;
+            }
+
+        }
+        
+        
 
         $scope.redirect = function(type){
             type = "#/app/"+type;
@@ -215,7 +246,7 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> You can track your order from the orders page","Congratulations");
                // window.localStorage.removeItem(cartArray);
-                window.localStorage.removeItem(window.localStorage.cartInfo);
+                window.localStorage.removeItem("cartInfo");
                 window.location.hash = "#/app/search";
             }).catch(function(e){ console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")})
         };
@@ -367,7 +398,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArray[$scope.shopDetail.tin] = [];
         };
 
-        $scope.$on("continue",function(){
+        $rootScope.$on("continue",function(){
             $scope.proceedToSaveInCart();
         });
 
