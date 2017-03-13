@@ -182,11 +182,11 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 var ricediscount=0, ravvadiscount=0;
                 
-                if(shopRiceWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' || shop.areaId =='EG_TUNI')){
+                if(shopRiceWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' )){
                                          ricediscount=25;
 
                 }
-                if(shopRavvaWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' || shop.areaId =='EG_TUNI')){
+                if(shopRavvaWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' )){
                                          ravvadiscount=20;
 
                 }
@@ -1548,7 +1548,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     shopOrderItem.price = parseInt(shopOrderItem.price.toString().match(/[0-9]+/).toString());
                     shopOrderItem.quantity = shopOrderItem.quantity;
                     y["price"] = shopOrderItem.price;
-                    y["weight"] = shopOrderItem.quantity;
+                    y["weight"] = Number(shopOrderItem.quantity);
                     y["masterWeightPrice"] = Math.round((shopOrderItem.price/parseInt(shopOrderItem.bag)) * 100) / 100;
                     y["quintalWeightPrice"] = Math.round((shopOrderItem.price/Number(shopOrderItem.quantity))*100)/100;
                     x.items[shopOrderItem.itemType] = x.items[shopOrderItem.itemType] || {};
@@ -1563,7 +1563,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 x["name"] = shopInfo[key].name;
                 x["areaId"] = shopInfo[key].areaId;
                 x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
-                x["totalWeight"] = totalWeight;
+                x["totalWeight"] = Number(totalWeight);
                 overAllPrice += totalShopPrice;
                 overAllWeight += totalWeight;
                 arr.push(x);
