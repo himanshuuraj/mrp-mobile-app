@@ -224,12 +224,14 @@ angular.module('starter.controllers', ['ngCordova'])
                 delete cartArray.shopDetail[index].$$hashKey;
 
             var ordersRef =  dbRef.child('orders/' + orderId);
+            var orderMsg = document.getElementById("specialMsg").value || '';
 
             var newOrder = {
                 uid : window.localStorage.uid,
                 time :  now.getTime(),
                 userName : userInfo.name,
                 status : "received",
+                orderMsg : orderMsg,
                 cart :  cartArray
             };
 
@@ -1544,11 +1546,11 @@ angular.module('starter.controllers', ['ngCordova'])
                     y["bags"] = shopOrderItem.bag;
                     y["name"] = shopOrderItem.name;
                     shopOrderItem.price = parseInt(shopOrderItem.price.toString().match(/[0-9]+/).toString());
-                    shopOrderItem.quantity = parseInt(shopOrderItem.quantity);
+                    shopOrderItem.quantity = shopOrderItem.quantity;
                     y["price"] = shopOrderItem.price;
                     y["weight"] = shopOrderItem.quantity;
-                    y["masterWeightPrice"] = shopOrderItem.price/parseInt(shopOrderItem.bag);
-                    y["quintalWeightPrice"] = shopOrderItem.price/shopOrderItem.quantity;
+                    y["masterWeightPrice"] = Math.round((shopOrderItem.price/parseInt(shopOrderItem.bag)) * 100) / 100;
+                    y["quintalWeightPrice"] = Math.round((shopOrderItem.price/shopOrderItem.quantity)*100)/100;
                     x.items[shopOrderItem.itemType] = x.items[shopOrderItem.itemType] || {};
                     var t = shopOrderItem.itemType;
                     //var b = x.items[t];
@@ -1560,7 +1562,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 x["address"] = shopInfo[key].address;
                 x["name"] = shopInfo[key].name;
                 x["areaId"] = shopInfo[key].areaId;
-                x["totalShopPrice"] = totalShopPrice;
+                x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
                 x["totalWeight"] = totalWeight;
                 overAllPrice += totalShopPrice;
                 overAllWeight += totalWeight;
