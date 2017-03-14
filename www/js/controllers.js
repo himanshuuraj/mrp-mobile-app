@@ -628,15 +628,15 @@ angular.module('starter.controllers', ['ngCordova'])
         }
 
         $scope.computePrice = function(key,index) {
-            var bagElement = document.getElementById(key+"bag");
+            var qtyElement = document.getElementById(key+"quantity");
             var price= $scope.getPrice(key);
-            var bagNumber =  Number(bagElement.value);
-            document.getElementById(key+"computedPrice").innerHTML="&#8377;"+bagNumber*price;
+            var qtyNumber =  Number(qtyElement.value);
+            document.getElementById(key+"computedPrice").innerHTML="&#8377;"+qtyNumber*price;
         }
 
         var earlySelectedShop = {};
 
-        $scope.getItemsPrice = function(){
+        $scope.getItemsPrice = function(){  
             var areaId = window.localStorage.areaId;
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.once('value').then(function(areaSnapshot){
@@ -1308,8 +1308,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     var pid = $scope.cartArray[key][index].productId;
                     var itemType = $scope.cartArray[key][index].itemType
                     var element = document.getElementById(key + "computedPrice" + pid);
-                    var bag = document.getElementById(key + "bag" + pid).value;
-                    var price = $scope.getPrice(pid, itemType) * bag;
+                    var qty = document.getElementById(key + "quantity" + pid).value;
+                    var price = $scope.getPrice(pid, itemType) * qty;
                     element.innerHTML = '₹​' + price;
                 }
             }
@@ -1457,10 +1457,10 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.computePrice(key,value.productId,index,value.itemType);
         };
         $scope.computePrice = function(key,productId,index,type) {
-            var bagElement = document.getElementById(key+"bag"+productId);
+            var qtyElement = document.getElementById(key+"quantity"+productId);
             var price = $scope.getPrice(productId,type);
-            var bagNumber =  Number(bagElement.value);
-            document.getElementById(key+"computedPrice"+productId).innerHTML="&#8377;"+bagNumber*price;
+            var quantity =  Number(qtyElement.value);
+            document.getElementById(key+"computedPrice"+productId).innerHTML="&#8377;"+quantity*price;
         }
 
         $scope.getPrice = function(key,type){
