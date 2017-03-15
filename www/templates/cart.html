@@ -1,7 +1,7 @@
 <ion-view view-title="Cart" ng-init="init();">
-    <ion-content>
 
-        <div class = "card" style="position:relative;height:20%;background-color: inherit;margin-top: 10%">
+    <div class="my-video">
+        <div class = "card has-header" style="position: relative;height:20%;margin-top: 10%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="padding">
+        <div class="padding" style="margin-top:31px;">
             <div class="row">
                 <div class="row">
                 <div class="col">
@@ -26,6 +26,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <ion-content class="ion-content-below-my-video">
+
 
         <div class="padding" ng-repeat = "(key,data) in cartArray"
              style="background-color:lightgray;position:relative;">

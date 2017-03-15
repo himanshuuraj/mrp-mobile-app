@@ -196,3 +196,13 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 #shopSearch::-webkit-input-placeholder{
     color:black;
 }
+
+.my-video
+{
+    position:relative;
+    height:500px;
+}
+
+.ion-content-below-my-video{
+    margin-top:200px!important;
+}
