@@ -341,6 +341,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $timeout(function(){updateUI()},100);
             }
             $rootScope.$broadcast("cached",{});
+            //document.getElementById("ricetab").className = "button button-positive";
         };
 
         $scope.showShopPopUp = function() {
@@ -639,7 +640,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.getItemsPrice = function(){  
             var areaId = window.localStorage.areaId;
             var areaRef = dbRef.child('priceList/'+ areaId);
-            areaRef.once('value').then(function(areaSnapshot){
+            areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
                 console.log("Fetched list of prices for selected area" + productsList);
                 window.localStorage.brokenPriceArray=JSON.stringify(productsList.broken);
@@ -650,9 +651,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.ricePriceArray = productsList.rice;
                 $scope.getProductItems();
 
-            }).catch(function(){
-                console.log("Failed to get list of product items");
-            })
+            });
 
         };
 
@@ -725,17 +724,26 @@ angular.module('starter.controllers', ['ngCordova'])
             updateCart();
         }
 
-        $http.get("https://stage-db-b035c.firebaseio.com/products.json")
-            .success(function(data){
-                console.log(data);
-                $scope.brokenArray = data.broken;
-                $scope.ravvaArray = data.ravva;
-                $scope.riceArray = data.rice;
-                document.getElementById("ricetab").className = "button button-positive";
-                $scope.selectedItem = "rice";
-            }).error(function(err){
-            console.log(err);
-        });
+        if(!window.sessionStorage.productData)
+            $http.get("https://stage-db-b035c.firebaseio.com/products.json")
+                .success(function(data){
+                    console.log(data);
+                    window.sessionStorage.productData = JSON.stringify(data);
+                    $scope.brokenArray = data.broken;
+                    $scope.ravvaArray = data.ravva;
+                    $scope.riceArray = data.rice;
+                    document.getElementById("ricetab").className = "button button-positive";
+                    $scope.selectedItem = "rice";
+                }).error(function(err){
+                console.log(err);
+            });
+        else{
+            var data = JSON.parse(window.sessionStorage.productData);
+            $scope.brokenArray = data.broken;
+            $scope.ravvaArray = data.ravva;
+            $scope.riceArray = data.rice;
+            $scope.selectedItem = "rice";
+        }
 
         $scope.shopSearchElement ={
             name: ""
