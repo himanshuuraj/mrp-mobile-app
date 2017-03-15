@@ -338,7 +338,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }
             if(window.localStorage.cartArray){
                 $scope.cartArray = JSON.parse(window.localStorage.cartArray);
-                $timeout(function(){updateUI()},0);
+                $timeout(function(){updateUI()},100);
             }
             $rootScope.$broadcast("cached",{});
         };
@@ -436,7 +436,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     return;
                 }
                 price = price.toString().match(/[0-9]+/);
-                if(!price)
+                if(!price || !price[0])
                 {
                     alert("Price not correct");
                     return;

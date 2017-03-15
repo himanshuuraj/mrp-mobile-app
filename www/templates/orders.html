@@ -1,6 +1,6 @@
 <ion-view cache-view="false" view-title="ORDER HISTORY" ng-init="loadOrders()">
   <ion-content ng-init="init();">
-      <div class="padding">
+      <div class="padding" style="margin-top: -10px;">
         <ion-list>
           <div ng-repeat = "order in ordersArray ">
               
@@ -9,9 +9,7 @@
                       {{order}}
                   </div>                
               </ion-item>
-              
-              
-               
+
               <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded" style="display: none;" >
                   <div class="row" style="margin: 5%">
                       STATUS : {{value.status}}
