@@ -1,8 +1,11 @@
 <ion-view view-title="SHOPS"  ng-init="onInit()">
   <ion-content ng-init="init();">
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
+          <input type="text" ng-model="shopSearchText.name"
+                 id="shopSearch" placeholder="Search for Shop" class="search-input quick-search"
+                    style="margin-left:30%;margin-bottom:10px;">
         <ion-list>
-          <div ng-repeat="shop in shopArray">
+          <div ng-repeat="shop in shopArray | filter:filterShop">
             <ion-item class="item-stable"
                       ng-class="{active: isGroupShown(shop)}">
                 <div class="row">
@@ -17,20 +20,18 @@
                         <i class="icon ion-edit" ng-click="showEditBox(shop);"></i>
                     </div>
                     <div class="col col-10" ng-show="addShopEnabled">
-                        <i class="icon icon ion-trash-b" ng-click="showConfirmRemoveShop(shop.tin)"></i>
+                        <i class="icon icon ion-trash-b" ng-click="showConfirmRemoveShop(shop.tin)" style="float: right;"></i>
                     </div>
                 </div>
             </ion-item>
             <ion-item class="item-accordion"
                       ng-show="isGroupShown(shop)">
                     <div class="row" ng-repeat="(key,value) in shop">
-                    <!--Proprietory Name :- {{shop.proprietor_name}}<br>
-                    Mobile Number :- {{shop.mobile}}<br>-->
                         <div class="col">
                             {{key}}:-
                         </div>
-                        <div class="col">
-                            {{value}}
+                        <div class="col" style="width:50%;word-wrap: break-word;">
+                            {{value.trim()}}
                         </div>
                     </div>
             </ion-item>

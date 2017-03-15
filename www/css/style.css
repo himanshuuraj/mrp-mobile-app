@@ -169,3 +169,30 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 .bar .title.title-left{
     text-align:center
 }
+
+.wordwrap {
+    white-space: pre-wrap;      /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -pre-wrap;     /* Opera <7 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    word-wrap: break-word;      /* IE */
+}
+
+.search-v4 .search-input {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+}
+.search-input {
+    background: #b2b2b2;
+    border: 0;
+    padding: 8px 40px 8px 10px;
+    outline: 0 !important;
+    color: #000;
+    font-style: italic;
+    width: 245px;
+    border-radius: 4px;
+}
+
+#shopSearch::-webkit-input-placeholder{
+    color:black;
+}

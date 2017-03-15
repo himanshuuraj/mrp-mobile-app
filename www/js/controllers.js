@@ -328,11 +328,17 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.computePrice(key);
         };
 
+        var flagOfAlreadyPresentPrice = false;
+        if(window.sessionStorage.flagOfAlreadyPresentPrice) {
+            flagOfAlreadyPresentPrice = true;
+            $scope.brokenPriceArray = JSON.parse(window.localStorage.brokenPriceArray);
+            $scope.ravvaPriceArray = JSON.parse(window.localStorage.ravvaPriceArray);
+            $scope.ricePriceArray = JSON.parse(window.localStorage.ricePriceArray);
+        }
 
         $scope.init = function(){
-            //TODO - change this to call everytime shop is changed
-            $scope.getItemsPrice();
-            //setTimeout(function(){getShopData();},0);
+            if(!flagOfAlreadyPresentPrice)
+                $scope.getItemsPrice();
             if(window.localStorage.shopName){
                 $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
             }
@@ -649,8 +655,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.ravvaPriceArray = productsList.ravva;
                 window.localStorage.ricePriceArray=JSON.stringify(productsList.rice);
                 $scope.ricePriceArray = productsList.rice;
+                flagOfAlreadyPresentPrice = true;
+                window.sessionStorage.flagOfAlreadyPresentPrice = true;
                 $scope.getProductItems();
-
             });
 
         };
@@ -702,6 +709,16 @@ angular.module('starter.controllers', ['ngCordova'])
                     bagElement.value = obj[arg.index].bag;
                     buttonElement.style.backgroundColor = "green";
                     buttonElement.className='button icon ion-checkmark-round';
+                    var computedElement = document.getElementById(arg.pId + "computedPrice");
+                    if(!computedElement.innerText) {
+                        /*var priceElement = document.getElementById(arg.pId + "price");
+                        if (priceElement) {
+                            var price = priceElement.innerText;
+                            price = price.toString().match(/[0-9]+/).toString();
+                            computedElement.innerHTML = obj[arg.index].bag
+                        }*/
+                        computedElement.innerHTML = obj[arg.index].price;
+                    }
                 }, 0,true,{pId:productId,index:index});
             }
         }
@@ -1066,7 +1083,6 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.showNewShopEdit = function () {
             $scope.showShopInput = true;
         };
-        
 
         $scope.showConfirmRemoveShop = function(tin) {
             var myPopup = $ionicPopup.show({
@@ -1087,7 +1103,6 @@ angular.module('starter.controllers', ['ngCordova'])
                 console.log('Tapped!', res);
             });
         };
-
 
         var removeShop = function(tin){
             var shops = userInfo.shops || [];
@@ -1270,7 +1285,12 @@ angular.module('starter.controllers', ['ngCordova'])
             $rootScope.$broadcast("cached",{});
         }
 
-
+        $scope.shopSearchText = {name : ""};
+        $scope.filterShop = function(shop){
+            if(!$scope.shopSearchText.name)
+                return true;
+            return shop.name.toLowerCase().includes($scope.shopSearchText.name.toLowerCase());
+        };
     })
 
     .controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope) {
