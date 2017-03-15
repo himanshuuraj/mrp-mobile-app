@@ -152,6 +152,82 @@ angular.module('starter.controllers', ['ngCordova'])
             $rootScope.$broadcast("cached",{});
         };
         
+        $scope.validateIfLatestPrice = function(dbRef){
+            var shopArray = $scope.shopArray;    
+            $scope.flagForPriceModified=false;
+            $scope.modifiedPriceList=[];
+            
+            shopArray.forEach(function(shop){     
+                (function(){
+                var items = shop.items;
+                var riceObject = items.rice;
+                var ravvaObject = items.ravva;
+                var brokenObject = items.broken;
+                var areaId = shop.areaId;
+                
+                
+                    var areaRef = dbRef.child('priceList/'+ areaId);
+                    areaRef.once('value',function(areaSnapshot){
+                    var productsList = areaSnapshot.val();
+                     var brokenPriceArray = productsList.broken;
+                     var ravvaPriceArray = productsList.ravva;
+                     var ricePriceArray = productsList.rice;var userType="Outlet";
+                     if(window.localStorage.isAgent == "true"){
+                       userType="Agent";
+                     }
+                    for(var productId in riceObject){
+                        if(riceObject[productId].quintalWeightPrice != ricePriceArray[productId][userType]){
+                            $scope.flagForPriceModified=true;
+                            var a= {
+                                productId : productId,
+                                newPrice : ricePriceArray[productId][userType],
+                                oldPrice : riceObject[productId].quintalWeightPrice
+                            }
+                            $scope.modifiedPriceList.push(a);
+                            riceObject[productId].quintalWeightPrice = ricePriceArray[productId][userType];
+                            
+                        }
+                                
+                    }
+
+                    for(var productId in ravvaObject){
+                        if(ravvaObject[productId].quintalWeightPrice != ravvaPriceArray[productId][userType]){
+                            $scope.flagForPriceModified=true;
+                             var a= {
+                                productId : productId,
+                                newPrice : ravvaPriceArray[productId][userType],
+                                oldPrice : riceObject[productId].quintalWeightPrice
+                            }
+                            $scope.modifiedPriceList.push(a);
+                            ravvaObject[productId].quintalWeightPrice = ravvaPriceArray[productId][userType];
+
+                        }
+                       
+                    }
+
+                    for(var productId in brokenObject){
+                        if(brokenObject[productId].quintalWeightPrice != brokenPriceArray[productId][userType]){
+                            $scope.flagForPriceModified=true;
+                             var a= {
+                                productId : productId,
+                                newPrice : brokenPriceArray[productId][userType],
+                                oldPrice : riceObject[productId].quintalWeightPrice
+                            }
+                            $scope.modifiedPriceList.push(a);
+                            brokenObject[productId].quintalWeightPrice = brokenPriceArray[productId][userType];
+
+                        }
+                       
+                    }
+
+                  });
+              })();
+
+            });
+            
+        };
+        
+      
         $scope.applyDiscount = function(){
             var shopArray = $scope.shopArray;
             var totaldiscountedPrice = 0;
@@ -201,6 +277,42 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - totaldiscountedPrice;
         }
         $scope.submitOrder = function(){
+            $scope.validateIfLatestPrice(loginCred.dbRef);
+            if($scope.flagForPriceModified==true){
+                    //$scope.modifiedPriceList
+                 //   showPopUp("Prices for few items have changed from the time you saved in cart. <br> Please review the order before submitting.")
+                    console.log($scope.modifiedPriceList);
+                (function(){
+                    $ionicPopup.show({
+                template: '<div class="row">'+
+                '<div class="col">Item Name</div>'+
+                '<div class="col-20">Old Price</div>'+
+                '<div class="col-20">New Price</div>'+
+                '</div>'+
+                '<hr>'+
+                '<div ng-repeat="item in modifiedPriceList" > ' +
+                '<div class="row">'+
+                '<div class="col">{{item.productId}}</div>'+
+                '<div class="col-20">{{item.oldPrice}}</div>'+
+                '<div class="col-20">{{item.newPrice}}</div>'+
+                '</div>'+
+                '</div>',
+                title: 'INFO',
+                scope: $scope,
+                buttons: [
+                    {   text: 'OK',
+                        onTap: function(e) {
+                            $scope.applyDiscount();
+                            return;
+                        }
+
+                    }
+                ]
+            });
+            })();
+                return 0;
+            }
+            
             var userInfo = JSON.parse(window.localStorage.userInfo);
             var dbRef = loginCred.dbRef;
             var now = new Date();
