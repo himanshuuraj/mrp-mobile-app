@@ -1,19 +1,8 @@
 <ion-view view-title="Cart" ng-init="init();">
     <ion-content>
 
-        <div class="card" style="background-color: whitesmoke;margin-top: 8%;height:8%">
-            <div class="row">
-                <div class="col-75" style="height:40px;float:right">
-                    Lorry Size is {{selectedLorrySize}} tonnes
-                </div>
-                <div class="col" style="height:40px;padding:0;">
-                    <button class="button button-positive" ng-click="showLorryPopUp();" style="min-height: 0px;">Change</button>
-                </div>
-            </div>
-        </div>
-
-        <div class = "card" style="position:relative;height:20%;background-color: whitesmoke;margin-top: 10%">
-            <img src="img/lorry.png" style="height:100%;width:100%;"/>
+        <div class = "card" style="position:relative;height:20%;background-color: inherit;margin-top: 10%">
+            <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
                     <div style="position:absolute;top:0;left:0px;background-color: red;height:102%;" id="progressBar"></div>
@@ -26,10 +15,13 @@
             <div class="row">
                 <div class="row">
                 <div class="col">
-                    Lorry loaded<b>{{totalQuantity}} Quintals</b>
+                    Lorry size <b>{{selectedLorrySize}} tonnes</b>
                 </div>
                 <div class="col">
-                    Capacity of Lorry <b>{{selectedLorrySize}}</b> tonnes
+                    <button class="button button-positive" ng-click="showLorryPopUp();" style="height: 85%;">Change</button>
+                </div>
+                <div class="col">
+                        {{totalQuantity}}/{{selectedLorrySizeInQuintals}} Quintals
                 </div>
                 </div>
             </div>

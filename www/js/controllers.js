@@ -1287,6 +1287,7 @@ angular.module('starter.controllers', ['ngCordova'])
             shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.deliveryArray = {};
         var selectedLorrySize = $scope.selectedLorrySize = 10;
+        $scope.selectedLorrySizeInQuintals=100;
         var progressBarElement = document.getElementById("progressBar");
         var totalQuantity = $scope.totalQuantity = 0;
         var earlySelectedLorry;
@@ -1326,6 +1327,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.setSelectedLorrySize = function(lorry){
             earlySelectedLorry = $scope.selectedLorrySize;
             $scope.selectedLorrySize = selectedLorrySize = lorry;
+            $scope.selectedLorrySizeInQuintals=selectedLorrySize*10;
             computeWidth(totalQuantity);
         };
 
