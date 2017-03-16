@@ -201,6 +201,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 {
     position:relative;
     height:500px;
+    background-color: lightgray;
 }
 
 .ion-content-below-my-video{
