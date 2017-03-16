@@ -11,7 +11,7 @@ body{
 
 
 ion-content{
-    background-color: #e9ebee;
+    background-color: #f1f1f2;
 }
 
 h1,h2,h3{
@@ -53,7 +53,6 @@ h1,h2,h3{
 }
 
 .bgdarkGray {
-    background-color: darkgray;
 }
 
 .bar-header{

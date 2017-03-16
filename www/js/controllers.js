@@ -502,7 +502,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.changeContent = function(type){
             earlySelectedTab = $scope.selectedItem;
             $scope.selectedItem = type;
-            document.getElementById(type+"tab").className = "button button-positive";
+            document.getElementById(type+"tab").className = "button";
             document.getElementById(earlySelectedTab+"tab").className = "button bgdarkGray";
             addUI();
         };
