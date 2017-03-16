@@ -410,6 +410,16 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.computePrice(key);
         };
 
+        $scope.showDiv = function(key){
+            var element = document.getElementById(key+"animate");
+            element.className = "widthFull animatewidthfull";
+        };
+
+        $scope.removeDiv = function(key){
+            var element = document.getElementById(key+"animate");
+            element.className = "widthZero animatewidthzero";
+        };
+
         var flagOfAlreadyPresentPrice = false;
         if(window.sessionStorage.flagOfAlreadyPresentPrice) {
             flagOfAlreadyPresentPrice = true;

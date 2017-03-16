@@ -210,3 +210,74 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 .hide{
     display:block;
 }
+
+.widthZero{
+    position:absolute;display:block;top:0;right:0;height:100%;width:0%;
+}
+
+.widthFull{
+    position:absolute;display:block;top:0;right:0;height:100%;width:75%;
+}
+
+.animatewidthfull{
+
+    background-color: white;
+    -webkit-animation-name: animateWidthFull; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: animateWidthFull;
+    animation-duration: 1s;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes animateWidthFull {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 75%;
+    }
+}
+
+/* Standard syntax */
+@keyframes animateWidthFull {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 75%;
+    }
+}
+
+.animatewidthzero{
+    position:absolute;
+    display:block;
+    top:0;
+    right:0;
+    height:100%;
+    width:0%;
+    background-color: white;
+    -webkit-animation-name: animateWidthZero; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: animateWidthZero;
+    animation-duration: 1s;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes animateWidthZero {
+    0% {
+        width: 75%;
+    }
+    100% {
+        width: 0%;
+    }
+}
+
+/* Standard syntax */
+@keyframes animateWidthZero {
+    0% {
+        width: 75%;
+    }
+    100% {
+        width: 0%;
+    }
+}
