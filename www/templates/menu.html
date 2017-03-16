@@ -1,8 +1,8 @@
 <ion-side-menus><!-- enable-menu-with-back-views="false">-->
   <ion-side-menu-content>
-    <ion-nav-bar class="bar-stable"><!-- ng-show="showHeader"-->
-     <!-- <ion-nav-back-button>
-      </ion-nav-back-button>-->
+    <!--<ion-nav-bar class="bar-stable">&lt;!&ndash; ng-show="showHeader"&ndash;&gt;
+     &lt;!&ndash; <ion-nav-back-button>
+      </ion-nav-back-button>&ndash;&gt;
 
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon"
@@ -12,10 +12,9 @@
       <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
                 style="color:white;">
-
         </button>
       </ion-nav-buttons>
-    </ion-nav-bar>
+    </ion-nav-bar>-->
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
@@ -25,9 +24,6 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-<!--        <ion-item menu-close href="#/app/login">
-          Login
-        </ion-item>-->
         <div class="col">
         <ion-item menu-close ng-click="redirect('profile');" style="color: black;margin-top: 4%">
             <img src="img/profileIcon.jpg" width="20px" height="20px"><span style="padding-left: 10px">Profile</span>

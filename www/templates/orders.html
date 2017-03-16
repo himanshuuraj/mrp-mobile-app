@@ -1,6 +1,14 @@
-<ion-view cache-view="false" view-title="ORDER HISTORY" ng-init="loadOrders()">
-  <ion-content ng-init="init();">
-      <div class="padding" style="margin-top: -10px;">
+<ion-view ng-init="loadOrders()">
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">ORDER HISTORY</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+  <ion-content class="has-header">
+      <div class="padding" style="margin-top: 15px;">
         <ion-list>
           <div ng-repeat = "order in ordersArray ">
               

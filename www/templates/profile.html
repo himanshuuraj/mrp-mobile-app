@@ -1,5 +1,13 @@
-<ion-view view-title="MY PROFILE" >
-  <ion-content ng-init="loadUserProfile()">
+<ion-view>
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">MY PROFILE</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+  <ion-content ng-init="loadUserProfile()" class="has-header">
       <div class="padding" ng-hide="editProfile">
         <ion-list>
             <div class="row" style="margin-top: 5%">

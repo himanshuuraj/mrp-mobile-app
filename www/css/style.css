@@ -173,7 +173,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 .wordwrap {
     white-space: pre-wrap;      /* CSS3 */
     white-space: -moz-pre-wrap; /* Firefox */
-    white-space: -pre-wrap;     /* Opera <7 */
+    white-space: pre-wrap;     /* Opera <7 */
     white-space: -o-pre-wrap;   /* Opera 7 */
     word-wrap: break-word;      /* IE */
 }
@@ -205,5 +205,9 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 }
 
 .ion-content-below-my-video{
-    margin-top:200px!important;
+    margin-top:270px!important;
+}
+
+.hide{
+    display:block;
 }

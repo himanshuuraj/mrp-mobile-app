@@ -1,4 +1,12 @@
-<ion-view view-title="Summary" cache-view="false">
+<ion-view>
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">Summary</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
     <ion-content ng-init = "init();">
         <h3 style="margin-top:40px"><center>Order Summary</center></h3>
         <div class="padding" ng-repeat="shop in shopArray" >

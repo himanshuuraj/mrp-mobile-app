@@ -52,10 +52,27 @@ angular.module('starter.controllers', ['ngCordova'])
         this.getImageUrl = function(key,selectedItem){
             return urlOfImage+selectedItem+"_200/"+key+".png";
         };
-
+        this.updateCart = function(){
+            var addToCartElement = document.getElementById("addToCartLogo");
+            var totalItemInCart = 0;
+            var x = window.localStorage.cartArray || "{}";
+            if(x)
+                x = JSON.parse(x);
+            for(var key in x){
+                totalItemInCart += x[key].length;
+            }
+            if(!addToCartElement)
+                return;
+            if(addToCartElement){
+                if(totalItemInCart === 0)
+                    addToCartElement.innerHTML = "";
+                else
+                    addToCartElement.innerHTML = totalItemInCart;
+            }
+        };
     })
 
-    .controller('AppCtrl', function($scope, $ionicModal, $timeout,$rootScope) {
+    .controller('AppCtrl', function($scope, $ionicModal, $timeout,$rootScope,loginCred) {
         // Form data for the login modal
         $scope.showHeader = true;
         if(window.location.href.includes("login"))
@@ -81,56 +98,17 @@ angular.module('starter.controllers', ['ngCordova'])
             $rootScope.$broadcast("continue",{});
         };
         var addToCartElement;
-        function initializeAddToCartElement() {
-            addToCartElement = document.getElementById("addToCartLogo");
-            var activeElement = document.querySelector('[nav-bar="active"]');
-            if (activeElement)
-                addToCartElement = activeElement.querySelector("button.button-icon.button-clear.ion-ios-cart");
-        }
         $rootScope.$on('cached',function (data) {
-            $timeout(function(){
-               /* var hidden = document.querySelector('[nav-bar="cached"]');
-                var hiddenParent;
-                if(hidden) {
-                    var y = hidden.querySelector("#naviconIcon");
-                    if(y){
-                        var z = y.parentNode;
-                        z.removeChild(y);
-                    }
-                    //hiddenParent = hidden.parentNode;
-                    //hiddenParent.removeChild(hidden);
-                }*/
-                var x = document.querySelector('[nav-bar="active"]');
-                if(x)
-                    x.querySelector("#naviconIcon").className = "button button-icon button-clear ion-navicon";
-                initializeAddToCartElement();
+            $timeout(function() {
                 updateCart();
+                var x = document.getElementById("ricetab");
+                if(x){
+                    x.className = "button button-positive";
+                }
             },1000);
-            
-
         });
         
-        var updateCart = function(){
-            var totalItemInCart = 0;
-            var x = window.localStorage.cartArray || "{}";
-            if(x)
-                x = JSON.parse(x);
-            for(var key in x){
-                totalItemInCart += x[key].length;
-            }
-            
-            if(!addToCartElement)
-                initializeAddToCartElement();
-            if(addToCartElement){
-                if(totalItemInCart === 0)
-                    addToCartElement.innerHTML = "";
-                else
-                    addToCartElement.innerHTML = totalItemInCart;
-            }
-
-        }
-        
-        
+        var updateCart = loginCred.updateCart;
 
         $scope.redirect = function(type){
             type = "#/app/"+type;
@@ -578,6 +556,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.cartArray[$scope.shopDetail.tin].push(x);
                 doAnimation(key);
+                window.localStorage.cartArray = JSON.stringify($scope.cartArray);
             }else{
                 tickElement.style.backgroundColor = "darkgray";
                 tickElement.className='button icon ion-plus-round';
@@ -588,9 +567,9 @@ angular.module('starter.controllers', ['ngCordova'])
                         break;
                     }
                 }
+                window.localStorage.cartArray = JSON.stringify($scope.cartArray);
                 updateCart();
             }
-            window.localStorage.cartArray = JSON.stringify($scope.cartArray);
             console.log($scope.cartArray);
         };
 
@@ -648,9 +627,6 @@ angular.module('starter.controllers', ['ngCordova'])
         var addToCartElement;
         function initializeAddToCartElement() {
             addToCartElement = document.getElementById("addToCartLogo");
-            var activeElement = document.querySelector('[nav-bar="active"]');
-            if (activeElement)
-                addToCartElement = activeElement.querySelector("button.button-icon.button-clear.ion-ios-cart");
         }
         function doAnimation(key){
             initializeAddToCartElement();
@@ -827,18 +803,8 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         }
 
-        var updateCart = function(){
-            var totalItemInCart = 0;
-            for(var key in $scope.cartArray){
-                totalItemInCart += $scope.cartArray[key].length;
-            }
-            if(totalItemInCart != 0){
-                if(!addToCartElement)
-                    initializeAddToCartElement();
-                addToCartElement.innerHTML = totalItemInCart;
-            }
+        var updateCart = loginCred.updateCart;
 
-        }
         var updateUI = function(){
             deleteUI();
             addUI();

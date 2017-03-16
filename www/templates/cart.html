@@ -1,7 +1,14 @@
-<ion-view view-title="Cart" ng-init="init();">
-
-    <div class="my-video">
-        <div class = "has-header" style="position: relative;height:20%;margin-top: 10%;background-color: lightgray;margin-left:5%;width:90%;">
+<ion-view ng-init="init();">
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">Cart</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+    <div class="my-video has-header">
+        <div class = "has-header" style="position: relative;height:25%;background-color: lightgray;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
@@ -11,7 +18,7 @@
             </div>
         </div>
 
-        <div class="padding" style="margin-top:31px;background-color: lightgray;">
+        <div class="padding" style="background-color: lightgray;margin-top:22px;">
             <div class="row">
                 <div class="row">
                 <div class="col">
@@ -28,8 +35,6 @@
         </div>
     </div>
     <ion-content class="ion-content-below-my-video">
-
-
         <div class="padding" ng-repeat = "(key,data) in cartArray"
              style="background-color:lightgray;position:relative;">
             <center><b>{{getShopName(key)}}</b></center>
@@ -108,8 +113,6 @@
                 </div>
             </div>
         </div>
-
-
     </ion-content>
     <ion-footer-bar align-title="center">
         <button class="button button-block button-positive" ng-click="checkoutOrder()" style="margin:0;">CHECK OUT</button>

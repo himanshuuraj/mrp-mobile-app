@@ -1,5 +1,13 @@
-<ion-view view-title="PRICE LIST" >
-  <ion-content ng-init="loadPrices()">
+<ion-view>
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">PRICE LIST</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+  <ion-content class="has-header" ng-init="loadPrices()">
       <div class="padding">
         <ion-list>
             <div class="card" style="background-color: whitesmoke;"ng-repeat="(area,product) in pricesForAreas">

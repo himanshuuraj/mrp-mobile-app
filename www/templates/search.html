@@ -1,6 +1,14 @@
 
-<ion-view cache-view="false" view-title="SRI LALITHA ENTERPRISES">
-  <ion-content ng-init="init();">
+<ion-view cache-view="false">
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">SRI LALITHA ENTERPRISES</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+  <ion-content class="has-header" ng-init="init();">
 
       <div class="card" ng-show="isAgent" ng-cloak style="margin-top: 8%;height:8%">
           <div class="row" style="padding-top: 0px;">
@@ -8,14 +16,14 @@
                   {{shopDetail.name}}
               </div>
               <div class="col" style="padding: 0" >
-                    <button class="button button-positive"  ng-click="showShopPopUp();" style="min-height: 0px;">
+                    <button class="button button-positive"  ng-click="showShopPopUp();" style="min-height: 0px;margin-top:4px;">
                         Change
                       </button>
               </div>
           </div>
       </div>
 
-    <div class="button-bar padding" style="margin-top:5%">
+    <div class="button-bar padding">
         <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="min-height:135px;height:auto;background-color:lightgray;position:relative;">

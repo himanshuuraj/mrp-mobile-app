@@ -1,9 +1,18 @@
-<ion-view view-title="SHOPS"  ng-init="onInit()">
-  <ion-content ng-init="init();">
+<ion-view ng-init="onInit()">
+    <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+        </button>
+        <h1 class="title">SHOPS</h1>
+        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
+                style="color:white;">
+        </button>
+    </div>
+  <ion-content class="has-header">
+
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
           <input type="text" ng-model="shopSearchText.name"
                  id="shopSearch" placeholder="Search for Shop" class="search-input quick-search"
-                    style="margin-left:30%;margin-bottom:10px;">
+                    style="margin-left:30%;width: 70%;margin-bottom:10px;padding-left:10px;">
         <ion-list>
           <div ng-repeat="shop in shopArray | filter:filterShop">
             <ion-item class="item-stable"
