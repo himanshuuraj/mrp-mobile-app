@@ -70,9 +70,7 @@
                           style="position:absolute;right:0px;top:0px;height:50px;width:50px;border-radius:25px;background-color:#fff;color:#388e3c;border-color:#388e3c">
                         </button>
                 </div>-->
-                <div class="row">
-                        <p style="font-weight: 900;padding-top:25px;padding-right:0px;position:absolute;bottom:0px;right:0px;height:50px;" id="{{key}}computedPrice"></p>
-                </div>
+                
             </div>
 
         </div>
@@ -102,15 +100,15 @@
                     
                     <div class="row">
                         <div class="col">
-                        <p style="font-weight: 900;font-size:18px;padding-right:0px;bottom:0px;right:0px;" id="{{key}}computedPrice">₹​  120000</p>
+                        <p style="font-weight: 900;font-size:18px;padding-right:0px;bottom:0px;right:0px;" id="{{key}}computedPrice"></p>
                         </div>
-                        <div class="col-">
-                            <button class="button" style="background-color: green;" ng-click="addToCart(key,value)" >ADD</button>
+                        <div class="col-67">
+                            <button class="button" id="{{key}}button" style="background-color: green;" ng-click="addToCart(key,value)" >ADD</button>
                         </div>
                     </div>
 
                     <div style="position:absolute;top:0px;right:0px;" ng-click="removeDiv(key)">
-                        X
+                        <b>X</b>
                     </div>
                 </div>
             </div>

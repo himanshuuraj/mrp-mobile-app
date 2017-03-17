@@ -89,9 +89,11 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.isAgent = true;
 
         $scope.signOut = function(){
+            var x = window.localStorage.cartArray;
             window.localStorage.clear();
+            window.localStorage.cartArray = x;
             window.sessionStorage.clear();
-            window.location.hash = "#/app/login";//"/app.login";
+            window.location.hash = "#/app/login";
         };
 
         $scope.continue = function(){
@@ -367,6 +369,8 @@ angular.module('starter.controllers', ['ngCordova'])
         var dbRef = loginCred.dbRef;
         $scope.shopDetail = {name : "",tin : ""};
         $scope.cartArray = {};
+        if(window.localStorage.cartArray)
+            $scope.cartArray = JSON.parse(window.localStorage.cartArray);
         $scope.tabArray = ['rice','ravva','broken'];
         $scope.isAgent = window.localStorage.isAgent;
         if(window.localStorage.isAgent == "true")
@@ -535,7 +539,7 @@ angular.module('starter.controllers', ['ngCordova'])
         var addToCartNumber;
         $scope.addToCart = function(key,value){
             var tickElement = document.getElementById(key+"button");
-            if(tickElement.style.backgroundColor == "darkgray")
+            if(tickElement.style.backgroundColor == "green")
             {
                 var x = {};
                 var quantityElement = document.getElementById(key+"quantity");
@@ -560,7 +564,6 @@ angular.module('starter.controllers', ['ngCordova'])
                     alert("Please insert bag or quantity");
                     return;
                 }
-                tickElement.style.backgroundColor = "green";
                 tickElement.className='button icon ion-checkmark-round';
                 //x = value;
                 x["master_weight"] = value.master_weight;
@@ -582,8 +585,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArray[$scope.shopDetail.tin].push(x);
                 doAnimation(key);
                 window.localStorage.cartArray = JSON.stringify($scope.cartArray);
-            }else{
                 tickElement.style.backgroundColor = "darkgray";
+            }else{
+                tickElement.style.backgroundColor = "green";
                 tickElement.className='button icon ion-plus-round';
                 var length = $scope.cartArray[$scope.shopDetail.tin].length;
                 for(var index = 0; index<length; index++){
