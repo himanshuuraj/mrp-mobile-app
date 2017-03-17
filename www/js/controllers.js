@@ -109,7 +109,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
             },1000);
         });
-        
+
         var updateCart = loginCred.updateCart;
 
         $scope.redirect = function(type){
@@ -131,21 +131,21 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.applyDiscount();
             $rootScope.$broadcast("cached",{});
         };
-        
+
         $scope.validateIfLatestPrice = function(dbRef){
-            var shopArray = $scope.shopArray;    
+            var shopArray = $scope.shopArray;
             $scope.flagForPriceModified=false;
             $scope.modifiedPriceList=[];
-            
-            shopArray.forEach(function(shop){     
+
+            shopArray.forEach(function(shop){
                 (function(){
                 var items = shop.items;
                 var riceObject = items.rice;
                 var ravvaObject = items.ravva;
                 var brokenObject = items.broken;
                 var areaId = shop.areaId;
-                
-                
+
+
                     var areaRef = dbRef.child('priceList/'+ areaId);
                     areaRef.once('value',function(areaSnapshot){
                     var productsList = areaSnapshot.val();
@@ -165,9 +165,9 @@ angular.module('starter.controllers', ['ngCordova'])
                             }
                             $scope.modifiedPriceList.push(a);
                             riceObject[productId].quintalWeightPrice = ricePriceArray[productId][userType];
-                            
+
                         }
-                                
+
                     }
 
                     for(var productId in ravvaObject){
@@ -182,7 +182,7 @@ angular.module('starter.controllers', ['ngCordova'])
                             ravvaObject[productId].quintalWeightPrice = ravvaPriceArray[productId][userType];
 
                         }
-                       
+
                     }
 
                     for(var productId in brokenObject){
@@ -197,23 +197,23 @@ angular.module('starter.controllers', ['ngCordova'])
                             brokenObject[productId].quintalWeightPrice = brokenPriceArray[productId][userType];
 
                         }
-                       
+
                     }
 
                   });
               })();
 
             });
-            
+
         };
-        
-      
+
+
         $scope.applyDiscount = function(){
             var shopArray = $scope.shopArray;
             var totaldiscountedPrice = 0;
             shopArray.forEach(function(shop){
-      
-                    
+
+
                 var items = shop.items;
                 var riceObject = items.rice;
                 var ravvaObject = items.ravva;
@@ -229,7 +229,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     shopBrokenWeight += brokenObject[productId].weight;
                 }
                 var ricediscount=0, ravvadiscount=0;
-                
+
                 if(shopRiceWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' )){
                                          ricediscount=25;
 
@@ -247,10 +247,10 @@ angular.module('starter.controllers', ['ngCordova'])
                                     ravvaObject[productId]['discountedQuintalPrice']=  ravvaObject[productId].quintalWeightPrice - ravvadiscount;
                                     ravvaObject[productId]['price']= ravvaObject[productId].discountedQuintalPrice * ravvaObject[productId]['weight']
                                                            totaldiscountedPrice += ravvadiscount*ravvaObject[productId]['weight'];
-                        }                
-                   
-                              
-                
+                        }
+
+
+
             })
             document.getElementById('discount_amount').innerHTML = "&#8377;"+totaldiscountedPrice.toString();
             $scope.cartArray["discount_amount"] = totaldiscountedPrice;
@@ -292,7 +292,7 @@ angular.module('starter.controllers', ['ngCordova'])
             })();
                 return 0;
             }
-            
+
             var userInfo = JSON.parse(window.localStorage.userInfo);
             var dbRef = loginCred.dbRef;
             var now = new Date();
@@ -439,13 +439,13 @@ angular.module('starter.controllers', ['ngCordova'])
             if(!slides || slides.length == 0)
                 return;
             for (i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none"; 
+                    slides[i].style.display = "none";
             }
             slideIndex++;
-                if (slideIndex> slides.length) {slideIndex = 1} 
-                slides[slideIndex-1].style.display = "block"; 
-                setTimeout($scope.slideImages, 5000); 
-            
+                if (slideIndex> slides.length) {slideIndex = 1}
+                slides[slideIndex-1].style.display = "block";
+                setTimeout($scope.slideImages, 5000);
+
         }
 
         $scope.init = function(){
@@ -754,7 +754,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
         var earlySelectedShop = {};
 
-        $scope.getItemsPrice = function(){  
+        $scope.getItemsPrice = function(){
             var areaId = window.localStorage.areaId;
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
@@ -905,7 +905,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 document.getElementById('welcomeDiv').style.display='block';
                 document.getElementById('loginDiv').style.marginTop='10%';
 
-                
+
             }else{
                 document.getElementById('toggle').textContent='SIGN UP';
                 document.getElementById('myOption').textContent = 'SIGN IN';
@@ -1503,11 +1503,13 @@ angular.module('starter.controllers', ['ngCordova'])
 
         function computeWidth(totalQuantity){
             var width = totalQuantity*10/selectedLorrySize;
-            if(width > 100)
+            if(width > 100) {
                 progressBarElement.style.backgroundColor = "red";
+                width = 100;
+            }
             else
                 progressBarElement.style.backgroundColor = "green";
-            progressBarElement.style.width = width.toString()+"%";
+            progressBarElement.style.width = width.toString() + "%";
             $scope.totalQuantity = totalQuantity;
             console.log($scope.deliveryArray);
         }
@@ -1621,29 +1623,29 @@ angular.module('starter.controllers', ['ngCordova'])
         }
         $scope.checkoutOrder = function(){
             //window.localStorage.shopArray = JSON.stringify($scope.deliveryArray);
-           
+
             if(!Object.keys($scope.deliveryArray).length){
                 myPopUp("Lorry is empty. Please add items to lorry","Message");
                 return;
             }
-            
+
             if($scope.totalQuantity > $scope.selectedLorrySize*10){
-            
+
                 lorryOverloadedPopup();
-           
+
             }else{
                 massageDataToSummaryCtrl();
             }
-        } 
-        
+        }
+
         var lorryOverloadedPopup = function(){
              var myPopup   = $ionicPopup.show({
-                template: 
+                template:
                 '<p>Lorry overloaded!!. Do you want to continue ?</p>',
                 title: 'Confirmation',
                 scope: $scope,
                 buttons: [
-                    {   text: 'No',                        
+                    {   text: 'No',
                     }, {
                         text: '<b>Yes</b>',
                         type: 'button-positive',
@@ -1657,7 +1659,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 console.log('Tapped!', res);
             });
         }
-        
+
          var massageDataToSummaryCtrl=  function () {
               var cartInfo = {};
                 var arr = [];
@@ -1706,7 +1708,7 @@ angular.module('starter.controllers', ['ngCordova'])
             window.localStorage.cartInfo = JSON.stringify(cartInfo);
             window.location.hash = "#/app/summary";
         }
-        
+
 
         $scope.getShopName = function(tin){
             return shopInfo[tin].name;
@@ -1725,15 +1727,15 @@ angular.module('starter.controllers', ['ngCordova'])
                 });
             $rootScope.$broadcast("cached",{});
         }
-        
+
         $scope.isViewDetailClicked = function(orderId){
             return ($scope.viewDetailOrder === orderId);
         }
-        
+
         $scope.showOrder = function(orderId){
             if($scope.viewDetailOrder == orderId)
                 $scope.viewDetailOrder = null;
-            else 
+            else
             $scope.viewDetailOrder = orderId;
             console.log("show order clicked"+orderId);
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
@@ -1744,9 +1746,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
                 $scope.$apply();
             });
-            
+
         }
-        
+
         $scope.showDeletePopUp = function(orderId) {
             var myPopup = $ionicPopup.show({
                 template: 'Are you sure you want to cancel the order ?',
@@ -1766,8 +1768,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 console.log('Tapped!', res);
             });
         };
-        
-        $scope.cancelOrder = function(orderId){          
+
+        $scope.cancelOrder = function(orderId){
             var showPopUp = loginCred.showPopup;
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(data){
@@ -1782,8 +1784,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 ];
 
                         var d = new Date();
-                        
-                
+
+
                 var promise = ordersRef.update(orderObject);
                 promise.then(function(data){
                     var singleMsg = {
@@ -1793,11 +1795,11 @@ angular.module('starter.controllers', ['ngCordova'])
                         }
                 var orderUpdatesRef = loginCred.dbRef.child('orders/'+ orderId + '/updates');
                 orderUpdatesRef.push(singleMsg);
-                showPopUp('Order Cancelled Successfully', 'Success');  
-                
+                showPopUp('Order Cancelled Successfully', 'Success');
+
             }).catch(function(e){ console.log(e);showPopUp('Could not cancel the order',"Failed!!")})
 
-            });           
+            });
         }
 
         $scope.onClickOrder = function(orderId){
@@ -1836,7 +1838,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         }
                         foo.push(singleMsg);
                     }
-                   
+
                 }
                  $scope.orderStatusArray[orderId] = {
                         updates:foo,
@@ -1860,15 +1862,15 @@ angular.module('starter.controllers', ['ngCordova'])
     })
      .controller('pricesCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
 
-       
+
          $scope.loadPrices = function(){
             var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
-         
+
              var internalVsDisplay = loginCred.dbRef.child('internalVsDisplay');
              internalVsDisplay.once('value', function(data){
                   $scope.intVsDisp=  data.val();
              })
-  
+
               var areas = [];
               usersRef.once('value', function(data){
                  var userobj = data.val();
@@ -1889,7 +1891,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                  $scope.pricesForAreas ={};
              for(j=0;j<areas.length;j++){
-                
+
                 (function(j){
                  var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
                  ordersRef.once('value', function(data){
@@ -1906,7 +1908,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var displayNameOfProduct = $scope.intVsDisp[product];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = product;
-                         
+
                           var foo={
                               name:displayNameOfProduct,
                               price:riceArray[product][userType]
@@ -1915,7 +1917,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     foobar['Rice']= bar;
                                        var bar=[]
- 
+
                     for(product in ravvaArray){
                         var displayNameOfProduct = $scope.intVsDisp[product];
                         if(displayNameOfProduct ==null)
@@ -1928,7 +1930,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     foobar['Ravva']= bar;
                                        var bar=[]
- 
+
                     for(product in brokenArray){
                         var displayNameOfProduct = $scope.intVsDisp[product];
                         if(displayNameOfProduct ==null)
@@ -1940,20 +1942,20 @@ angular.module('starter.controllers', ['ngCordova'])
                           bar.push(foo);
                     }
                     foobar['Broken']= bar;
-                    
+
                      $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
                      $scope.$apply();
                      console.log($scope.pricesForAreas);
                      $rootScope.$broadcast("cached",{});
-                     
+
                 })})(j);
              }
               })
               $rootScope.$broadcast("cached",{});
          };
      })
-     
-     
+
+
      .controller('profileCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope){
        $scope.userProfile={}; var  usersRef ;var userObj;$scope.userProfileView={};
        var showPopup = loginCred.showPopup;
@@ -1965,7 +1967,7 @@ angular.module('starter.controllers', ['ngCordova'])
              usersRef.once('value', function(data){
                  console.log(data.val());
                  userObj = data.val();
-                 
+
                  $scope.userProfileView['Name'] = userObj['name'];
                  $scope.userProfileView['Email'] = userObj['email'];
                  $scope.userProfileView['Is Agent'] = userObj['isAgent'];
@@ -1974,15 +1976,15 @@ angular.module('starter.controllers', ['ngCordova'])
                  $scope.$apply();
 
              })
-            
+
            $rootScope.$broadcast("cached",{});
         };
-        
+
         $scope.updateProfile = function(){
-           
+
             userObj['name'] = $scope.userProfile['name'];
             userObj['address'] = $scope.userProfile['address'];
-                          
+
             var promise = usersRef.update(userObj);
             promise.then(function(data){
                   $scope.editProfile=false;
@@ -1990,15 +1992,15 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.userProfileView['Address'] = userObj['address'];
                 $scope.$apply();
                 showPopup('User information updated successfully', 'Success');
-                
+
             }).catch(function(e){ console.log(e);showPopUp('Some problem occured while updating the user information',"Failed!!")})
 
         };
-        
+
         $scope.cancel = function(){
             $scope.editProfile = false;
         };
-       
+
              })
 
-            
+
