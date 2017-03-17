@@ -11,7 +11,7 @@
                       </button>-->
     </div>
   <ion-content class="has-header" ng-init="init();">
-      <div class="card" style="height: 250px;margin-top: 2%;margin-top: 7%">
+      <div class="card" style="height: 250px;padding:0;margin: 0">
           <img class="mySlides" src="img/slide1.jpg" style="height: 250px;width: 100%">
           <img class="mySlides" src="img/slide2.jpg" style="height: 250px;width: 100%">
            <img class="mySlides" src="img/slide3.jpg" style="height: 250px;width: 100%">
@@ -30,8 +30,8 @@
           </div>
       </div>-->
 
-    <div class="button-bar padding" style="margin-top:5%;background-color: #fff;width: 96%;margin-left: 2%;margin-bottom: 5%">
-        <a class="button bgdarkGray" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
+    <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
+        <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="min-height:135px;height:auto;background:#fff;position:relative;">
         <div class = "row" style="height:100%;">
@@ -40,9 +40,9 @@
                    style="height:100%;max-height: 120px;width: 100%;max-width: 100%;"/>
             </div>
             <div class = "col col-80"  style="margin-left: 4%;padding-right: 10px;margin-top: 3%">
-              <div class="row text-left" style="padding:0;color:#388e3c;">
-                  <p style="text-align: left;padding:0;" id="{{key}}name">
-                      <b>{{value.name.toUpperCase()}}</b>
+              <div class="row text-left" style="padding:0;">
+                  <p style="text-align: left;padding:0;font-size: 16px;font-weight: 900" id="{{key}}name">
+                      {{value.name.toUpperCase()}}
                   </p>
               </div>
               <div class="row text-left" style="padding:0;">
@@ -52,7 +52,7 @@
               </div>
                 <div class="row text-left">
                     <div class="col" style="padding:0;font-size: 18px;margin-top: 10px">
-                    <p id="{{key}}price" style="text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-weight: 16px">₹​ {{getPrice(key)}}</p>
+                    <p id="{{key}}price" style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-size: 24px">₹​ {{getPrice(key)}}</p>
                     </div>
                     <div class="col" style="margin-bottom: -10px;margin-left: 60px">
                         <button class="button" id="{{key}}buy" ng-click="showDiv(key);"
