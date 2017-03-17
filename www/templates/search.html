@@ -2,7 +2,7 @@
     <div class="bar bar-header">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
-        <h1 class="title">LALITHA BRAND</h1>
+        <h1 class="title" style="color: white;font-size: 20px;font-weight: 900;margin-top: 4px">LALITHA ENTERPRISES</h1>
         <button class="button button-icon button-clear ion-ios-cart" menu-toggle="right" id="addToCartLogo" ng-click="continue()"
                 style="color:white;">
 <!--        </button>
@@ -33,7 +33,7 @@
     <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
         <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
-    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="min-height:135px;height:auto;background:#fff;position:relative;">
+    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;">
         <div class = "row" style="height:100%;">
             <div class = "col col-20" style="height:100%;margin-top: 10px;">
               <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image"
@@ -119,23 +119,27 @@
     </div>
   </ion-content>
 
-    <ion-footer-bar align-title="center">
-        <div class="row">
-            <div class="col">
-                <div class="button-bar">
-                    <button class="button  button-positive" ng-click="proceedToSaveInCart()" style="margin:0;">
-                        <b style="font-size: large">SHOP</b>
-                    </button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="button-bar">
-                    <button class="button  button-positive" ng-click="proceedToSaveInCart()" style="margin:0;">
-                        <b style="font-size: large">CONTINUE</b>
-                    </button>
-                </div>
-            </div>
+    <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent">
+        <div class="col" style="padding: 0;margin: 0">
+        <div class="row" style="padding: 0;margin: 0">
+            <span style="font-size: 20px;padding-left: 10px;margin-bottom: 10px;background-color: #d4db2b">{{shopDetail.name}}</span>
         </div>
+        <div class="row" style="margin: 0;padding: 0;background-color:transparent">
+            <div class="col" style="margin: 0;padding: 0">
+                <div class="button-bar">
+                    <button class="button" ng-click="showShopPopUp();" style="margin:0;margin-right: 40px;color:#fff;font-weight: 600;background-color:#535766">
+                        SELECT SHOP
+                    </button>
+                </div>
+            </div>
+            <div class="col" style="margin: 0;padding: 0">
+                <div class="button-bar">
+                    <button class="button" ng-click="proceedToSaveInCart()" style="margin:0;margin-left: -20px;color:#fff;font-weight: 600;background-color: #20bd99">
+                        CONTINUE
+                    </button>
+                </div>
+            </div>
+        </div></div>
         
     </ion-footer-bar>
 </ion-view>

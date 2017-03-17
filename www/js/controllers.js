@@ -438,7 +438,7 @@ angular.module('starter.controllers', ['ngCordova'])
             slideIndex++;
                 if (slideIndex> slides.length) {slideIndex = 1} 
                 slides[slideIndex-1].style.display = "block"; 
-                setTimeout($scope.slideImages, 3000); // Change image every 2 seconds
+                setTimeout($scope.slideImages, 5000); 
             
         }
 
