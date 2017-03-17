@@ -11,7 +11,7 @@
                       </button>-->
     </div>
   <ion-content class="has-header" ng-init="init();">
-      <div class="card" style="height: 250px;padding:0;margin: 0">
+      <div class="card" style="height: 250px;padding:0;margin-top: 20px">
           <img class="mySlides" src="img/slider1.jpg" style="height: 250px;width: 100%">
           <img class="mySlides" src="img/slider2.jpg" style="height: 250px;width: 100%">
            <img class="mySlides" src="img/slider3.jpg" style="height: 250px;width: 100%">
@@ -77,14 +77,14 @@
                   </div>
                       <div class="row">
                     <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);"
-                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #fb641b;color: #fff;font-size: 18px" placeholder="0"/>
+                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #fb641b;color: #fff;font-size: 22px" placeholder="0"/>
                       </div>
                   <div class="row" style="margin-top: 2%">
                     <center><span>Bags</span></center>
                   </div>
                     <div class="row">
                     <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="0"
-                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #ff9f00" ng-keyup="textInBag(key,this.value.master_weight);"/>
+                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #ff9f00;color:#fff;font-size: 22px" ng-keyup="textInBag(key,this.value.master_weight);"/>
                     </div>
                 </div>
                 <div class="col" style="position: relative;">

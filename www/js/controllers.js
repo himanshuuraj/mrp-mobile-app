@@ -550,6 +550,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 var bag = bagElement.value;
                 var priceElement = document.getElementById(key+"computedPrice");
                 var price = priceElement.innerText;
+                if(!bag && !quantity){
+                    alert("Please insert bag or quantity");
+                    return;
+                }
                 if(!price)
                 {
                     alert("Price of this item is not available");
@@ -562,11 +566,9 @@ angular.module('starter.controllers', ['ngCordova'])
                     return;
                 }
                 price = price.toString(); // array to string
-                if(!bag && !quantity){
-                    alert("Please insert bag or quantity");
-                    return;
-                }
+                
                 tickElement.className='button icon ion-checkmark-round';
+                tickElement.style.backgroundColor="#388e3c"
                 //x = value;
                 x["master_weight"] = value.master_weight;
                 x["name"] = value.name;
@@ -590,6 +592,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.cartArray = JSON.stringify($scope.cartArray);
             }else{
                 tickElement.className='button icon ion-plus-round';
+                tickElement.style.backgroundColor="#fff";
                 var length = $scope.cartArray[$scope.shopDetail.tin].length;
                 for(var index = 0; index<length; index++){
                     if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
