@@ -427,8 +427,23 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.ravvaPriceArray = JSON.parse(window.localStorage.ravvaPriceArray);
             $scope.ricePriceArray = JSON.parse(window.localStorage.ricePriceArray);
         }
+        var slideIndex = 0;
+
+        $scope.slideImages = function() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none"; 
+            }
+            slideIndex++;
+                if (slideIndex> slides.length) {slideIndex = 1} 
+                slides[slideIndex-1].style.display = "block"; 
+                setTimeout($scope.slideImages, 3000); // Change image every 2 seconds
+            
+        }
 
         $scope.init = function(){
+            $scope.slideImages();
             if(!flagOfAlreadyPresentPrice)
                 $scope.getItemsPrice();
             if(window.localStorage.shopName){
