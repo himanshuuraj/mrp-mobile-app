@@ -436,7 +436,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.slideImages = function() {
             var i;
             var slides = document.getElementsByClassName("mySlides");
-            if(!slides)
+            if(!slides || slides.length == 0)
                 return;
             for (i = 0; i < slides.length; i++) {
                     slides[i].style.display = "none"; 

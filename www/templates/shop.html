@@ -37,7 +37,7 @@
                       ng-show="isGroupShown(shop)">
                     <div class="row" ng-repeat="(key,value) in shop">
                         <div class="col">
-                            {{key}}:-
+                            {{key.toUpperCase()}}
                         </div>
                         <div class="col" style="width:50%;word-wrap: break-word;">
                             {{value.trim()}}
