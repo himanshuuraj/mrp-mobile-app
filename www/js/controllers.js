@@ -539,7 +539,7 @@ angular.module('starter.controllers', ['ngCordova'])
         var addToCartNumber;
         $scope.addToCart = function(key,value){
             var tickElement = document.getElementById(key+"button");
-            if(tickElement.style.backgroundColor == "green")
+            if(tickElement.getAttribute("status") == "add")
             {
                 var x = {};
                 var quantityElement = document.getElementById(key+"quantity");
@@ -584,10 +584,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.cartArray[$scope.shopDetail.tin].push(x);
                 doAnimation(key);
+                tickElement.setAttribute("status","remove");
                 window.localStorage.cartArray = JSON.stringify($scope.cartArray);
-                tickElement.style.backgroundColor = "darkgray";
             }else{
-                tickElement.style.backgroundColor = "green";
                 tickElement.className='button icon ion-plus-round';
                 var length = $scope.cartArray[$scope.shopDetail.tin].length;
                 for(var index = 0; index<length; index++){
@@ -597,6 +596,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                 }
                 window.localStorage.cartArray = JSON.stringify($scope.cartArray);
+                tickElement.setAttribute("status","add");
                 updateCart();
             }
             console.log($scope.cartArray);
@@ -798,8 +798,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 var buttonElement = document.getElementById(productId + "button");
                 quantityElement.value = "";
                 bagElement.value = "";
-                buttonElement.style.backgroundColor = "darkgray";
-                buttonElement.className='button icon ion-plus-round';
+                buttonElement.className='button icon ion-plus-round buttonAddToCart';
             }
         }
 
@@ -816,8 +815,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     var buttonElement = document.getElementById(arg.pId + "button");
                     quantityElement.value = obj[arg.index].quantity;
                     bagElement.value = obj[arg.index].bag;
-                    buttonElement.style.backgroundColor = "green";
-                    buttonElement.className='button icon ion-checkmark-round';
+                    buttonElement.className = 'button icon ion-checkmark-round buttonAddToCart';
+                    buttonElement.setAttribute("status","remove");
                     var computedElement = document.getElementById(arg.pId + "computedPrice");
                     if(!computedElement.innerText) {
                         /*var priceElement = document.getElementById(arg.pId + "price");

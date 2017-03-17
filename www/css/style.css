@@ -285,3 +285,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
         width: 0%;
     }
 }
+
+.buttonAddToCart:hover{
+    color:green;
+}
