@@ -20,8 +20,105 @@
 
               <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded" style="display: none;" >
                   <div class="row" style="margin: 5%">
-                      STATUS : {{value.status}}
+                      <div class="col-75">
+                            STATUS : {{value.status}}
+                      </div>
+                      <div class="col">
+                            <i class="icon ion-close-round" ng-click="showDeletePopUp(order)" style="font-size: 20px;margin-right: 20px;float: right"></i>
+                          <i class="icon ion-eye" ng-click="showOrder(order)" style="font-size: 20px;"></i>                         
+                      </div>
                   </div>
+                  <div id="{{order}}}OrderEye" ng-show="isViewDetailClicked(order)">
+                  <div class="row" id="viewDetailedOrder">
+                      
+                    <div class="padding col" ng-repeat="shop in shopArrayOrderDetail" >
+            <h4 style="margin-left:10px">{{shop.name}}</h4>
+            <hr style="margin-left:10px">
+            <div class="row"  style="margin-top: 5px">
+                <div class="col">
+                    <span><i>Item Name</i></span>
+                </div>
+                <div class="col">
+                    <span>Weight in Quintals</span>
+                </div>
+                <div class="col">
+                    <span>Quintal Price</span>
+                </div>
+                 <div class="col">
+                    <span>Price After Discount</span>
+                </div>
+                <div class="col">
+                    <span>Price</span>
+                </div>
+
+            </div>
+
+            <div ng-repeat="(key,item) in shop.items" >
+                <div ng-repeat="(k,v) in item" >
+                    <div class="row">
+                        <div class="col">
+                            <span>{{v.name}}</span>
+                        </div>
+                        <div class="col">
+                            <span>{{v.weight}}</span>
+                        </div>
+                        <div class="col">
+                            <span>&#8377;{{v.quintalWeightPrice}}</span>
+                        </div>
+                        <div class="col">
+                            <span>&#8377;{{v.discountedQuintalPrice}}</span>
+                        </div>
+                        <div class="col">
+                            <span>&#8377;{{v.price}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-top: 1px dotted">
+            <br>
+        </div>
+            </div>
+        <div class="row" >
+            <div class="col-60">
+            </div>
+            <div class="col">
+                <ul class="priceList">
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>TOTAL PRICE</span>
+                            </div>
+                            <div class="col" style="padding: 0">
+                                <span style="padding-left: 20%" id="gross_price">&#8377;{{cartArrayOrderDetail.grossPrice}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>DISCOUNT</span>
+                            </div>
+                            <div class="col" style="padding: 0">
+                                <span style="padding-left: 20%" id="discount_amount">&#8377;</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col" style="padding: 0">
+                                <span>GRAND TOTAL</span>
+                            </div>
+                            <div class="col" style="padding: 0;">
+                                <span style="padding-left: 20%;" id="grand_total">&#8377;{{cartArrayOrderDetail.totalPrice}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+                    </div>
+
+   
                   <div ng-repeat="msgs in value.updates" class="row">
                           <ion-item class="row" >
                               <div class="col">
@@ -37,4 +134,5 @@
         </ion-list>
       </div>
   </ion-content>
+        
 </ion-view>

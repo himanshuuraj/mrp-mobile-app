@@ -1705,6 +1705,78 @@ angular.module('starter.controllers', ['ngCordova'])
                 });
             $rootScope.$broadcast("cached",{});
         }
+        
+        $scope.isViewDetailClicked = function(orderId){
+            return ($scope.viewDetailOrder === orderId);
+        }
+        
+        $scope.showOrder = function(orderId){
+            if($scope.viewDetailOrder == orderId)
+                $scope.viewDetailOrder = null;
+            else 
+            $scope.viewDetailOrder = orderId;
+            console.log("show order clicked"+orderId);
+            var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
+            ordersRef.once('value', function(data){
+                $scope.cartArrayOrderDetail = data.val().cart;
+                $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
+                $scope.$apply();
+            });
+            
+        }
+        
+        $scope.showDeletePopUp = function(orderId) {
+            var myPopup = $ionicPopup.show({
+                template: 'Are you sure you want to cancel the order ?',
+                title: 'Cancel Order ?',
+                scope: $scope,
+                buttons: [
+                    { text: 'No' }, {
+                        text: '<b>Yes</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            $scope.cancelOrder(orderId);
+                        }
+                    }
+                ]
+            });
+            myPopup.then(function(res) {
+                console.log('Tapped!', res);
+            });
+        };
+        
+        $scope.cancelOrder = function(orderId){          
+            var showPopUp = loginCred.showPopup;
+            var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
+            ordersRef.once('value', function(data){
+                var orderObject = data.val();
+                orderObject['status'] = 'cancelled';
+                 var foo = orderObject.updates;
+                var monthNames = [
+                    "January", "February", "March",
+                    "April", "May", "June", "July",
+                    "August", "September", "October",
+                    "November", "December"
+                ];
+
+                        var d = new Date();
+                        
+                
+                var promise = ordersRef.update(orderObject);
+                promise.then(function(data){
+                    var singleMsg = {
+                            timestamp : d.getDate() + '-'+monthNames[d.getMonth()] + '-' + d.getFullYear()+' '+ d.getHours() + ':'+ d.getMinutes(),
+                            updateMsg : "Cancelled by user",
+                            messageType : "cancelled"
+                        }
+                var orderUpdatesRef = loginCred.dbRef.child('orders/'+ orderId + '/updates');
+                orderUpdatesRef.push(singleMsg);
+                showPopUp('Order Cancelled Successfully', 'Success');  
+                
+            }).catch(function(e){ console.log(e);showPopUp('Could not cancel the order',"Failed!!")})
+
+            });           
+        }
 
         $scope.onClickOrder = function(orderId){
 
