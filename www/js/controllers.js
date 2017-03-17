@@ -1736,7 +1736,8 @@ angular.module('starter.controllers', ['ngCordova'])
             console.log("show order clicked"+orderId);
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(data){
-                $scope.cartArrayOrderDetail = data.val().cart;
+                if(data.val())
+                    $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
                 $scope.$apply();
             });
