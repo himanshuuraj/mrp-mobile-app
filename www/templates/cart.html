@@ -1,4 +1,4 @@
-<ion-view ng-init="init();">
+<ion-view ng-init="init();" style="background-color: #fff">
     <div class="bar bar-header">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
@@ -7,8 +7,8 @@
                 style="color:white;">
         </button>
     </div>
-    <div class="my-video has-header">
-        <div class = "has-header" style="position: relative;height:25%;background-color: lightgray;margin-left:5%;width:90%;">
+    <div class="my-video has-header" style="background-color: #fff">
+        <div class = "has-header" style="position: relative;height:25%;background-color:#fff;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
@@ -17,32 +17,16 @@
 
             </div>
         </div>
-
-        <div class="padding" style="background-color: lightgray;margin-top:22px;">
-            <div class="row">
-                <div class="row">
-                <div class="col">
-                    Lorry size <b>{{selectedLorrySize}} tonnes</b>
-                </div>
-                <div class="col">
-                    <button class="button button-positive" ng-click="showLorryPopUp();" style="height: 85%;">Change</button>
-                </div>
-                <div class="col" style="padding-top:15px;">
-                        {{totalQuantity}}/{{selectedLorrySizeInQuintals}} Quintals
-                </div>
-                </div>
-            </div>
-        </div>
     </div>
     <ion-content class="ion-content-below-my-video">
         <div class="padding" ng-repeat = "(key,data) in cartArray"
-             style="background-color:lightgray;position:relative;">
-            <center><b>{{getShopName(key)}}</b></center>
-            <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:155px;background-color: whitesmoke">
+             style="background-color:white;position:relative;margin-top: 15px;">
+            <center style="color:#388e3c;font-size: 16px;font-weight: 700"><b>{{getShopName(key).toUpperCase()}}</b></center>
+            <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:175px;background-color: white">
                 <!--here-->
                 <div class = "row" style="height:30%;">
                     <div class="col col-67 text-left" style="margin:0;padding-left:4%;">
-                        <p style="text-align: left;padding:0;padding:0;font-weight: 500" id="{{key}}name">
+                        <p style="text-align: left;padding:0;padding:0;font-weight: 500;font-size: 16px" id="{{key}}name">
                             {{value.name.toUpperCase()}}
                         </p>
                     </div>
@@ -56,55 +40,55 @@
                     <div class="col">
                         <img src="{{getImageUrl(value.productId,value.itemType)}}" style="margin-top: 10px;height: 100px;max-width: 100%;"/>
                     </div>
-                    <div class="col" style="margin-left: 0">
+                    <div class="col" style="margin-left: 0;margin-top: -5px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Quintals</span>
                         </div>
-                        <div class="row" style="padding-left:10px;">
-                            <div style="font-size:25px;margin-top: 0" ng-click="addQuantity(key,this.value,$index);">
-                                <i class="icon ion-plus-circled" ></i>
+                        <div class="row" style="padding-left:13px;">
+                            <div style="font-size:25px;margin-top: 0;padding-bottom: 5px" ng-click="addQuantity(key,this.value,$index);">
+                                <i class="icon ion-plus" ></i>
                             </div>
 
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}quantity{{value.productId}}" ng-keyup="textInQuantity(key,this.value,$index);" ng-value="value.quantity"
-                                   style="text-align:center;width:40%;background-color: whitesmoke;border-bottom:1px solid black;" placeholder="quantity"/>
+                                   style="text-align:center;width:40%;background-color: white;border:1px solid black;font-size: 14px;" placeholder="quantity"/>
 
                         </div>
-                        <div class="row" style="padding-left:10px;">
-                            <div style="font-size:25px;" ng-click="minusQuantity(key,this.value,$index)">
-                                <i class="icon ion-minus-circled"></i>
+                        <div class="row" style="padding-left:13px;">
+                            <div style="font-size:25px;padding-top: 5px" ng-click="minusQuantity(key,this.value,$index)">
+                                <i class="icon ion-minus"></i>
                             </div>
                         </div>
 
                     </div>
-                    <div class="col" style="margin-bottom: 0">
+                    <div class="col" style="margin-bottom: 0;margin-top: -5px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Bags</span>
                         </div>
-                        <div class="row" style="padding-left:10px;">
-                            <div style="font-size:25px;margin-top: 0" ng-click="addBag(key,this.value,$index);">
-                                <i class="icon ion-plus-circled"></i>
+                        <div class="row" style="padding-left:13px;">
+                            <div style="font-size:25px;margin-top: 0;padding-bottom: 5px" ng-click="addBag(key,this.value,$index);">
+                                <i class="icon ion-plus"></i>
                             </div>
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}bag{{value.productId}}" ng-keyup="textInBag(key,this.value,$index);"  ng-value="value.bag"
-                                   style="text-align:center;width:40%;background-color: whitesmoke;border-bottom:1px solid black;"/>
+                                   style="text-align:center;width:40%;background-color: white;border:1px solid black;"/>
 
                         </div>
-                        <div class="row" style="padding-left:10px;">
-                            <div style="font-size:25px;" ng-click="minusBag(key,this.value,$index);">
-                                <i class="icon ion-minus-circled" ></i>
+                        <div class="row" style="padding-left:13px;">
+                            <div style="font-size:25px;padding-top: 5px" ng-click="minusBag(key,this.value,$index);">
+                                <i class="icon ion-minus" ></i>
                             </div>
 
                         </div>
                     </div>
                     <div class="col">
                         <div class="row" style="margin-top: 10%">
-                            <p id="{{key}}computedPrice{{value.productId}}"></p>
+                            <p style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;font-weight: 700;font-size: 20px" id="{{key}}computedPrice{{value.productId}}"></p>
                         </div>
                         <div class="row" style="margin-top: -3%">
-                            <button class="button" style="background-color: darkgrey" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
+                            <button class="button" style="background-color:#fb641b" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
                                 ADD
                             </button>
                         </div>
@@ -114,7 +98,32 @@
             </div>
         </div>
     </ion-content>
-    <ion-footer-bar align-title="center">
-        <button class="button button-block button-positive" ng-click="checkoutOrder()" style="margin:0;">CHECK OUT</button>
+
+     <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent">
+        <div class="col" style="padding: 0;margin: 0">
+        <div class="row" style="padding: 0;margin: 0">
+            <span style="font-size: 20px;padding-left: 10px;margin-bottom: 10px;background-color: #d4db2b">Lorry size <b>{{selectedLorrySize}} tonnes</b></span>
+        </div>
+        <div class="row" style="margin: 0;padding: 0;background-color:transparent">
+            <div class="col" style="margin: 0;padding: 0">
+                <div class="button-bar">
+                    <button class="button" ng-click="showLorryPopUp();" style="margin:0;margin-right: 40px;color:#fff;font-weight: 600;background-color:#535766">
+                        SELECT LORRY
+                    </button>
+                </div>
+            </div>
+            <div class="col" style="margin: 0;padding: 0">
+                <div class="button-bar">
+                    <button class="button" ng-click="checkoutOrder()" style="margin:0;margin-left: -20px;color:#fff;font-weight: 600;background-color: #20bd99">
+                        CHECK OUT
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+         
+   
+         
+        
     </ion-footer-bar>
 </ion-view>

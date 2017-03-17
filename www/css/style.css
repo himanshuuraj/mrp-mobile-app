@@ -203,7 +203,6 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
 .my-video
 {
     position:relative;
-    height:500px;
     background-color: lightgray;
 }
 

@@ -1,5 +1,5 @@
 <ion-view>
-    <div class="bar bar-header">
+    <div class="bar bar-header" style="background-color: white">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
         <h1 class="title">Summary</h1>
@@ -7,7 +7,7 @@
                 style="color:white;">
         </button>
     </div>
-    <ion-content ng-init = "init();">
+    <ion-content ng-init = "init();" style="background-color: white">
         <h3 style="margin-top:40px"><center>Order Summary</center></h3>
         <div class="padding" ng-repeat="shop in shopArray" >
             <h4 style="margin-left:10px">{{shop.name}}</h4>

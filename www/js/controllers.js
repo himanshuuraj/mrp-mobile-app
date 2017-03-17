@@ -1616,9 +1616,11 @@ angular.module('starter.controllers', ['ngCordova'])
             if(buttonElement.innerHTML.toString().trim() == "ADD"){
                 $scope.addToDeliveryArray(key,value,index);
                 buttonElement.innerHTML = "REMOVE";
+                buttonElement.style.backgroundColor ="#ff9f00"
             }else{
                 $scope.removeItemFromDeliverable(key,value);
                 buttonElement.innerHTML = "ADD";
+                buttonElement.style.backgroundColor ="#fb641b"
             }
         }
         $scope.checkoutOrder = function(){
