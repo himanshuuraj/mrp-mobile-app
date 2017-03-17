@@ -1736,8 +1736,9 @@ angular.module('starter.controllers', ['ngCordova'])
             console.log("show order clicked"+orderId);
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(data){
-                if(data.val())
-                    $scope.cartArrayOrderDetail = data.val().cart;
+                if(!data.val())
+                    return;
+                $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
                 $scope.$apply();
             });
@@ -1813,6 +1814,8 @@ angular.module('starter.controllers', ['ngCordova'])
             var foo=[];
             orderUpdatesRef.once('value', function(data){
                 var order = data.val();
+                if(!order)
+                    return;
                 var updates = order.updates;
                 var monthNames = [
                     "January", "February", "March",
