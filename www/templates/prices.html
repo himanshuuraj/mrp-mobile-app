@@ -10,13 +10,14 @@
   <ion-content class="has-header" ng-init="loadPrices()">
       <div class="padding">
         <ion-list>
-            <div class="card" style="background-color: whitesmoke;"ng-repeat="(area,product) in pricesForAreas">
-                <center><span style="font-size: larger">{{area}}</span> </center>
+            <div class="card" style="background-color: white;margin-top: 25px;"ng-repeat="(area,product) in pricesForAreas">
+                    <center class="button button-bar" style="background-color:#388e3c;width: 70%;margin-left: 15%;height: 40px;margin-top: 20px">
+                        <span style="font-size: 20px;color: white;font-weight: 600">{{area}}</span></center>
                 <div ng-repeat="(itemType, items ) in product">
-                    <div class="card" style="padding-left: 5%;">{{itemType}}</div>
+                    <div class="card" style="margin-top: 20px;padding-left: 5%;font-size: 16px;padding-top: 10px;background-color: #d4db2b">{{itemType}}</div>
                     <div ng-repeat="key in items">
                         <div class="row">
-                            <div class="col-80" style="font-style: italic" >{{key.name}}</div>
+                            <div class="col-80" style="font-size: 14px;" >{{key.name}}</div>
                             <div class="col" >₹​ {{key.price}}</div>
 
                         </div>
