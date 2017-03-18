@@ -793,6 +793,8 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         var deleteUI = function(){
+            document.getElementById('brokentab').className='button';
+            document.getElementById('ravvatab').className='button';
             var tin = earlySelectedShop["tin"];
             var obj = $scope.cartArray[tin] || [];
             for(var index = 0; index < obj.length; index++){

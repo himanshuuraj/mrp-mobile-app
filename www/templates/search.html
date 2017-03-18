@@ -30,7 +30,7 @@
           </div>
       </div>-->
 
-    <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
+    <div class="button-bar padding" style="margin-bottom: 5%">
         <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
     </div>
     <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;">
@@ -46,15 +46,18 @@
                   </p>
               </div>
               <div class="row text-left" style="padding:0;">
-                <p style="font-style: italic;padding:0;margin-top: 3px;font-weight:100">
+                <p style="font-size: 12px;padding:0;margin-top: -2px;font-weight:200">
                     Master Weight: {{value.master_weight}}
                 </p>
               </div>
                 <div class="row text-left">
-                    <div class="col" style="padding:0;font-size: 18px;margin-top: 10px">
-                    <p id="{{key}}price" style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-size: 24px">₹​ {{getPrice(key)}}</p>
+                    <div class="col-33" style="padding:0;font-size: 18px;margin-top: 10px">
+                    <span id="{{key}}price" style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-size: 24px">₹​ {{getPrice(key)}}</span>
                     </div>
-                    <div class="col" style="margin-bottom: -10px;margin-left: 60px">
+                    <div class="col-20" style="margin-top: 3%">
+                        <span style="font-weight: 200;font-size: 12px;padding-top: 3%">/ Quintal</span>
+                    </div>
+                    <div class="col" style="margin-bottom: -10px;margin-left: 20px">
                         <button class="button" id="{{key}}buy" ng-click="showDiv(key);"
                           style="background-color: #fb641b;margin-right:5%;margin-left: 35%">
                              <span style="color:white">BUY</span>
