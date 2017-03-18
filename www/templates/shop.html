@@ -2,12 +2,12 @@
     <div class="bar bar-header">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
-        <h1 class="title">SHOPS</h1>
+        <h1 class="title" style="color:white;">SHOPS</h1>
         <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
                 style="color:white;">
         </button>
     </div>
-  <ion-content class="has-header">
+  <ion-content class="has-header" style="color:white;background-color: white">
 
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
           <input type="text" ng-model="shopSearchText.name"
@@ -22,7 +22,7 @@
                         <i class="icon" ng-class="isGroupShown(shop) ? 'ion-minus' : 'ion-plus'"></i>
                     </div>
 
-                    <div class="col" class="wrapWord" ng-click="toggleGroup(shop)" title="{{shop.name}}">
+                    <div class="col wrapWord" style="color: #388e3c;font-size: 18px" ng-click="toggleGroup(shop)" title="{{shop.name}}" >
                         {{shop.name}}
                     </div>
                     <div class="col col-10">
