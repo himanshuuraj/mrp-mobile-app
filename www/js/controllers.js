@@ -1860,9 +1860,10 @@ angular.module('starter.controllers', ['ngCordova'])
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
         $scope.orderStatusArray = {};  $scope.ordersArray = [];
         $scope.loadOrders = function(){
-            usersRef.once('value' ,
+            usersRef.orderByKey().once('value' ,
                 function(data){
                     $scope.ordersArray = data.val().orders;
+                    $scope.ordersArray.reverse();
                     $scope.$apply();
                 });
             $rootScope.$broadcast("cached",{});
@@ -1972,10 +1973,14 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.onClickOrder = function(orderId){
 
             var x= document.getElementById(orderId +'expanded');
+            var icon = document.getElementById(orderId+'icon');
+            
             if (x.style.display === 'none') {
                 x.style.display = 'block';
+                icon.className = 'icon ion-minus';
             } else {
                 x.style.display = 'none';
+                icon.className = 'icon ion-plus';
             }
 
             if($scope.orderStatusArray[orderId] != null){

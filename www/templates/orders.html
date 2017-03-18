@@ -1,4 +1,4 @@
-<ion-view ng-init="loadOrders()">
+<ion-view ng-init="loadOrders()" style="background-color: #fff">
     <div class="bar bar-header">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
@@ -8,17 +8,18 @@
         </button>
     </div>
     <ion-content class="has-header">
-        <div class="padding" style="margin-top: 15px;">
+        <div class="padding" style="margin-top: 20px;">
+            <p style="padding-left: 10px;font-size:16px;font-weight: 400">Latest order appears on the top of the page.<br><br> You can track/cancel/view updates related the order.</p>
             <ion-list>
-                <div ng-repeat = "order in ordersArray ">
-
-                    <ion-item class="item-stable">
-                        <div class="row" ng-click="onClickOrder(order)" style="cursor:pointer;color: #388e3c;">
+                <div ng-repeat = "order in ordersArray " style="margin-top: 15px">
+                    <ion-item class="item-stable" style="background-color: white;margin-top: 4px">
+                        <div class="row" ng-click="onClickOrder(order)" style="cursor:pointer;color: #388e3c;font-weight: 500;font-size: 18px">
+                            <i id="{{order}}icon" style="margin-right: 10px" class="icon ion-plus" ng-class="ion-plus"></i>
                             {{order}}
                         </div>
                     </ion-item>
 
-                    <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded" style="background-color:#fafafa;display: none;" >
+                    <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded" style="background-color:#fff;margin-left: 2%;width: 96%;display: none;" >
                         <div class="row card">
                             <div class="col-75">
                                 STATUS : {{value.status}}
