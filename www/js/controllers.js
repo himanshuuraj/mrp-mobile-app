@@ -566,7 +566,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     return;
                 }
                 price = price.toString(); // array to string
-                
+
                 tickElement.className='button icon ion-checkmark-round';
                 tickElement.style.backgroundColor="#388e3c"
                 //x = value;
@@ -1453,6 +1453,24 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.selectedLorrySizeInQuintals=selectedLorrySize*10;
             computeWidth(totalQuantity);
         };
+
+        var updateCart = loginCred.updateCart;
+
+        $scope.removeFromCart = function(key,value){
+            var cartArray = $scope.cartArray[key] || [];
+            for(var index = 0; index < cartArray.length; index++){
+                if(cartArray[index].productId == value.productId){
+                    cartArray.splice(index,1);
+                    $scope.cartArray[key] = cartArray;
+                    if($scope.cartArray[key].length == 0)
+                        delete $scope.cartArray[key];
+                    window.localStorage.cartArray = JSON.stringify($scope.cartArray);
+                    break;
+                }
+            }
+            updateCart();
+            $scope.removeItemFromDeliverable(key,value);
+        }
 
         $scope.showLorryPopUp = function() {
             // Custom popup
