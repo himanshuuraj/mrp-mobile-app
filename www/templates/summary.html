@@ -7,9 +7,9 @@
                 style="color:white;">
         </button>
     </div>
-    <ion-content ng-init = "init();" style="background-color: white">
-        <h3 style="margin-top:40px"><center>Order Summary</center></h3>
-        <div class="padding" ng-repeat="shop in shopArray" >
+    <ion-content ng-init = "init();" style="background-color: white;font-size: 12px">
+        <h3 style="margin-top:75px"><center>Order Summary</center></h3>
+        <div class="padding" ng-repeat="shop in shopArrayDup" >
             <h4 style="margin-left:10px">{{shop.name}}</h4>
             <hr style="margin-left:10px">
             <div class="row"  style="margin-top: 5px">
@@ -52,6 +52,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row" style="color:green">            
+                <div class="col">
+                    <span>Total: {{shop.totalShopPrice}}</span>
+                </div>
+                <div class="col-25">
+                    <span>Discount: {{shop.shopDiscountAmount}}</span>
+                </div>
+                <div class="col-40">
+                    <span>Amount Payable: {{shop.shopGrossAmount}}</span>
+                </div>
+                
+            </div>
             <hr style="border-top: 1px dotted">
             <br>
         </div>
@@ -64,7 +76,7 @@
                         <input class="coupon" type="text" placeholder="COUPON CODE" ng-model="cartArray.couponCode">
                     </div>
                     <div class="col" style="padding: 0">
-                        <button class="button button-block button-calm" style="background-color: lightslategray;margin-top:0;" ng-click="applyCoupon()">APPLY</button>
+                        <button class="button button-block button-calm" style="background-color: #388e3c;margin-top:0;" ng-click="applyCoupon()">APPLY</button>
                     </div>
                 </div>
                 <div class="row" style="margin-top:5%">
@@ -74,14 +86,14 @@
 
 
             <div class="col" style="padding-left: 5%;font-size: 75%;margin-bottom: 20%">
-                <ul class="priceList">
+                <ul class="priceList" style="font-size: 14px">
                     <li>
                         <div class="row">
-                            <div class="col" style="padding: 0">
+                            <div class="col" style="padding: 0;font-weight: 900">
                                 <span>TOTAL PRICE</span>
                             </div>
                             <div class="col" style="padding: 0">
-                                <span style="padding-left: 20%" id="gross_price">&#8377;{{cartArray.grossPrice}}</span>
+                                <span style="padding-left: 20%;font-weight: 900" id="gross_price"></span>
                             </div>
                         </div>
                     </li>
@@ -91,17 +103,17 @@
                                 <span>DISCOUNT</span>
                             </div>
                             <div class="col" style="padding: 0">
-                                <span style="padding-left: 20%" id="discount_amount">&#8377;</span>
+                                <span style="padding-left: 20%" id="discount_amount"></span>
                             </div>
                         </div>
                     </li>
                     <li>
                         <div class="row">
-                            <div class="col" style="padding: 0">
+                            <div class="col" style="padding: 0;font-weight: 900">
                                 <span>GRAND TOTAL</span>
                             </div>
-                            <div class="col" style="padding: 0;">
-                                <span style="padding-left: 20%;" id="grand_total">&#8377;{{cartArray.totalPrice}}</span>
+                            <div class="col" style="padding: 0;font-weight: 900">
+                                <span style="padding-left: 20%;" id="grand_total"></span>
                             </div>
                         </div>
                     </li>
