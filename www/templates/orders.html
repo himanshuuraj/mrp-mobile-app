@@ -74,6 +74,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                     <div class="row" style="color:green">            
+                                            <div class="col">
+                                                <span>Total: {{shop.totalShopPrice}}</span>
+                                            </div>
+                                            <div class="col-25">
+                                                <span>Discount: {{shop.shopDiscountAmount}}</span>
+                                            </div>
+                                            <div class="col-40">
+                                                <span>Amount Payable: {{shop.shopGrossAmount}}</span>
+                                            </div>
+                
+                                     </div>
                                     <hr style="border-top: 1px dotted">
                                     <br>
                                 </div>
@@ -99,7 +111,7 @@
                                                     <span>DISCOUNT</span>
                                                 </div>
                                                 <div class="col" style="padding: 0">
-                                                    <span style="padding-left: 20%" id="discount_amount">&#8377;</span>
+                                                    <span style="padding-left: 20%" id="discount_amount">&#8377;{{cartArrayOrderDetail.discount_amount}}</span>
                                                 </div>
                                             </div>
                                         </li>

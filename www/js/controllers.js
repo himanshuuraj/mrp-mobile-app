@@ -1821,6 +1821,33 @@ angular.module('starter.controllers', ['ngCordova'])
                     return;
                 $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
+                
+            for (var index in $scope.shopArrayOrderDetail){
+                var shop = $scope.shopArrayOrderDetail[index];
+                for(var item in shop.items){
+                    var itemObj = shop.items[item];
+                    for( var product in itemObj){
+                        var productObj = itemObj[product];
+                        console.log(productObj);
+                        productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
+                        productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
+                        productObj['price'] = loginCred.toCommaFormat(productObj['price']);
+                        console.log(productObj);
+
+                    }
+                    
+                }
+                shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
+                shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
+                shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
+            }
+            
+            $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
+            $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
+            $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                    
+                
+                
                 $scope.$apply();
             });
 
