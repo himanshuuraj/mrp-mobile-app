@@ -104,9 +104,11 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.isAgent = true;
 
         $scope.signOut = function(){
-            var x = window.localStorage.cartArray;
+            var cartArray = window.localStorage.cartArray;
+            var favouriteObject = window.localStorage.favouriteObject;
             window.localStorage.clear();
-            window.localStorage.cartArray = x;
+            window.localStorage.cartArray = cartArray;
+            window.localStorage.favouriteObject = favouriteObject;
             window.sessionStorage.clear();
             window.location.hash = "#/app/login";
         };
@@ -578,8 +580,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 '<label class="item item-input">'+
                 '<input type="text" id="searchElement" ng-model = "shopSearchElement.name"/>'+
                 '</label></div><ion-list> ' +
-                '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)">'+
-                '{{shop.name}}</ion-radio>'+
+                '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)" style="font-size:20px;">'+
+                '{{shop.name}}<br><span class="mobileFont">{{shop.mobile}}</span></ion-radio>'+
                 ' </ion-list>',
                 title: 'Choose Shop',
                 scope: $scope,
@@ -703,6 +705,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }else{
                 tickElement.className='button icon ion-plus-round';
                 tickElement.style.backgroundColor="#fff";
+                $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
                 var length = $scope.cartArray[$scope.shopDetail.tin].length;
                 for(var index = 0; index<length; index++){
                     if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
@@ -923,9 +926,16 @@ angular.module('starter.controllers', ['ngCordova'])
                 if(!quantityElement) continue;
                 var bagElement = document.getElementById(productId + "bag");
                 var buttonElement = document.getElementById(productId + "button");
+                var computedElement = document.getElementById(productId + "computedPrice");
                 quantityElement.value = "";
                 bagElement.value = "";
-                buttonElement.className='button icon ion-plus-round buttonAddToCart';
+                buttonElement.className='button icon ion-plus-round';
+                buttonElement.style.backgroundColor = "white";
+                buttonElement.setAttribute("status","add");
+                if(computedElement)
+                    computedElement.innerHTML = "";
+                var animateElement = document.getElementById(productId+"animate");
+                animateElement.className = "widthZero animatewidthzero";
             }
         }
 
@@ -942,18 +952,15 @@ angular.module('starter.controllers', ['ngCordova'])
                     var buttonElement = document.getElementById(arg.pId + "button");
                     quantityElement.value = obj[arg.index].quantity;
                     bagElement.value = obj[arg.index].bag;
-                    buttonElement.className = 'button icon ion-checkmark-round buttonAddToCart';
+                    buttonElement.className = 'button icon ion-checkmark-round';
+                    buttonElement.style.backgroundColor = "green";
                     buttonElement.setAttribute("status","remove");
+                    var animateElement = document.getElementById(productId+"animate");
+                    //animateElement.className = "widthFull animatewidthfull";
+                    animateElement.className = "widthZero animatewidthzero";
                     var computedElement = document.getElementById(arg.pId + "computedPrice");
-                    if(!computedElement.innerText) {
-                        /*var priceElement = document.getElementById(arg.pId + "price");
-                        if (priceElement) {
-                            var price = priceElement.innerText;
-                            price = price.toString().match(/[0-9]+/).toString();
-                            computedElement.innerHTML = obj[arg.index].bag
-                        }*/
+                    if(!computedElement.innerText)
                         computedElement.innerHTML = obj[arg.index].price;
-                    }
                 }, 0,true,{pId:productId,index:index});
             }
         }

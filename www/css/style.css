@@ -285,6 +285,7 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
     }
 }
 
-.buttonAddToCart:hover{
-    color:green;
+.mobileFont{
+    font-weight: 200;
+    font-size: 14px;
 }
