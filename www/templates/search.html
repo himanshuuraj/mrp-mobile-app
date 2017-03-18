@@ -1,143 +1,143 @@
 <ion-view cache-view="false">
     <div class="bar bar-header">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
-        </button>
-        <h1 class="title" style="color: white;font-size: 20px;font-weight: 900;margin-top: 4px">LALITHA ENTERPRISES</h1>
-        <button class="button button-icon button-clear ion-ios-cart" menu-toggle="right" id="addToCartLogo" ng-click="continue()"
-                style="color:white;">
-<!--        </button>
-        <button class="button button-positive" ng-click="showShopPopUp();" menu-toggle="right" style="">
-                        Choose
-                      </button>-->
-    </div>
-  <ion-content class="has-header" ng-init="init();">
-      <div class="card" style="height: 250px;padding:0;margin-top: 20px">
-          <img class="mySlides" src="img/slider1.jpg" style="height: 250px;width: 100%">
-          <img class="mySlides" src="img/slider2.jpg" style="height: 250px;width: 100%">
-           <img class="mySlides" src="img/slider3.jpg" style="height: 250px;width: 100%">
-      </div>
-
-<!--      <div class="card" ng-show="isAgent" ng-cloak style="margin-top: 8%;height:8%">
-          <div class="row" style="padding-top: 0px;">
-              <div class="col col-75 wrapWord" ng-show="shopDetail.name" style="padding-top: 10px;text-align: left;">
-                  {{shopDetail.name}}
-              </div>
-              <div class="col" style="padding: 0" >
-                    <button class="button button-positive"  ng-click="showShopPopUp();" style="min-height: 0px;margin-top:4px;">
-                        Choose
-                      </button>
-              </div>
-          </div>
-      </div>-->
-
-    <div class="button-bar padding" style="margin-bottom: 5%">
-        <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
-    </div>
-    <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;">
-        <div class = "row" style="height:100%;">
-            <div class = "col col-20" style="height:100%;margin-top: 10px;">
-              <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image"
-                   style="height:100%;max-height: 120px;width: 100%;max-width: 100%;"/>
+        <div class="row">
+            <div class="col col-10">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
+                </button>
             </div>
-            <div class = "col col-80"  style="margin-left: 4%;padding-right: 10px;margin-top: 3%">
-              <div class="row text-left" style="padding:0;">
-                  <p style="text-align: left;padding:0;font-size: 16px;font-weight: 900" id="{{key}}name">
-                      {{value.name.toUpperCase()}}
-                  </p>
-              </div>
-              <div class="row text-left" style="padding:0;">
-                <p style="font-size: 12px;padding:0;margin-top: -2px;font-weight:200">
-                    Master Weight: {{value.master_weight}}
-                </p>
-              </div>
-                <div class="row text-left">
-                    <div class="col-40" style="padding:0;font-size: 18px;margin-top: 10px">
-                    <span id="{{key}}price" style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-size: 24px">₹​ {{getPrice(key)}}</span>
-                    </div>
-                    <div class="col-20" style="margin-top: 3%;margin-left: -10%">
-                        <span style="font-weight: 200;font-size: 12px;padding-top: 3%">/ Quintal</span>
-                    </div>
-                    <div class="col" style="margin-bottom: -10px;margin-left: 25px">
-                        <button class="button" id="{{key}}buy" ng-click="showDiv(key);"
-                          style="background-color: #fb641b;margin-right:5%;margin-left: 35%">
-                             <span style="color:white">BUY</span>
-                        </button>
-                    </div>
-                </div>
-              
+            <div class="col">
+                <h1 class="title" style="color: white;font-size: 20px;font-weight: 900;margin-top: 10px">LALITHA BRAND</h1>
             </div>
-            
-            <div class="col-10">
+            <div class="col" style="position:relative;max-width: 10%;">
+                <button class="button button-icon button-clear ion-ios-heart" menu-toggle="right" id="addToFavouriteLogo"
+                        ng-click="showFavouriteItems()" style="color:white;">
+                </button>
+                <!--<span id="addToFavouriteText" style="position:absolute;top:0;right:0;"></span>-->
+            </div>
+            <div class="col" style="max-width: 15%;padding-right: 0px;">
+                <button class="button button-icon button-clear ion-ios-cart" menu-toggle="right" id="addToCartLogo" ng-click="continue()"
+                        style="color:white;margin-left: -10px;max-width: 120%;width: 120%;">
+                </button>
             </div>
 
+        </div>    </div>
+    <ion-content class="has-header" ng-init="init();">
+        <div class="card" style="height: 250px;padding:0;margin-top: 20px">
+            <img class="mySlides" src="img/slider1.jpg" style="height: 250px;width: 100%">
+            <img class="mySlides" src="img/slider2.jpg" style="height: 250px;width: 100%">
+            <img class="mySlides" src="img/slider3.jpg" style="height: 250px;width: 100%">
         </div>
-        <div class="widthZero" id="{{key}}animate" style="">
-            <div style="position:relative;height: 100%;width:100%;">
-                <div class="row" style="height:100%;width:100%;">
-                <div class="col col-33" style="padding:0px;margin-left: 10px;">
-                  <div class="row" >
-                      <center><span>Quintals</span></center>
-                  </div>
-                      <div class="row">
-                    <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);"
-                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #fb641b;color: #fff;font-size: 22px" placeholder="0"/>
-                      </div>
-                  <div class="row" style="margin-top: 2%">
-                    <center><span>Bags</span></center>
-                  </div>
-                    <div class="row">
-                    <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="0"
-                           style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #ff9f00;color:#fff;font-size: 22px" ng-keyup="textInBag(key,this.value.master_weight);"/>
-                    </div>
+        <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
+            <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
+        </div>
+        <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" ng-if="getFlag(key);"
+             style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;">
+            <div class = "row" style="height:100%;">
+                <div class = "col col-20" style="height:100%;margin-top: 10px;">
+                    <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image"
+                         style="height:100%;max-height: 120px;width: 100%;max-width: 100%;"/>
                 </div>
-                <div class="col" style="position: relative;">
-                    <div class="row">
-                        <p id="{{key}}priceOnBuy" style="text-align:left;width:100%;padding-top: 3%;font-weight: 200;font-weight: 16px">₹​ {{getPrice(key)}} / Quintal</p>          
+                <div class = "col col-80"  style="position:relative;margin-left: 4%;padding-right: 10px;margin-top: 3%">
+                    <div class="row text-left" style="padding:0;">
+                        <p style="text-align: left;padding:0;font-size: 16px;font-weight: 900" id="{{key}}name">
+                            {{value.name.toUpperCase()}}
+                        </p>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col">
-                        <p style="font-weight: 900;font-size:18px;padding-right:0px;bottom:0px;right:0px;" id="{{key}}computedPrice"></p>
+                    <div class="row text-left" style="padding:0;">
+                        <p style="font-style: italic;padding:0;margin-top: 3px;font-weight:100">
+                            Master Weight: {{value.master_weight}}
+                        </p>
+                    </div>
+                    <div class="row text-left">
+                        <div class="col" style="padding:0;font-size: 18px;margin-top: 10px">
+                            <p id="{{key}}price" style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;padding-top: 3%;font-weight: 700;font-size: 24px">₹​ {{getPrice(key)}}</p>
                         </div>
-                        <div class="col">
-                            <button class="button icon ion-plus-round buttonAddToCart" id="{{key}}button" status="add"
-                                    style="position:absolute;right:0px;height:50px;width:50px;border-radius: 25px;border-color:green;"
-                                    ng-click="addToCart(key,value)" >
+                        <div class="col" style="margin-bottom: -10px;margin-left: 60px">
+                            <button class="button" id="{{key}}buy" ng-click="showDiv(key);"
+                                    style="background-color: #fb641b;margin-right:5%;margin-left: 35%">
+                                <span style="color:white">BUY</span>
                             </button>
                         </div>
                     </div>
+                    <div id="{{key}}heart" status="add" style="position:absolute;height:50px;width:50px;top:0px;right:0px;padding-left:10px;"
+                         ng-click="toggleFavourite(key);">
+                        <i class="icon ion-heart" ng-if="!favouriteObject.includes(key)" style="font-size: 22px;color: #c2c2c2;"></i>
+                        <i class="icon ion-heart" ng-if="favouriteObject.includes(key)" style="font-size: 22px;color:orangered;"></i>
+                    </div>
+                </div>
 
-                    <div style="position:absolute;top:0px;right:0px;" ng-click="removeDiv(key)">
-                        <span style="font-size:18px;"><b>X</b></span>
+                <div class="col-10">
+                </div>
+
+            </div>
+            <div class="widthZero" id="{{key}}animate">
+                <div style="position:relative;height: 100%;width:100%;">
+                    <div class="row" style="height:100%;width:100%;">
+                        <div class="col col-33" style="padding:0px;margin-left: 10px;">
+                            <div class="row" >
+                                <center><span>Quintals</span></center>
+                            </div>
+                            <div class="row">
+                                <input type="number" id="{{key}}quantity" ng-keyup="textInQuantity(key,this.value.master_weight);"
+                                       style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #fb641b;color: #fff;font-size: 22px" placeholder="0"/>
+                            </div>
+                            <div class="row" style="margin-top: 2%">
+                                <center><span>Bags</span></center>
+                            </div>
+                            <div class="row">
+                                <input type="number" id="{{key}}bag" ng-keyup="textInBag(key,this.value.master_weight);" placeholder="0"
+                                       style="text-align: center;width:75%;border-bottom:1px solid black;background-color: #ff9f00;color:#fff;font-size: 22px" ng-keyup="textInBag(key,this.value.master_weight);"/>
+                            </div>
+                        </div>
+                        <div class="col" style="position: relative;">
+                            <div class="row">
+                                <p id="{{key}}priceOnBuy" style="text-align:left;width:100%;padding-top: 3%;font-weight: 200;font-weight: 16px">₹​ {{getPrice(key)}} / Quintal</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <p style="font-weight: 900;font-size:18px;padding-right:0px;bottom:0px;right:0px;" id="{{key}}computedPrice"></p>
+                                </div>
+                                <div class="col">
+                                    <button class="button icon ion-plus-round buttonAddToCart" id="{{key}}button" status="add"
+                                            style="position:absolute;right:0px;height:50px;width:50px;border-radius: 25px;border-color:green;"
+                                            ng-click="addToCart(key,value)" >
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="position:absolute;top:0px;right:0px;" ng-click="removeDiv(key)">
+                                <span style="font-size:18px;"><b>X</b></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
-    </div>
-  </ion-content>
+
+    </ion-content>
 
     <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent">
         <div class="col" style="padding: 0;margin: 0">
-        <div class="row" style="padding: 0;margin: 0">
-            <span style="font-size: 20px;padding-left: 10px;margin-bottom: 10px;background-color: #d4db2b">{{shopDetail.name}}</span>
-        </div>
-        <div class="row" style="margin: 0;padding: 0;background-color:transparent">
-            <div class="col" style="margin: 0;padding: 0">
-                <div class="button-bar">
-                    <button class="button" ng-click="showShopPopUp();" style="margin:0;margin-right: 40px;color:#fff;font-weight: 600;background-color:#535766">
-                        SELECT SHOP
-                    </button>
-                </div>
+            <div class="row" style="padding: 0;margin: 0">
+                <span style="font-size: 20px;padding-left: 10px;margin-bottom: 10px;background-color: #d4db2b">{{shopDetail.name}}</span>
             </div>
-            <div class="col" style="margin: 0;padding: 0">
-                <div class="button-bar">
-                    <button class="button" ng-click="proceedToSaveInCart()" style="margin:0;margin-left: -20px;color:#fff;font-weight: 600;background-color: #20bd99">
-                        CONTINUE
-                    </button>
+            <div class="row" style="margin: 0;padding: 0;background-color:transparent">
+                <div class="col" style="margin: 0;padding: 0">
+                    <div class="button-bar">
+                        <button class="button" ng-click="showShopPopUp();" style="margin:0;margin-right: 40px;color:#fff;font-weight: 600;background-color:#535766">
+                            SELECT SHOP
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div></div>
-        
+                <div class="col" style="margin: 0;padding: 0">
+                    <div class="button-bar">
+                        <button class="button" ng-click="proceedToSaveInCart()" style="margin:0;margin-left: -20px;color:#fff;font-weight: 600;background-color: #20bd99">
+                            CONTINUE
+                        </button>
+                    </div>
+                </div>
+            </div></div>
+
     </ion-footer-bar>
 </ion-view>

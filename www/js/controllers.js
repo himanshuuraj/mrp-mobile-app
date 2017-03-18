@@ -465,6 +465,69 @@ angular.module('starter.controllers', ['ngCordova'])
             element.className = "widthFull animatewidthfull";
         };
 
+        $scope.favouriteObject = [];
+
+        $scope.showFavouriteFlag = 'item';
+
+        /*$scope.getFavouriteArray = function () {
+            return $scope.favouriteObject[$scope.selectedItem];
+        };*/
+
+        $scope.getFlag = function(key){
+            if($scope.showFavouriteFlag == 'item')
+                return true;
+            else{
+                return $scope.favouriteObject.includes(key);
+            }
+        }
+
+        $scope.favouriteObject = [];
+        if(window.localStorage.favouriteObject)
+            $scope.favouriteObject = JSON.parse(window.localStorage.favouriteObject);
+
+        $scope.addToFavourite = function(key,value){
+            if(!$scope.favouriteObject.includes(key)) {
+                $scope.favouriteObject.push(key);
+                window.localStorage.favouriteObject = JSON.stringify($scope.favouriteObject);
+                return 1;
+            }
+            return 0;
+        };
+
+        var updateFavourites = function(){
+            $scope.favouriteObject = $scope.favouriteObject || [];
+            var totalItemInFavouries = $scope.favouriteObject.length;
+            if(totalItemInFavouries > 0){
+                var favouriteElement = document.getElementById("addToFavouriteLogo");
+                //var favouriteTextElement = document.getElementById("addToFavouriteText");
+                //favouriteTextElement.innerHTML = totalItemInFavouries;
+                favouriteElement.style.color = "red";
+            }else{
+                var favouriteElement = document.getElementById("addToFavouriteLogo");
+                //var favouriteTextElement = document.getElementById("addToFavouriteText");
+                //favouriteTextElement.innerHTML = "";
+                favouriteElement.style.color = "white";
+            }
+        }
+
+        $scope.removeFromFavourite = function(key,value){
+            var index = $scope.favouriteObject.indexOf(key);
+            if(index != -1)
+                $scope.favouriteObject.splice(index,1);
+            window.localStorage.favouriteObject = JSON.stringify($scope.favouriteObject);
+        };
+
+        $scope.showFavouriteItems = function(){
+            ($scope.showFavouriteFlag == 'item') ? $scope.showFavouriteFlag = 'favourite' : $scope.showFavouriteFlag = 'item';
+            console.log($scope.showFavouriteFlag);
+        };
+
+        $scope.toggleFavourite = function(key){
+            if(!$scope.addToFavourite(key))
+                $scope.removeFromFavourite(key);
+            updateFavourites();
+        };
+
         $scope.removeDiv = function(key){
             var element = document.getElementById(key+"animate");
             element.className = "widthZero animatewidthzero";
@@ -503,10 +566,10 @@ angular.module('starter.controllers', ['ngCordova'])
             }
             if(window.localStorage.cartArray){
                 $scope.cartArray = JSON.parse(window.localStorage.cartArray);
-                $timeout(function(){updateUI()},100);
+                $timeout(function(){updateUI();},100);
             }
             $rootScope.$broadcast("cached",{});
-            //document.getElementById("ricetab").className = "button button-positive";
+            updateFavourites();
         };
 
         $scope.showShopPopUp = function() {
