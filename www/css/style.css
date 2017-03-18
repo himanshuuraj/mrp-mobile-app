@@ -153,6 +153,12 @@ input.animateInput:focus::-webkit-input-placeholder, input.animateInput:valid::-
     transform: translateY(-20px);
     visibility: visible !important;
 }
+input.animateText:focus::-webkit-input-placeholder, input.animateText:valid::-webkit-input-placeholder {
+    color: white;
+}
+input.animateText::-webkit-input-placeholder {
+    color:white
+}
 
 .wrapWord{
     white-space: nowrap;

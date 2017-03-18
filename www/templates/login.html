@@ -6,16 +6,16 @@
 
    
     <ion-content id="backgroundContent" scroll="false"
-                 style="height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;"
+                 style="background-color: white;"
                  ng-hide="showUserInputField">
 
         <div id="loginDiv" class="padding" style="margin-top:65%;padding:4%">
             <div id="welcomeDiv" class="row" style="color: red;display: none">
                 <div class="col">
                     <div class="row">
-                    <h4>WELCOME TO SRI LALITHA ENTERPRISES</h4>
+                   <h4 style="color: #065f2c;font-size: 24px;">WELCOME TO SRI LALITHA ENTERPRISES</h4>
                     </div>
-                            <p>You can use any of your e-mail like gmail, yahoo mail etc to Sign Up</p>
+                            <p style="color: navy">You can use any of your e-mail like gmail, yahoo mail etc to Sign Up</p>
                 </div>
 
             </div>
@@ -23,13 +23,15 @@
             <div class="row" style="margin-top: 1%">
                 <div class="col">
                     <div style='margin-bottom: 2%'>
-                        <input type="text" class="animateInput" placeholder="Email" ng-model="userData.username" required="" style="width: 98%;">
+                        <input type="text" class="animateInput animateText" placeholder="Email" ng-model="userData.username" required=""
+                               style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <input type="password" class="animateInput" placeholder="Password" ng-model="userData.password" required="" style="width: 98%;">
+                    <input type="password" class="animateInput animateText  " placeholder="Password" ng-model="userData.password" required=""
+                           style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
                 </div>
             </div>
             <div class="row" >
@@ -44,7 +46,8 @@
     </ion-content>
 
 
-    <ion-content ng-show="showUserInputField" style="background-color: white;" id="signUpInput">
+    <ion-content ng-show="showUserInputField"
+                 style="height:100%;background: url('img/lalithaSignUpImage.jpg');background-size:100% 100%; background-repeat: no-repeat;" id="signUpInput">
         <div class="padding" >
             <div class="list list-inset">
                 <div class="row" style="margin-top: 1%">

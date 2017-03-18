@@ -106,9 +106,11 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.signOut = function(){
             var cartArray = window.localStorage.cartArray;
             var favouriteObject = window.localStorage.favouriteObject;
+            if(cartArray)
+                window.localStorage.cartArray = cartArray;
+            if(favouriteObject)
+                window.localStorage.favouriteObject = favouriteObject;
             window.localStorage.clear();
-            window.localStorage.cartArray = cartArray;
-            window.localStorage.favouriteObject = favouriteObject;
             window.sessionStorage.clear();
             window.location.hash = "#/app/login";
         };
@@ -1033,7 +1035,7 @@ angular.module('starter.controllers', ['ngCordova'])
             if(anchorText=='SIGN UP'){
                 document.getElementById('toggle').textContent='SIGN IN';
                 document.getElementById('myOption').textContent = 'SIGN UP';
-                document.getElementById('backgroundContent').style.background = '';
+                document.getElementById('backgroundContent').style.cssText = 'height: 100%; background: url("img/lalithaSignUpImage.jpg") 0% 0% / 100% 100% no-repeat;  ';
                 document.getElementById('welcomeDiv').style.display='block';
                 document.getElementById('loginDiv').style.marginTop='10%';
 
@@ -1295,8 +1297,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.signUpData["isAgent"] = false;
             }
         };
-        window.localStorage.clear();
-        window.sessionStorage.clear();
+        //window.localStorage.clear();
+        //window.sessionStorage.clear();
 
     })
 
