@@ -855,10 +855,12 @@ angular.module('starter.controllers', ['ngCordova'])
             if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][shopContext])
                 price = $scope[arrayName][key][shopContext];
 
+            var cardElement = document.getElementById(key+"card");
             if(price && price != 'N/A') {
                price = loginCred.toCommaFormat(price);
+                cardElement.style.backgroundColor = "white";
             }else{
-                var cardElement = document.getElementById(key+"card");
+
                 cardElement.style.backgroundColor = "gray";
             }
 
@@ -1977,7 +1979,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var x= document.getElementById(orderId +'expanded');
             var icon = document.getElementById(orderId+'icon');
-            
+
             if (x.style.display === 'none') {
                 x.style.display = 'block';
                 icon.className = 'icon ion-minus';
