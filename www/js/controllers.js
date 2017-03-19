@@ -227,57 +227,12 @@ angular.module('starter.controllers', ['ngCordova'])
 
         };
 
-
-        $scope.applyDiscount = function(){
-            var shopArray = $scope.shopArray;
-            var totaldiscountedPrice = 0;
-            shopArray.forEach(function(shop){
-                var shopDiscountAmount = 0;
-
-                var items = shop.items;
-                var riceObject = items.rice;
-                var ravvaObject = items.ravva;
-                var brokenObject = items.broken;
-                var shopRiceWeight = 0;var shopRavvaWeight = 0; var shopBrokenWeight= 0;
-                for(var productId in riceObject){
-                    shopRiceWeight += riceObject[productId].weight;
-                }
-                for(var productId in ravvaObject){
-                    shopRavvaWeight += ravvaObject[productId].weight;
-                }
-                for(var productId in brokenObject){
-                    shopBrokenWeight += brokenObject[productId].weight;
-                }
-                var ricediscount=0, ravvadiscount=0;
-
-                if(shopRiceWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' )){
-                                         ricediscount=25;
-
-                }
-                if(shopRavvaWeight >=35 && (shop.areaId =='EG_PDP' || shop.areaId =='EG_KTPD' )){
-                                         ravvadiscount=20;
-
-                }
-                 for(var productId in riceObject){
-                        riceObject[productId]['discountedQuintalPrice']=  riceObject[productId].quintalWeightPrice - ricediscount;
-                       riceObject[productId]['price']= riceObject[productId].discountedQuintalPrice * riceObject[productId]['weight'];
-                       shopDiscountAmount += ricediscount*riceObject[productId]['weight'];
-                       totaldiscountedPrice += ricediscount*riceObject[productId]['weight']
-                }
-                for(var productId in ravvaObject){
-                        ravvaObject[productId]['discountedQuintalPrice']=  ravvaObject[productId].quintalWeightPrice - ravvadiscount;
-                        ravvaObject[productId]['price']= ravvaObject[productId].discountedQuintalPrice * ravvaObject[productId]['weight']
-                        shopDiscountAmount += ravvadiscount*ravvaObject[productId]['weight'];
-                        totaldiscountedPrice += ravvadiscount*ravvaObject[productId]['weight'];
-                }
-
-                shop['shopDiscountAmount'] = shopDiscountAmount;
-                shop['shopGrossAmount'] = shop['totalShopPrice'] - shopDiscountAmount;
-
-            })
-
-            $scope.cartArray["discount_amount"] = totaldiscountedPrice;
-            $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - totaldiscountedPrice;
+            var calcDiscount = function() {
+             
+             console.log('------------ entered discount');
+             console.log($scope.cartArray);
+            $scope.cartArray["discount_amount"] = $scope.totaldiscountedPrice;
+            $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - $scope.totaldiscountedPrice;
 
             //convert to comma separated
             $scope.shopArrayDup = JSON.parse(JSON.stringify($scope.cartArray.shopDetail)) ;
@@ -301,11 +256,103 @@ angular.module('starter.controllers', ['ngCordova'])
                 shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
             }
 
-            document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat(totaldiscountedPrice.toString());
+            document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.totaldiscountedPrice.toString());
             document.getElementById('gross_price').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.grossPrice);
             document.getElementById('grand_total').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.totalPrice);
 
+        };
+
+        $scope.applyDiscount = function(){
+            var shopArray = $scope.shopArray;
+            $scope.totaldiscountedPrice = 0; var itemsProcessed = 0;
+            shopArray.forEach(function(shop){
+                itemsProcessed++;
+                var shopDiscountAmount = 0;
+
+                var items = shop.items;
+                var riceObject = items.rice;
+                var ravvaObject = items.ravva;
+                var brokenObject = items.broken;
+                var shopRiceWeight = 0;var shopRavvaWeight = 0; var shopBrokenWeight= 0;
+                for(var productId in riceObject){
+                    shopRiceWeight += riceObject[productId].weight;
+                }
+                for(var productId in ravvaObject){
+                    shopRavvaWeight += ravvaObject[productId].weight;
+                }
+                for(var productId in brokenObject){
+                    shopBrokenWeight += brokenObject[productId].weight;
+                }
+                var ricediscount=0, ravvadiscount=0,brokendiscount=0;
+                
+                var areasRef = loginCred.dbRef.child('areas/' + shop.areaId );
+                var riceDiscArray = [];var ravvaDiscArray = []; var brokenDiscArray=[];
+               (function() {
+                areasRef.once('value', function(data){
+                    var discounts = data.val().discounts;
+                    console.log(discounts);
+                    if(discounts) {
+                        riceDiscArray = discounts.rice || riceDiscArray ;
+                        ravvaDiscArray = discounts.ravva ||  ravvaDiscArray;
+                        brokenDiscArray = discounts.broken || brokenDiscArray;
+                    }
+                    
+                    riceDiscArray.forEach(function(entry){
+                    if(shopRiceWeight >= entry.quintals){
+                        ricediscount = entry.discount;
+                    }
+                    });
+                
+                 ravvaDiscArray.forEach(function(entry){
+                    if(shopRavvaWeight >= entry.quintals){
+                        ravvadiscount = entry.discount;
+                    }
+                    });
+                
+                 brokenDiscArray.forEach(function(entry){
+                    if(shopBrokenWeight >= entry.quintals){
+                        brokendiscount = entry.discount;
+                    }
+                    });
+                
+                console.log(ricediscount + '======' + ravvadiscount + '=======' + brokendiscount);
+
+               
+                 for(var productId in riceObject){
+                        riceObject[productId]['discountedQuintalPrice']=  riceObject[productId].quintalWeightPrice - ricediscount;
+                       riceObject[productId]['price']= riceObject[productId].discountedQuintalPrice * riceObject[productId]['weight'];
+                       shopDiscountAmount += ricediscount*riceObject[productId]['weight'];
+                       $scope.totaldiscountedPrice += ricediscount*riceObject[productId]['weight']
+                }
+                for(var productId in ravvaObject){
+                        ravvaObject[productId]['discountedQuintalPrice']=  ravvaObject[productId].quintalWeightPrice - ravvadiscount;
+                        ravvaObject[productId]['price']= ravvaObject[productId].discountedQuintalPrice * ravvaObject[productId]['weight']
+                        shopDiscountAmount += ravvadiscount*ravvaObject[productId]['weight'];
+                        $scope.totaldiscountedPrice += ravvadiscount*ravvaObject[productId]['weight'];
+                }
+                
+                for(var productId in brokenObject){
+                        brokenObject[productId]['discountedQuintalPrice']=  brokenObject[productId].quintalWeightPrice - brokendiscount;
+                        brokenObject[productId]['price']= brokenObject[productId].discountedQuintalPrice * brokenObject[productId]['weight']
+                        shopDiscountAmount += brokendiscount*brokenObject[productId]['weight'];
+                        $scope.totaldiscountedPrice += brokendiscount*brokenObject[productId]['weight'];
+                }
+
+
+                shop['shopDiscountAmount'] = shopDiscountAmount;
+                shop['shopGrossAmount'] = shop['totalShopPrice'] - shopDiscountAmount;
+                if(itemsProcessed == shopArray.length)
+                    calcDiscount();
+            })
+                }());
+                
+               
+            });
+
         }
+        
+        
+        
         $scope.submitOrder = function(){
             $scope.validateIfLatestPrice(loginCred.dbRef);
             if($scope.flagForPriceModified==true){
@@ -365,6 +412,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 time :  now.getTime(),
                 userName : userInfo.name,
                 status : "received",
+                priority : (new Date).getTime(),
                 orderMsg : orderMsg,
                 cart :  cartArray
             };
