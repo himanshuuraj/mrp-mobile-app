@@ -73,6 +73,8 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         this.toCommaFormat = function(x){
+            if(!x)
+                return;
             x=x.toString();
             var lastThree = x.substring(x.length-3);
             var otherNumbers = x.substring(0,x.length-3);
