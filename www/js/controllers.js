@@ -274,7 +274,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
             }
 
-            document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.totaldiscountedPrice.toString());
+            document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.totaldiscountedPrice);
             document.getElementById('gross_price').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.grossPrice);
             document.getElementById('grand_total').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.totalPrice);
 
@@ -1050,6 +1050,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.lorryArray = [];
         if(window.localStorage.lorryArray){
             $scope.lorryArray = JSON.parse(window.localStorage.lorryArray) || [];
+            $scope.lorryArray = $scope.lorryArray.sort();
         }
         $scope.setSearchedShop = function(shop){
             $scope.shop = shop;
@@ -1070,7 +1071,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     if(!$scope.lorryArray.includes(lorry[index]))
                         $scope.lorryArray.push(lorry[index]);
                 }
-                window.localStorage.lorryArray = JSON.stringify($scope.lorryArray);
+                window.localStorage.lorryArray = JSON.stringify($scope.lorryArray.sort());
             }).catch(function(data){
                console.log(data);
             });
@@ -1681,14 +1682,15 @@ angular.module('starter.controllers', ['ngCordova'])
         var totalQuantity = $scope.totalQuantity = 0;
         var earlySelectedLorry;
         $scope.deliveryArray = [];
-        $scope.lorryArray = [3.5,7,10,17,21,25];
+        $scope.lorryArray = [3,5,7,10,17,21,25];
         if(window.localStorage.lorryArray){
-            var lorryArray = JSON.parse(window.localStorage.lorryArray) || [];
-            for(var index = 0; index < lorryArray.length; index++){
-                lorryArray[index] = parseInt(lorryArray[index]);
+            var lorryArray2 = JSON.parse(window.localStorage.lorryArray) || [];
+            for(var index = 0; index < lorryArray2.length; index++){
+                lorryArray2[index] = parseInt(lorryArray2[index]);
             }
-            lorryArray = lorryArray.sort();
-            $scope.lorryArray = lorryArray;
+            $scope.lorryArray   = lorryArray2.sort(function(a,b){
+                return a-b;
+            });
         }
         var selectedLorrySize = $scope.selectedLorrySize = $scope.lorryArray[0];
 
