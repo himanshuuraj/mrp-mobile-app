@@ -664,7 +664,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 ]
             });
             myPopup.then(function(res) {
-                console.log('Tapped!', res);
+                //console.log('Tapped!', res);
             });
         };
 
@@ -997,6 +997,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.getItemsPrice = function(){
             var areaId = window.localStorage.areaId;
+            if(!areaId)
+                return;
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
