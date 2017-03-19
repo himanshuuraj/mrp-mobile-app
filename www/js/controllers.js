@@ -430,6 +430,7 @@ angular.module('starter.controllers', ['ngCordova'])
         var shopInfo = {};
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
+        $scope.selectedItem = "rice";
         var getShopData = function(){
             var shopsRef = dbRef.child('users/'+uid + '/shops');
             shopsRef.once('value', function(snap) {
@@ -563,23 +564,20 @@ angular.module('starter.controllers', ['ngCordova'])
         
 
         $scope.init = function(){
-            $scope.slideImages();   
-           
-            if(!flagOfAlreadyPresentPrice || !window.sessionStorage.riceArray || !window.sessionStorage.ravvaArray ||
-                   !window.sessionStorage.brokenArray )
-                $scope.getItemsPrice();
-            else {
-                $scope.brokenArray = JSON.parse(window.sessionStorage.brokenArray);
-                $scope.ravvaArray = JSON.parse(window.sessionStorage.ravvaArray);
-                $scope.riceArray = JSON.parse(window.sessionStorage.riceArray);
-            }
+            $scope.slideImages();
+
+            $scope.getItemsPrice();
             if(window.localStorage.shopName){
                 $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
             }
             if(window.localStorage.cartArray){
                 $scope.cartArray = JSON.parse(window.localStorage.cartArray);
-                $timeout(function(){updateUI();},100);
+                $timeout(function(){updateUI();
+                },100);
             }
+            $timeout(function(){
+                document.getElementById("ricetab").className = "button btnSelected";
+            },100);
             $rootScope.$broadcast("cached",{});
             updateFavourites();
         };
@@ -903,13 +901,11 @@ angular.module('starter.controllers', ['ngCordova'])
                     var ob={};
                     ob[entry.key]=$scope.ravvaObject[entry.key];
                     $scope.ravvaArray.push(ob);
-                })           
-                window.sessionStorage.riceArray = JSON.stringify($scope.riceArray);
-                window.sessionStorage.ravvaArray = JSON.stringify($scope.ravvaArray);
-                window.sessionStorage.brokenArray = JSON.stringify($scope.brokenArray);
-                document.getElementById("ricetab").className = "button btnSelected";
-                $scope.selectedItem = "rice";
-                $scope.$apply();
+                });
+                if(!$scope.$$phase) {
+                    $scope.$apply();
+                }
+
             });
 
         };
@@ -956,7 +952,6 @@ angular.module('starter.controllers', ['ngCordova'])
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
-                console.log('---------------testing the calls--------------------------')
                 window.localStorage.brokenPriceArray = JSON.stringify(productsList.broken);
                 $scope.brokenPriceArray = productsList.broken;
                 window.localStorage.ravvaPriceArray=JSON.stringify(productsList.ravva);
@@ -975,6 +970,10 @@ angular.module('starter.controllers', ['ngCordova'])
             return $scope[$scope.selectedItem+"Array"] || [];
         }
 
+        $scope.lorryArray = [];
+        if(window.localStorage.lorryArray){
+            $scope.lorryArray = JSON.parse(window.localStorage.lorryArray) || [];
+        }
         $scope.setSearchedShop = function(shop){
             $scope.shop = shop;
             earlySelectedShop["tin"] = $scope.shopDetail.tin;
@@ -985,6 +984,20 @@ angular.module('starter.controllers', ['ngCordova'])
             window.localStorage.shopInfo = JSON.stringify(shopInfo);
             $scope.getItemsPrice();
             $timeout(function(){updateUI();},0);
+            var area = dbRef.child('areas/'+ shop.areaId);
+            area.once('value').then(function(data){
+                console.log(data);
+                var lorry = data.val();
+                lorry = lorry.lorries || [];
+                var length = lorry.length;
+                for(var index = 0;index < length;index++){
+                    if(!$scope.lorryArray.includes(lorry[index]))
+                        $scope.lorryArray.push(lorry[index]);
+                }
+                window.localStorage.lorryArray = JSON.stringify($scope.lorryArray);
+            }).catch(function(data){
+               console.log(data);
+            });
         };
 
         var deleteUI = function(){
@@ -1044,30 +1057,8 @@ angular.module('starter.controllers', ['ngCordova'])
             addUI();
             updateCart();
         }
-        
-//        if(!window.sessionStorage.productData)
-//            $http.get("https://stage-db-b035c.firebaseio.com/products.json")
-//                .success(function(data){
-//                    console.log(data);
-//                    window.sessionStorage.productData = JSON.stringify(data);
-//                    $scope.brokenArray = data.broken;
-//                    $scope.ravvaArray = data.ravva;
-//                    $scope.riceArray = data.rice;
-//                    document.getElementById("ricetab").className = "button";
-//                    $scope.selectedItem = "rice";
-//                }).error(function(err){
-//                console.log(err);
-//            });
-//     else{
-          // var data = JSON.parse(window.sessionStorage.productData);
-            
-          
-            $scope.selectedItem = "rice";
-//        }
 
-
-
-        $scope.shopSearchElement ={
+        $scope.shopSearchElement = {
             name: ""
         };
         $scope.shopArray = $scope.shopArray || [];
@@ -1609,13 +1600,20 @@ angular.module('starter.controllers', ['ngCordova'])
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.deliveryArray = {};
-        var selectedLorrySize = $scope.selectedLorrySize = 10;
         $scope.selectedLorrySizeInQuintals=100;
         var progressBarElement = document.getElementById("progressBar");
         var totalQuantity = $scope.totalQuantity = 0;
         var earlySelectedLorry;
         $scope.deliveryArray = [];
         $scope.lorryArray = [3.5,7,10,17,21,25];
+        if(window.localStorage.lorryArray){
+            var lorryArray = JSON.parse(window.localStorage.lorryArray) || [];
+            for(var index = 0; index < lorryArray.length; index++){
+                lorryArray[index] = parseInt(lorryArray[index]);
+            }
+            $scope.lorryArray = lorryArray;
+        }
+        var selectedLorrySize = $scope.selectedLorrySize = $scope.lorryArray[0];
 
         var myPopUp = loginCred.showPopup;
 
