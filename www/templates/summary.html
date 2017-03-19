@@ -13,20 +13,20 @@
             <h4 style="margin-left:10px">{{shop.name}}</h4>
             <hr style="margin-left:10px">
             <div class="row"  style="margin-top: 5px">
-                <div class="col">
-                    <span><i>Item Name</i></span>
+                <div class="col-25">
+                    <p  style="text-align: right;margin-right: 25%"><i>Item Name</i></p>
+                </div>
+                <div class="col-10">
+                    <p style="text-align: right;margin-right: 25%">Wt in Qtls</p>
                 </div>
                 <div class="col">
-                    <span>Weight in Quintals</span>
-                </div>
-                <div class="col">
-                    <span>Quintal Price</span>
+                    <p style="text-align: right;margin-right: 25%">Qtl Price</span>
                 </div>
                  <div class="col">
-                    <span>Price After Discount</span>
+                    <p style="text-align: right;margin-right: 25%">Price After Discount</p>
                 </div>
-                <div class="col">
-                    <span>Price</span>
+                <div class="col-25">
+                    <p style="text-align: right;margin-right: 25%">Price</p>
                 </div>
 
             </div>
@@ -34,20 +34,20 @@
             <div ng-repeat="(key,item) in shop.items" >
                 <div ng-repeat="(k,v) in item" >
                     <div class="row">
-                        <div class="col">
-                            <span>{{v.name}}</span>
+                        <div class="col-25">
+                            <p style="text-align: right;margin-right: 25%">{{v.name}}</p>
+                        </div>
+                        <div class="col-10">
+                            <p style="text-align: right;margin-right: 25%">{{v.weight}}</p>
                         </div>
                         <div class="col">
-                            <span>{{v.weight}}</span>
+                            <p style="text-align: right;margin-right: 25%">&#8377;{{v.quintalWeightPrice}}</p>
                         </div>
                         <div class="col">
-                            <span>&#8377;{{v.quintalWeightPrice}}</span>
+                            <p style="text-align: right;margin-right: 25%">&#8377;{{v.discountedQuintalPrice}}</p>
                         </div>
-                        <div class="col">
-                            <span>&#8377;{{v.discountedQuintalPrice}}</span>
-                        </div>
-                        <div class="col">
-                            <span>&#8377;{{v.price}}</span>
+                        <div class="col-25">
+                            <p style="text-align: right;margin-right: 25%">&#8377;{{v.price}}</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="row" style="margin-top: 5%;">
-            <div class="col" >
+            <div class="col-40" >
                 <p style="margin-left: 10px;">REDEEM COUPON</p>
                 <div class="row" style="margin-top: 5%;">
                     <div class="col" style="border: 1px solid black;border-radius: 20px;height:50%;margin-right: 15px">
@@ -85,7 +85,7 @@
             </div>
 
 
-            <div class="col" style="padding-left: 5%;font-size: 75%;margin-bottom: 20%">
+            <div class="col" style="font-size: 75%;margin-bottom: 20%">
                 <ul class="priceList" style="font-size: 14px">
                     <li>
                         <div class="row">
@@ -93,7 +93,7 @@
                                 <span>TOTAL PRICE</span>
                             </div>
                             <div class="col" style="padding: 0">
-                                <span style="padding-left: 20%;font-weight: 900" id="gross_price"></span>
+                                <span style="padding-left: 10%;font-weight: 900" id="gross_price"></span>
                             </div>
                         </div>
                     </li>
@@ -103,7 +103,7 @@
                                 <span>DISCOUNT</span>
                             </div>
                             <div class="col" style="padding: 0">
-                                <span style="padding-left: 20%" id="discount_amount"></span>
+                                <span style="padding-left: 10%" id="discount_amount"></span>
                             </div>
                         </div>
                     </li>
@@ -113,7 +113,7 @@
                                 <span>GRAND TOTAL</span>
                             </div>
                             <div class="col" style="padding: 0;font-weight: 900">
-                                <span style="padding-left: 20%;" id="grand_total"></span>
+                                <span style="padding-left: 10%;" id="grand_total"></span>
                             </div>
                         </div>
                     </li>

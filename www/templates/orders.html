@@ -32,54 +32,54 @@
                         <div id="{{order}}OrderEye" ng-show="isViewDetailClicked(order)">
                             <div class="card" id="viewDetailedOrder">
 
-                                <div class="padding col" ng-repeat="shop in shopArrayOrderDetail" >
+                                <div class="padding col" ng-repeat="shop in shopArrayOrderDetail" style="width: 108%">
                                     <h4 style="margin-left:10px">{{shop.name}}</h4>
                                     <hr style="margin-left:10px">
                                     <div class="row"  style="margin-top: 5px">
-                                        <div class="col">
-                                            <span><i>Item Name</i></span>
+                                        <div class="col-25">
+                                            <p  style="text-align: right;margin-right: 25%"><i>Item Name</i></p>
+                                        </div>
+                                        <div class="col-10">
+                                            <p style="text-align: right;margin-right: 25%">Wt in Qtls</p>
                                         </div>
                                         <div class="col">
-                                            <span>Weight in Quintals</span>
+                                            <p style="text-align: right;margin-right: 25%">Qtl Price</span>
                                         </div>
-                                        <div class="col">
-                                            <span>Quintal Price</span>
+                                         <div class="col">
+                                            <p style="text-align: right;margin-right: 25%">Price After Discount</p>
                                         </div>
-                                        <div class="col">
-                                            <span>Price After Discount</span>
-                                        </div>
-                                        <div class="col">
-                                            <span>Price</span>
+                                        <div class="col-25">
+                                            <p style="text-align: right;margin-right: 25%">Price</p>
                                         </div>
 
                                     </div>
 
                                     <div ng-repeat="(key,item) in shop.items" >
                                         <div ng-repeat="(k,v) in item" >
-                                            <div class="row">
-                                                <div class="col">
-                                                    <span>{{v.name}}</span>
+                                           <div class="row">
+                                                <div class="col-25">
+                                                    <p style="text-align: right;margin-right: 25%">{{v.name}}</p>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p style="text-align: right;margin-right: 25%">{{v.weight}}</p>
                                                 </div>
                                                 <div class="col">
-                                                    <span>{{v.weight}}</span>
+                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.quintalWeightPrice}}</p>
                                                 </div>
                                                 <div class="col">
-                                                    <span>&#8377;{{v.quintalWeightPrice}}</span>
+                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.discountedQuintalPrice}}</p>
                                                 </div>
-                                                <div class="col">
-                                                    <span>&#8377;{{v.discountedQuintalPrice}}</span>
+                                                <div class="col-25">
+                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.price}}</p>
                                                 </div>
-                                                <div class="col">
-                                                    <span>&#8377;{{v.price}}</span>
-                                                </div>
-                                            </div>
+                                         </div>
                                         </div>
                                     </div>
                                      <div class="row" style="color:green">            
                                             <div class="col">
                                                 <span>Total: {{shop.totalShopPrice}}</span>
                                             </div>
-                                            <div class="col-25">
+                                            <div class="col-20">
                                                 <span>Discount: {{shop.shopDiscountAmount}}</span>
                                             </div>
                                             <div class="col-40">

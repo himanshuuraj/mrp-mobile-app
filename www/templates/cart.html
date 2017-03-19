@@ -7,8 +7,8 @@
                 style="color:white;">
         </button>
     </div>
-    <div class="my-video has-header" style="background-color: #fff">
-        <div class = "has-header" style="position: relative;height:25%;background-color:#fff;margin-left:5%;width:90%;">
+    <div class="" style="background-color: #fff">
+        <div class = "has-header" style="position: relative;margin-top: 5%;background-color:#fff;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
@@ -38,7 +38,7 @@
                     <div class="col">
                         <img src="{{getImageUrl(value.productId,value.itemType)}}" style="margin-top: 10px;height: 100px;max-width: 100%;"/>
                     </div>
-                    <div class="col" style="margin-left: 0;margin-top: -5px">
+                    <div class="col-20" style="margin-left: 0;margin-top: -5px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Quintals</span>
                         </div>
@@ -60,7 +60,7 @@
                         </div>
 
                     </div>
-                    <div class="col" style="margin-bottom: 0;margin-top: -5px">
+                    <div class="col-20" style="margin-bottom: 0;margin-top: -5px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Bags</span>
                         </div>
@@ -83,10 +83,10 @@
                     </div>
                     <div class="col">
                         <div class="row" style="margin-top: 4%;margin-left: -10%;width: 110%;padding: 0;">
-                            <p style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:left;width:100%;font-weight: 700;font-size: 20px;" id="{{key}}computedPrice{{value.productId}}"></p>
+                            <p style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:right;width:100%;font-weight: 700;font-size: 20px;" id="{{key}}computedPrice{{value.productId}}"></p>
                         </div>
                         <div class="row" style="margin-top: 10%;">
-                            <button class="button" style="background-color:#fb641b" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
+                            <button class="button" style="background-color:#fb641b;margin-left: 30px" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
                                 ADD
                             </button>
                         </div>
