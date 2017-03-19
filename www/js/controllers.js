@@ -472,6 +472,10 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.favouriteObject = [];
 
         $scope.showFavouriteFlag = 'item';
+        
+        $scope.displayProduct = function(value) {
+            return (value.available == 'true');
+        }
 
         $scope.getFlag = function(key){
             if($scope.showFavouriteFlag == 'item')
@@ -556,11 +560,19 @@ angular.module('starter.controllers', ['ngCordova'])
                 setTimeout($scope.slideImages, 5000);
 
         }
+        
 
         $scope.init = function(){
-            $scope.slideImages();
-            if(!flagOfAlreadyPresentPrice)
+            $scope.slideImages();   
+           
+            if(!flagOfAlreadyPresentPrice || !window.sessionStorage.riceArray || !window.sessionStorage.ravvaArray ||
+                   !window.sessionStorage.brokenArray )
                 $scope.getItemsPrice();
+            else {
+                $scope.brokenArray = JSON.parse(window.sessionStorage.brokenArray);
+                $scope.ravvaArray = JSON.parse(window.sessionStorage.ravvaArray);
+                $scope.riceArray = JSON.parse(window.sessionStorage.riceArray);
+            }
             if(window.localStorage.shopName){
                 $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
             }
@@ -829,16 +841,75 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.getProductItems = function(){
             var productsRef = dbRef.child('products');
-            productsRef.once('value').then(function(productSnapshot){
+            productsRef.on('value' , function(productSnapshot){
                 var productsList = productSnapshot.val();
-                $scope.brokenArray = productsList.broken;
-                $scope.ravvaArray = productsList.ravva;
-                $scope.riceArray = productsList.rice;
+                
+                $scope.brokenObject = productsList.broken;
+                $scope.ravvaObject = productsList.ravva;
+                $scope.riceObject = productsList.rice;
+                
+                var arrayForSort = [];
+                for(var productId in $scope.riceObject) {
+                    var prty = $scope.riceObject[productId]['priority'] || 0;
+                    arrayForSort.push({
+                        'key': productId,
+                        'value' : prty
+                    });
+                }
+                arrayForSort.sort(function(a,b){
+                    return a.value - b.value; 
+                })
+                $scope.riceArray = [];
+                
+                arrayForSort.forEach(function(entry){
+                    var ob={};
+                    ob[entry.key]=$scope.riceObject[entry.key];
+                    $scope.riceArray.push(ob);
+                })
+                //broken
+                 var arrayForSort = [];
+                for(var productId in $scope.brokenObject) {
+                    var prty = $scope.brokenObject[productId]['priority'] || 0;
+                    arrayForSort.push({
+                        'key': productId,
+                        'value' : prty
+                    });
+                }
+                arrayForSort.sort(function(a,b){
+                    return a.value - b.value; 
+                })
+                $scope.brokenArray = [];
+                
+                arrayForSort.forEach(function(entry){
+                    var ob={};
+                    ob[entry.key]=$scope.brokenObject[entry.key];
+                    $scope.brokenArray.push(ob);
+                })
+                //ravva
+                 var arrayForSort = [];
+                for(var productId in $scope.ravvaObject) {
+                    var prty = $scope.ravvaObject[productId]['priority'] || 0;
+                    arrayForSort.push({
+                        'key': productId,
+                        'value' : prty
+                    });
+                }
+                arrayForSort.sort(function(a,b){
+                    return a.value - b.value; 
+                })
+                $scope.ravvaArray = [];
+                
+                arrayForSort.forEach(function(entry){
+                    var ob={};
+                    ob[entry.key]=$scope.ravvaObject[entry.key];
+                    $scope.ravvaArray.push(ob);
+                })           
+                window.sessionStorage.riceArray = JSON.stringify($scope.riceArray);
+                window.sessionStorage.ravvaArray = JSON.stringify($scope.ravvaArray);
+                window.sessionStorage.brokenArray = JSON.stringify($scope.brokenArray);
                 document.getElementById("ricetab").className = "button btnSelected";
                 $scope.selectedItem = "rice";
                 $scope.$apply();
-            }).catch(function(){
-                console.log("Failed to get list of product items");
             });
 
         };
@@ -885,9 +956,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
-                if(!productsList)
-                    return;
-                console.log("Fetched list of prices for selected area" + productsList);
+                console.log('---------------testing the calls--------------------------')
                 window.localStorage.brokenPriceArray = JSON.stringify(productsList.broken);
                 $scope.brokenPriceArray = productsList.broken;
                 window.localStorage.ravvaPriceArray=JSON.stringify(productsList.ravva);
@@ -975,27 +1044,28 @@ angular.module('starter.controllers', ['ngCordova'])
             addUI();
             updateCart();
         }
-
-        if(!window.sessionStorage.productData)
-            $http.get("https://stage-db-b035c.firebaseio.com/products.json")
-                .success(function(data){
-                    console.log(data);
-                    window.sessionStorage.productData = JSON.stringify(data);
-                    $scope.brokenArray = data.broken;
-                    $scope.ravvaArray = data.ravva;
-                    $scope.riceArray = data.rice;
-                    document.getElementById("ricetab").className = "button";
-                    $scope.selectedItem = "rice";
-                }).error(function(err){
-                console.log(err);
-            });
-        else{
-            var data = JSON.parse(window.sessionStorage.productData);
-            $scope.brokenArray = data.broken;
-            $scope.ravvaArray = data.ravva;
-            $scope.riceArray = data.rice;
+        
+//        if(!window.sessionStorage.productData)
+//            $http.get("https://stage-db-b035c.firebaseio.com/products.json")
+//                .success(function(data){
+//                    console.log(data);
+//                    window.sessionStorage.productData = JSON.stringify(data);
+//                    $scope.brokenArray = data.broken;
+//                    $scope.ravvaArray = data.ravva;
+//                    $scope.riceArray = data.rice;
+//                    document.getElementById("ricetab").className = "button";
+//                    $scope.selectedItem = "rice";
+//                }).error(function(err){
+//                console.log(err);
+//            });
+//     else{
+          // var data = JSON.parse(window.sessionStorage.productData);
+            
+          
             $scope.selectedItem = "rice";
-        }
+//        }
+
+
 
         $scope.shopSearchElement ={
             name: ""

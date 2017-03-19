@@ -30,8 +30,10 @@
         <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
             <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
         </div>
-        <div class="card" ng-repeat = "(key, value) in getSelectedItemArray()" ng-if="getFlag(key);"
-             style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;">
+        <div  ng-repeat = "productItem in getSelectedItemArray()">
+
+             <div class="card" ng-repeat="(key,value) in productItem"  ng-if="getFlag(key);"
+                          style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;" ng-show="displayProduct(value)" >
             <div class = "row" id="{{key}}card" style="height:100%;">
                 <div class = "col col-20" style="height:100%;margin-top: 10px;">
                     <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image"
@@ -115,6 +117,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
