@@ -75,13 +75,29 @@ angular.module('starter.controllers', ['ngCordova'])
         this.toCommaFormat = function(x){
             if(!x)
                 return;
-            x=x.toString();
-            var lastThree = x.substring(x.length-3);
-            var otherNumbers = x.substring(0,x.length-3);
-            if(otherNumbers != '')
-                lastThree = ',' + lastThree;
-            var y = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-            return y;
+            if(Number(x) === x && x % 1 === 0) {
+                x=x.toString();
+                var lastThree = x.substring(x.length-3);
+                var otherNumbers = x.substring(0,x.length-3);
+                if(otherNumbers != '')
+                    lastThree = ',' + lastThree;
+                var y = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+                return y;
+            }
+            else {
+                x=x.toString();
+                var afterPoint = '';
+                if(x.indexOf('.') > 0)
+                    afterPoint = x.substring(x.indexOf('.'),x.length);
+                x = Math.floor(x);
+                x=x.toString();
+                var lastThree = x.substring(x.length-3);
+                var otherNumbers = x.substring(0,x.length-3);
+                if(otherNumbers != '')
+                    lastThree = ',' + lastThree;
+                var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
+
+            }
 
         };
         this.toNumberFormat = function(x){
@@ -598,11 +614,13 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         var flagOfAlreadyPresentPrice = false;
-        if(window.sessionStorage.flagOfAlreadyPresentPrice) {
+        if(window.sessionStorage.flagOfAlreadyPresentPrice == "true") {
             flagOfAlreadyPresentPrice = true;
-            $scope.brokenPriceArray = JSON.parse(window.localStorage.brokenPriceArray);
-            $scope.ravvaPriceArray = JSON.parse(window.localStorage.ravvaPriceArray);
-            $scope.ricePriceArray = JSON.parse(window.localStorage.ricePriceArray);
+            var priceArray = window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
+            priceArray = priceArray[window.localStorage.tin];
+            $scope.brokenPriceArray = priceArray['broken'];
+            $scope.ravvaPriceArray = priceArray['ravva'];
+            $scope.ricePriceArray = priceArray['rice'];
         }
         var slideIndex = 0;
 
@@ -971,30 +989,23 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.getPrice = function(key){
             //
-            var type=$scope.selectedItem; var shopContext = 'Agent';
-
+            var type=$scope.selectedItem;
+            var shopContext = 'Agent';
             if(window.localStorage.isAgent=='true')
                 shopContext = 'Agent';
             else
                 shopContext = 'Outlet';
 
-            var arrayName = type + 'PriceArray';
-
+            var priceArray = window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
             var price = 'N/A';
-            if($scope[arrayName] && $scope[arrayName][key] && $scope[arrayName][key][shopContext])
-                price = $scope[arrayName][key][shopContext];
-
-            var cardElement = document.getElementById(key+"card");
-            if(price && price != 'N/A') {
-               price = loginCred.toCommaFormat(price);
-                cardElement.style.backgroundColor = "white";
-            }else{
-
-                cardElement.style.backgroundColor = "gray";
-            }
-
+            if(!priceArray[window.localStorage.tin])
+                return;
+            var obj = priceArray[window.localStorage.tin][type];
+            if(obj && obj[key] && obj[key][shopContext])
+                price = obj[key][shopContext];
             return price;
-        }
+
+       }
 
         $scope.computePrice = function(key,index) {
             var qtyElement = document.getElementById(key+"quantity");
@@ -1052,7 +1063,6 @@ angular.module('starter.controllers', ['ngCordova'])
             $timeout(function(){updateUI();},0);
             var area = dbRef.child('areas/'+ shop.areaId);
             area.once('value').then(function(data){
-                console.log(data);
                 var lorry = data.val();
                 lorry = lorry.lorries || [];
                 var length = lorry.length;
@@ -1677,6 +1687,7 @@ angular.module('starter.controllers', ['ngCordova'])
             for(var index = 0; index < lorryArray.length; index++){
                 lorryArray[index] = parseInt(lorryArray[index]);
             }
+            lorryArray = lorryArray.sort();
             $scope.lorryArray = lorryArray;
         }
         var selectedLorrySize = $scope.selectedLorrySize = $scope.lorryArray[0];

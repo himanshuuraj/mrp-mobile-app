@@ -27,7 +27,7 @@
             <img class="mySlides" src="img/slider2.jpg" style="height: 200px;width: 100%">
             <img class="mySlides" src="img/slider3.jpg" style="height: 200px;width: 100%">
         </div>
-        <div class="button-bar padding" style="background-color: #fff;margin-bottom: 5%">
+        <div class="button-bar padding" style="padding-top: 0;padding-bottom: 0;background-color: inherit;">
             <a class="button" ng-repeat="tab in tabArray" id="{{tab}}tab" ng-click="changeContent(tab)">{{tab.toUpperCase()}}</a>
         </div>
         <div  ng-repeat = "productItem in getSelectedItemArray()">
