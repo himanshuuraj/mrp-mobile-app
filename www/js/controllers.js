@@ -287,11 +287,11 @@ angular.module('starter.controllers', ['ngCordova'])
                     var itemObj = shop.items[item];
                     for( var product in itemObj){
                         var productObj = itemObj[product];
-                        console.log(productObj);
+                        //console.log(productObj);
                         productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
                         productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
                         productObj['price'] = loginCred.toCommaFormat(productObj['price']);
-                        console.log(productObj);
+                        //console.log(productObj);
 
                     }
 
@@ -311,7 +311,7 @@ angular.module('starter.controllers', ['ngCordova'])
             if($scope.flagForPriceModified==true){
                     //$scope.modifiedPriceList
                  //   showPopUp("Prices for few items have changed from the time you saved in cart. <br> Please review the order before submitting.")
-                    console.log($scope.modifiedPriceList);
+                    //console.log($scope.modifiedPriceList);
                 (function(){
                     $ionicPopup.show({
                 template: '<div class="row">'+
@@ -473,10 +473,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.showFavouriteFlag = 'item';
 
-        /*$scope.getFavouriteArray = function () {
-            return $scope.favouriteObject[$scope.selectedItem];
-        };*/
-
         $scope.getFlag = function(key){
             if($scope.showFavouriteFlag == 'item')
                 return true;
@@ -523,7 +519,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.showFavouriteItems = function(){
             ($scope.showFavouriteFlag == 'item') ? $scope.showFavouriteFlag = 'favourite' : $scope.showFavouriteFlag = 'item';
-            console.log($scope.showFavouriteFlag);
+            //console.log($scope.showFavouriteFlag);
         };
 
         $scope.toggleFavourite = function(key){
@@ -596,7 +592,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         text: '<b>Done</b>',
                         type: 'button-positive',
                         onTap: function(e) {
-                            console.log($scope.shopArray);
+                            //console.log($scope.shopArray);
                             if (!$scope.shopDetail.name) {
                                 //don't allow the user to close unless he enters model...
                                 e.preventDefault();
@@ -719,7 +715,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 tickElement.setAttribute("status","add");
                 updateCart();
             }
-            console.log($scope.cartArray);
+            //console.log($scope.cartArray);
         };
 
         var cln;
@@ -887,8 +883,10 @@ angular.module('starter.controllers', ['ngCordova'])
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
+                if(!productsList)
+                    return;
                 console.log("Fetched list of prices for selected area" + productsList);
-                window.localStorage.brokenPriceArray=JSON.stringify(productsList.broken);
+                window.localStorage.brokenPriceArray = JSON.stringify(productsList.broken);
                 $scope.brokenPriceArray = productsList.broken;
                 window.localStorage.ravvaPriceArray=JSON.stringify(productsList.ravva);
                 $scope.ravvaPriceArray = productsList.ravva;
@@ -1050,7 +1048,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             }
         };
-         $scope.onForgotPassword = function() {
+        $scope.onForgotPassword = function() {
             showPopUp("Please contact administrator", "oops!!" );
         };
         $scope.onClickButton = function() {
@@ -1076,7 +1074,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         uid = window.localStorage.uid = uid;
                         usersRef.once('value').then(function(data){
                             data = data.val();
-                            console.log(data);
+                            //console.log(data);
                             if(data){
                                 userInfo = data;
                                 window.localStorage.userInfo = JSON.stringify(data);
@@ -1200,7 +1198,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var areasRef = loginCred.dbRef.child('areas' );
             $scope.areasObj = {};
             areasRef.once('value', function(data){
-                console.log(data.val());
+                //console.log(data.val());
                 var areas = $scope.areasObj = data.val();
                 var foo=[];
                 for(var area in areas){
@@ -1212,7 +1210,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.areas = foo;
                 $scope.$apply();
-                console.log($scope.areas);
+                //console.log($scope.areas);
 
             })
         }
@@ -1297,8 +1295,6 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.signUpData["isAgent"] = false;
             }
         };
-        //window.localStorage.clear();
-        //window.sessionStorage.clear();
 
     })
 
@@ -1421,7 +1417,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             $scope.shop.address = fulladdress;
             userInfo["shops"] = userInfo["shops"] || [];
-            console.log($scope.shop);
+            //console.log($scope.shop);
             userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
             saveShop('add');
             $scope.shop = {
@@ -1470,7 +1466,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.showEditBox = function(shop){
             $scope.shop = shop;
-            console.log(shop);
+            //console.log(shop);
             $scope.showShopInput = true;
             $scope.editType = true;
         };
@@ -1481,7 +1477,7 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         $scope.editShop = function(){
-            console.log(userInfo);
+            //console.log(userInfo);
             var length = userInfo.shops.length;
             for(var index = 0; index < length; index++){
                 var shop = userInfo.shops[index];
@@ -1501,7 +1497,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.addShopEnabled=false;
             $scope.areasObj = {};
             areasRef.once('value', function (data) {
-                console.log(data.val());
+                //console.log(data.val());
                 var areas = $scope.areasObj = data.val();
                 var foo = [];
                 for (var area in areas) {
@@ -1513,7 +1509,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.areas = foo;
                 $scope.$apply();
-                console.log($scope.areas);
+                //console.log($scope.areas);
 
             });
             $rootScope.$broadcast("cached",{});
@@ -1555,7 +1551,7 @@ angular.module('starter.controllers', ['ngCordova'])
             if(window.localStorage.cartArray)
                 temp = JSON.parse(window.localStorage.cartArray);
             $scope.cartArray = temp || [];
-            console.log($scope.cartArray);
+            //console.log($scope.cartArray);
             $timeout(function () {
                 showInitialPrice();
             },0);
@@ -1622,7 +1618,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         text: '<b>Done</b>',
                         type: 'button-positive',
                         onTap: function(e) {
-                            console.log($scope.selectedLorrySize);
+                            //console.log($scope.selectedLorrySize);
                             if (!$scope.selectedLorrySize) {
                                 //don't allow the user to close unless he enters model...
                                 e.preventDefault();
@@ -1640,7 +1636,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.addToDeliveryArray = function(key,value,index){
             var x = {};
-            console.log(value);
+            //console.log(value);
             value.quantity = document.getElementById(key+"quantity"+value.productId).value;
             value.bag = document.getElementById(key+"bag"+value.productId).value;
             value.price = loginCred.toNumberFormat(document.getElementById(key+"computedPrice"+value.productId).innerText.trim());
@@ -1663,7 +1659,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 progressBarElement.style.backgroundColor = "green";
             progressBarElement.style.width = width.toString() + "%";
             $scope.totalQuantity = totalQuantity;
-            console.log($scope.deliveryArray);
+            //console.log($scope.deliveryArray);
         }
 
         $scope.removeItemFromDeliverable = function(key,value,index){
@@ -1858,7 +1854,7 @@ angular.module('starter.controllers', ['ngCordova'])
             cartInfo["totalWeight"] = overAllWeight;
             cartInfo["shopDetail"] = arr;
             cartInfo["selectedLorrySize"] = $scope.selectedLorrySize;
-            console.log(cartInfo);
+            //console.log(cartInfo);
             window.localStorage.cartInfo = JSON.stringify(cartInfo);
             window.location.hash = "#/app/summary";
         }
@@ -1892,7 +1888,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.viewDetailOrder = null;
             else
             $scope.viewDetailOrder = orderId;
-            console.log("show order clicked"+orderId);
+            //console.log("show order clicked"+orderId);
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(data){
                 if(!data.val())
@@ -1906,11 +1902,11 @@ angular.module('starter.controllers', ['ngCordova'])
                     var itemObj = shop.items[item];
                     for( var product in itemObj){
                         var productObj = itemObj[product];
-                        console.log(productObj);
+                        //console.log(productObj);
                         productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
                         productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
                         productObj['price'] = loginCred.toCommaFormat(productObj['price']);
-                        console.log(productObj);
+                        //console.log(productObj);
 
                     }
 
@@ -2081,7 +2077,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 (function(j){
                  var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
                  ordersRef.once('value', function(data){
-                    console.log(areas[j]);
+                    //console.log(areas[j]);
                     var items = data.val();
                     var riceArray = items['rice'];
                     var ravvaArray = items['ravva'];
@@ -2131,7 +2127,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                      $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
                      $scope.$apply();
-                     console.log($scope.pricesForAreas);
+                     //console.log($scope.pricesForAreas);
                      $rootScope.$broadcast("cached",{});
 
                 })})(j);
@@ -2151,7 +2147,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.loadUserProfile = function(){
             usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
              usersRef.once('value', function(data){
-                 console.log(data.val());
+                 //console.log(data.val());
                  userObj = data.val();
 
                  $scope.userProfileView['Name'] = userObj['name'];
