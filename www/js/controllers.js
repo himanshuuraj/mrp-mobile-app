@@ -106,11 +106,11 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.signOut = function(){
             var cartArray = window.localStorage.cartArray;
             var favouriteObject = window.localStorage.favouriteObject;
+            window.localStorage.clear();
             if(cartArray)
                 window.localStorage.cartArray = cartArray;
             if(favouriteObject)
                 window.localStorage.favouriteObject = favouriteObject;
-            window.localStorage.clear();
             window.sessionStorage.clear();
             window.location.hash = "#/app/login";
         };
@@ -586,7 +586,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 buttons: [
                     { text: 'Cancel',
                         onTap: function(e) {
-                            e.preventDefault();
+                            if (!$scope.shopDetail.name) {
+                                e.preventDefault();
+                            }
                         }
                     }, {
                         text: '<b>Done</b>',
@@ -905,6 +907,7 @@ angular.module('starter.controllers', ['ngCordova'])
         }
 
         $scope.setSearchedShop = function(shop){
+            $scope.shop = shop;
             earlySelectedShop["tin"] = $scope.shopDetail.tin;
             window.localStorage.shopName = $scope.shopDetail.name = shop.name;
             window.localStorage.areaId = $scope.shopDetail.areaId=shop.areaId
@@ -1276,8 +1279,8 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Please click the SIGN IN button below to login", "CONGRATULATIONS!!");
                 $scope.showUserInputField = false;
-                window.localStorage.clear();
-                window.sessionStorage.clear();
+                //window.localStorage.clear();
+                //window.sessionStorage.clear();
                 $scope.$apply();
             }).catch(e => showPopUp("Please try again"));
 
@@ -1556,8 +1559,6 @@ angular.module('starter.controllers', ['ngCordova'])
                 showInitialPrice();
             },0);
             $rootScope.$broadcast("cached",{});
-            //document.getElementById("naviconIcon").className = "button button-icon button-clear ion-navicon";
-            //$ionicNavBarDelegate.showBackButton(false);
         };
 
         var showInitialPrice = function () {
