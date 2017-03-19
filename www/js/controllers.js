@@ -268,29 +268,35 @@ angular.module('starter.controllers', ['ngCordova'])
             var shopArray = $scope.shopArray;
             $scope.totaldiscountedPrice = 0; var itemsProcessed = 0;
             shopArray.forEach(function(shop){
-                itemsProcessed++;
                 var shopDiscountAmount = 0;
 
                 var items = shop.items;
-                var riceObject = items.rice;
-                var ravvaObject = items.ravva;
-                var brokenObject = items.broken;
+                var riceObjectOrg = items.rice;
+                var ravvaObjectOrg = items.ravva;
+                var brokenObjectOrg = items.broken;
                 var shopRiceWeight = 0;var shopRavvaWeight = 0; var shopBrokenWeight= 0;
-                for(var productId in riceObject){
-                    shopRiceWeight += riceObject[productId].weight;
+                for(var productId in riceObjectOrg){
+                    shopRiceWeight += riceObjectOrg[productId].weight;
                 }
-                for(var productId in ravvaObject){
-                    shopRavvaWeight += ravvaObject[productId].weight;
+                for(var productId in ravvaObjectOrg){
+                    shopRavvaWeight += ravvaObjectOrg[productId].weight;
                 }
-                for(var productId in brokenObject){
-                    shopBrokenWeight += brokenObject[productId].weight;
+                for(var productId in brokenObjectOrg){
+                    shopBrokenWeight += brokenObjectOrg[productId].weight;
                 }
                 var ricediscount=0, ravvadiscount=0,brokendiscount=0;
                 
                 var areasRef = loginCred.dbRef.child('areas/' + shop.areaId );
                 var riceDiscArray = [];var ravvaDiscArray = []; var brokenDiscArray=[];
                (function() {
+                   
+                   var ravvaObject = ravvaObjectOrg ? JSON.parse(JSON.stringify(ravvaObjectOrg)) : {};
+                    var riceObject = riceObjectOrg ? JSON.parse(JSON.stringify(riceObjectOrg)): {};
+                   var brokenObject = brokenObjectOrg ? JSON.parse(JSON.stringify(brokenObjectOrg)): {};
+
                 areasRef.once('value', function(data){
+                    
+                    itemsProcessed++;
                     var discounts = data.val().discounts;
                     console.log(discounts);
                     if(discounts) {
@@ -340,6 +346,9 @@ angular.module('starter.controllers', ['ngCordova'])
                         $scope.totaldiscountedPrice += brokendiscount*brokenObject[productId]['weight'];
                 }
 
+                shop['items']['rice'] = riceObject;
+                                shop['items']['ravva'] = ravvaObject;
+                shop['items']['broken'] = brokenObject;
 
                 shop['shopDiscountAmount'] = shopDiscountAmount;
                 shop['shopGrossAmount'] = shop['totalShopPrice'] - shopDiscountAmount;
@@ -1004,12 +1013,17 @@ angular.module('starter.controllers', ['ngCordova'])
             var areaRef = dbRef.child('priceList/'+ areaId);
             areaRef.on('value',function(areaSnapshot){
                 var productsList = areaSnapshot.val();
-                window.localStorage.brokenPriceArray = JSON.stringify(productsList.broken);
                 $scope.brokenPriceArray = productsList.broken;
-                window.localStorage.ravvaPriceArray=JSON.stringify(productsList.ravva);
                 $scope.ravvaPriceArray = productsList.ravva;
-                window.localStorage.ricePriceArray=JSON.stringify(productsList.rice);
                 $scope.ricePriceArray = productsList.rice;
+
+                var tin  = window.localStorage.tin ;
+                var x= window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
+                x[tin] = {'rice' : productsList.rice,
+                    'ravva': productsList.ravva,
+                    'broken': productsList.broken
+                     } ;
+                window.localStorage.priceArray = JSON.stringify(x);
                 flagOfAlreadyPresentPrice = true;
                 window.sessionStorage.flagOfAlreadyPresentPrice = true;
                 $scope.getProductItems();
@@ -1689,7 +1703,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     var itemType = $scope.cartArray[key][index].itemType
                     var element = document.getElementById(key + "computedPrice" + pid);
                     var qty = document.getElementById(key + "quantity" + pid).value;
-                    var price = $scope.getPrice(pid, itemType) * qty;
+                    var price = $scope.getPrice(pid, itemType, key) * qty;
                     element.innerHTML = '₹​' + loginCred.toCommaFormat(price);
                 }
             }
@@ -1859,20 +1873,21 @@ angular.module('starter.controllers', ['ngCordova'])
         };
         $scope.computePrice = function(key,productId,index,type) {
             var qtyElement = document.getElementById(key+"quantity"+productId);
-            var price = $scope.getPrice(productId,type);
+            var price = $scope.getPrice(productId,type,key);
             var quantity =  Number(qtyElement.value);
             document.getElementById(key+"computedPrice"+productId).innerHTML="&#8377;"+loginCred.toCommaFormat(quantity*price);
         }
 
-        $scope.getPrice = function(key,type){
+        $scope.getPrice = function(key,type,tin){
             var shopContext = 'Agent';
             if(window.localStorage.isAgent=='true')
                 shopContext = 'Agent';
             else
                 shopContext = 'Outlet';
+            var priceArray = JSON.parse(window.localStorage.priceArray);
             var arrayName = type + 'PriceArray';
             var price = 'N/A';
-            var obj = JSON.parse(window.localStorage[arrayName]);
+            var obj = priceArray[tin][type];
             if(obj && obj[key] && obj[key][shopContext])
                 price = obj[key][shopContext];
             return price;
