@@ -7,17 +7,15 @@
                 style="color:white;">
         </button>
     </div>
-    <!--<div style="background-color: #fff">-->
-    <div class = "has-header" style="position: relative;margin-top: 10%;">
-        <center>
-            <b><span style="font-size: 17px;color: green;">{{totalQuantity}} quintals / {{selectedLorrySize}} tonnes</span></b>
-        </center>
-    </div>
-        <div style="position: relative;margin-top: 14%;background-color:#fff;margin-left:5%;width:90%;">
+        <div style="position: relative;margin-top: 16%;background-color:#fff;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
-                    <div style="position:absolute;top:0;left:0px;background-color: red;height:102%;" id="progressBar"></div>
+                    <div style="position:absolute;top:0;left:0px;height:102%;" id="progressBar">
+                         <center style="margin-top: 30px">
+                             <b><span style="font-size: 14px;color: white;">{{totalQuantity}} quintals</span></b>
+                        </center>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,7 +103,7 @@
         </div>
     </ion-content>
 
-     <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent">
+     <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent;margin-bottom: 5px">
         <div class="col" style="padding: 0;margin: 0">
         <div class="row" style="padding: 0;margin: 0">
             <span style="font-size: 20px;padding-left: 10px;margin-bottom: 10px;background-color: #d4db2b">Lorry size <b>{{selectedLorrySize}} tonnes</b></span>

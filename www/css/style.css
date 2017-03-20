@@ -54,7 +54,7 @@ h1,h2,h3{
 
 .btnSelected {
     color: white !important;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
     background-color: #388e3c;
 }
@@ -135,7 +135,7 @@ input.animateInput {
     background-size: 98% 100%;
     background-repeat: no-repeat;
     color: black;
-    font-size: 16px;
+    font-size: 14px;
     
 }
 input.animateInput::-webkit-input-placeholder {
@@ -213,7 +213,7 @@ input.animateText::-webkit-input-placeholder {
 }
 
 .ion-content-below-my-video{
-    margin-top:260px!important;
+    margin-top:220px!important;
 }
 
 .hide{
@@ -295,3 +295,14 @@ input.animateText::-webkit-input-placeholder {
     font-weight: 200;
     font-size: 14px;
 }
+
+/*@font-face {
+    font-family: 'Lato-Light';
+    src: url('../fonts/Lato-Light.eot') format('embedded-opentype'), url('../fonts/Lato-Light.woff') format('woff'), url('../fonts/Lato-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Lato-Light' !important;
+}*/
