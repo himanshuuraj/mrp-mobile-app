@@ -22,7 +22,7 @@
         <div class="padding" ng-repeat = "(key,data) in cartArray"
              style="background-color:white;position:relative;margin-top: 15px;">
             <center style="color:#388e3c;font-size: 16px;font-weight: 700"><b>{{getShopName(key).toUpperCase()}}</b></center>
-            <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:175px;background-color: white">
+            <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:160px;background-color: white">
                 <!--here-->
                 <div class = "row" style="height:30%;">
                     <div class="col col-75 text-left" style="margin:0;padding-left:4%;">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}quantity{{value.productId}}" ng-keyup="textInQuantity(key,this.value,$index);" ng-value="value.quantity"
-                                   style="text-align:center;width:40%;background-color: white;border:1px solid black;font-size: 14px;" placeholder="quantity"/>
+                                   style="text-align:center;width:50%;background-color: white;border:1px solid black;font-size: 14px;" placeholder="quantity"/>
 
                         </div>
                         <div class="row" style="padding-left:13px;">
@@ -71,7 +71,7 @@
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}bag{{value.productId}}" ng-keyup="textInBag(key,this.value,$index);"  ng-value="value.bag"
-                                   style="text-align:center;width:40%;background-color: white;border:1px solid black;"/>
+                                   style="text-align:center;width:50%;background-color: white;border:1px solid black;"/>
 
                         </div>
                         <div class="row" style="padding-left:13px;">

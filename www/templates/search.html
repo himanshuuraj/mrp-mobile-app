@@ -33,7 +33,7 @@
         <div  ng-repeat = "productItem in getSelectedItemArray()">
 
              <div class="card" ng-repeat="(key,value) in productItem"  ng-if="getFlag(key);"
-                          style="padding: 0;min-height:135px;height:auto;background:#fff;position:relative;" ng-show="displayProduct(value)" >
+                          style="padding: 0;min-height:130px;height:auto;background:#fff;position:relative;" ng-show="displayProduct(value)" >
             <div class = "row" id="{{key}}card" style="height:100%;">
                 <div class = "col col-20" style="height:100%;margin-top: 10px;">
                     <img ng-src="{{getImageUrl(key,selectedItem)}}" id="{{key}}image"
