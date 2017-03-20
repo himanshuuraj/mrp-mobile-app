@@ -7,17 +7,21 @@
                 style="color:white;">
         </button>
     </div>
-    <div class="" style="background-color: #fff">
-        <div class = "has-header" style="position: relative;margin-top: 5%;background-color:#fff;margin-left:5%;width:90%;">
+    <!--<div style="background-color: #fff">-->
+    <div class = "has-header" style="position: relative;margin-top: 10%;">
+        <center>
+            <b><span style="font-size: 17px;color: green;">{{totalQuantity}} quintals / {{selectedLorrySize}} tonnes</span></b>
+        </center>
+    </div>
+        <div style="position: relative;margin-top: 14%;background-color:#fff;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
                     <div style="position:absolute;top:0;left:0px;background-color: red;height:102%;" id="progressBar"></div>
                 </div>
-
             </div>
         </div>
-    </div>
+    <!--</div>-->
     <ion-content class="ion-content-below-my-video">
         <div class="padding" ng-repeat = "(key,data) in cartArray"
              style="background-color:white;position:relative;margin-top: 15px;">
