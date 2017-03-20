@@ -1003,6 +1003,11 @@ angular.module('starter.controllers', ['ngCordova'])
             var obj = priceArray[window.localStorage.tin][type];
             if(obj && obj[key] && obj[key][shopContext])
                 price = obj[key][shopContext];
+            if(price == 'N/A'){
+                document.getElementById(key+"card").style.backgroundColor = "gray";
+            }else{
+                document.getElementById(key+"card").style.backgroundColor = "white";
+            }
             return price;
 
        }
@@ -1119,7 +1124,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     buttonElement.setAttribute("status","remove");
                     var animateElement = document.getElementById(productId+"animate");
                     //animateElement.className = "widthFull animatewidthfull";
-                    animateElement.className = "widthZero animatewidthzero";
+                    animateElement.className = "widthZero";// animatewidthzero";
                     var computedElement = document.getElementById(arg.pId + "computedPrice");
                     if(!computedElement.innerText)
                         computedElement.innerHTML = obj[arg.index].price;
