@@ -1055,7 +1055,6 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.lorryArray = [];
         if(window.localStorage.lorryArray){
             $scope.lorryArray = JSON.parse(window.localStorage.lorryArray) || [];
-            $scope.lorryArray = $scope.lorryArray.sort();
         }
         $scope.setSearchedShop = function(shop){
             $scope.shop = shop;
@@ -1697,7 +1696,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 return a-b;
             });
         }
-        var selectedLorrySize = $scope.selectedLorrySize = $scope.lorryArray[0];
+        if(!$scope.lorryArray || ($scope.lorryArray.length == 0))
+            $scope.lorryArray = [3,5,7,10,17,21,25];
+
+        var selectedLorrySize = $scope.selectedLorrySize = $scope.lorryArray[$scope.lorryArray.length - 1];
 
         var myPopUp = loginCred.showPopup;
 
