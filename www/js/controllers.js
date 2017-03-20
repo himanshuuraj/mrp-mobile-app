@@ -74,7 +74,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
         this.toCommaFormat = function(x){
             if(!x)
-                return;
+                return "0";
+            
             if(Number(x) === x && x % 1 === 0) {
                 x=x.toString();
                 var lastThree = x.substring(x.length-3);
@@ -96,7 +97,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 if(otherNumbers != '')
                     lastThree = ',' + lastThree;
                 var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
-
+                return res;
             }
 
         };
@@ -124,11 +125,15 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.signOut = function(){
             var cartArray = window.localStorage.cartArray;
             var favouriteObject = window.localStorage.favouriteObject;
+            var shopInfoObject = window.localStorage.shopInfo;
             window.localStorage.clear();
             if(cartArray)
                 window.localStorage.cartArray = cartArray;
             if(favouriteObject)
                 window.localStorage.favouriteObject = favouriteObject;
+            if(shopInfoObject)
+                window.localStorage.shopInfo = shopInfoObject
+            
             window.sessionStorage.clear();
             window.location.hash = "#/app/login";
         };
@@ -272,6 +277,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
                 shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
                 shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
+            }
+            if(!$scope.$$phase) {
+                    $scope.$apply();
             }
 
             document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.totaldiscountedPrice);
@@ -1003,10 +1011,17 @@ angular.module('starter.controllers', ['ngCordova'])
             var obj = priceArray[window.localStorage.tin][type];
             if(obj && obj[key] && obj[key][shopContext])
                 price = obj[key][shopContext];
+                            
+            var x = document.getElementById(key+"buy");
+
             if(price == 'N/A'){
-                document.getElementById(key+"card").style.backgroundColor = "gray";
+                document.getElementById(key+"card").style.opacity = "0.3";
+                if(x)
+                    x.style.display = "none";
             }else{
-                document.getElementById(key+"card").style.backgroundColor = "white";
+                document.getElementById(key+"card").style.opacity = "1";
+                if(x)
+                    x.style.display = "";
             }
             return price;
 
@@ -1017,7 +1032,11 @@ angular.module('starter.controllers', ['ngCordova'])
             var price= $scope.getPrice(key);
             price= Number(loginCred.toNumberFormat(price));
             var qtyNumber =  Number(qtyElement.value);
-            document.getElementById(key+"computedPrice").innerHTML="&#8377;"+ loginCred.toCommaFormat(qtyNumber*price);
+            var compPriceElement = document.getElementById(key+"computedPrice");
+            if(qtyNumber == 0)
+                compPriceElement.innerHTML="&#8377; 0";
+            else 
+                compPriceElement.innerHTML = loginCred.toCommaFormat(qtyNumber*price);
         }
 
         var earlySelectedShop = {};
@@ -1904,12 +1923,17 @@ angular.module('starter.controllers', ['ngCordova'])
                 shopContext = 'Agent';
             else
                 shopContext = 'Outlet';
-            var priceArray = JSON.parse(window.localStorage.priceArray);
-            var arrayName = type + 'PriceArray';
+    
+            
+            var priceArray = window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
             var price = 'N/A';
-            var obj = priceArray[tin][type];
+            if(!priceArray[window.localStorage.tin])
+                return;
+            var obj = priceArray[window.localStorage.tin][type];
             if(obj && obj[key] && obj[key][shopContext])
-                price = obj[key][shopContext];
+                price = obj[key][shopContext];           
+            
+           
             return price;
         };
 
@@ -1988,7 +2012,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     y["price"] = shopOrderItem.price;
                     y["weight"] = Number(shopOrderItem.quantity);
                     y["masterWeightPrice"] = Math.round((shopOrderItem.price/parseInt(shopOrderItem.bag)) * 100) / 100;
-                    y["quintalWeightPrice"] = Math.round((shopOrderItem.price/Number(shopOrderItem.quantity))*100)/100;
+                    y["quintalWeightPrice"] = Math.round(Math.round((shopOrderItem.price/Number(shopOrderItem.quantity))*100)/100);
                     x.items[shopOrderItem.itemType] = x.items[shopOrderItem.itemType] || {};
                     var t = shopOrderItem.itemType;
                     //var b = x.items[t];
@@ -2017,7 +2041,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         $scope.getShopName = function(tin){
-            return shopInfo[tin].name;
+            return shopInfo[tin] != null ? shopInfo[tin].name : '';
         }
 
     })
