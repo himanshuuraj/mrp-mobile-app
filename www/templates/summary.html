@@ -12,7 +12,7 @@
         <div class="padding" ng-repeat="shop in shopArrayDup" >
             <h4 style="margin-left:10px">{{shop.name}}</h4>
             <hr style="margin-left:10px">
-            <div class="row"  style="margin-top: 5px">
+            <!--<div class="row"  style="margin-top: 5px">
                 <div class="col-25">
                     <p  style="text-align: right;margin-right: 25%"><i>Item Name</i></p>
                 </div>
@@ -29,11 +29,11 @@
                     <p style="text-align: right;margin-right: 25%">Price</p>
                 </div>
 
-            </div>
+            </div>-->
 
             <div ng-repeat="(key,item) in shop.items" >
                 <div ng-repeat="(k,v) in item" >
-                    <div class="row">
+                    <!--<div class="row">
                         <div class="col-25">
                             <p style="text-align: right;margin-right: 25%">{{v.name}}</p>
                         </div>
@@ -48,6 +48,40 @@
                         </div>
                         <div class="col-25">
                             <p style="text-align: right;margin-right: 25%">&#8377;{{v.price}}</p>
+                        </div>
+                    </div>-->
+                    <div class="card">
+                        <div class="row">
+                            <p style="width: 100%;">
+                                <span><b>Item Name</b></span>
+                                <span style="float:right;">{{v.name}}</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p style="width: 100%;">
+                                <span><b>Weight in Quintals</b></span>
+                                <span style="float:right;">{{v.weight}}</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p style="width: 100%;">
+                                <span><b>Quintal Price</b></span>
+                                <span style="float:right;">&#8377;{{v.quintalWeightPrice}}</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p style="width: 100%;">
+                                <span><b>Price After Discount</b></span>
+                                <span style="float:right;">&#8377;{{v.discountedQuintalPrice}}</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Price</b>
+                                                            <span style="float:right;">&#8377;{{v.price}}</span>
+                                                        </span>
+                            </p>
                         </div>
                     </div>
                 </div>
