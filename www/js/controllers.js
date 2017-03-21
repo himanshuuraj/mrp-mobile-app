@@ -1944,11 +1944,13 @@ angular.module('starter.controllers', ['ngCordova'])
             if(buttonElement.innerHTML.toString().trim() == "ADD"){
                 $scope.addToDeliveryArray(key,value,index);
                 buttonElement.innerHTML = "REMOVE";
-                buttonElement.style.backgroundColor ="#ff9f00"
+                buttonElement.style.backgroundColor ="#ff9f00";
+                buttonElement.style.marginLeft = null;
             }else{
                 $scope.removeItemFromDeliverable(key,value);
                 buttonElement.innerHTML = "ADD";
-                buttonElement.style.backgroundColor ="#fb641b"
+                buttonElement.style.backgroundColor ="#fb641b";
+                buttonElement.style.marginLeft = "25%";
             }
         }
         $scope.checkoutOrder = function(){

@@ -2,19 +2,19 @@
     <div class="bar bar-header">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
         </button>
-        <h1 class="title">Cart</h1>
+        <h1 class="title" style="margin-top:10px;">Cart</h1>
         <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
                 style="color:white;">
         </button>
     </div>
-        <div style="position: relative;margin-top: 16%;background-color:#fff;margin-left:5%;width:90%;">
+        <div style="position: relative;margin-top: 18%;background-color:#fff;margin-left:5%;width:90%;">
             <img src="img/lorryWithDriver.png" style="height:100%;width:100%;"/>
             <div style="position:absolute;top:0;left:27%;width:73%;height:62%;">
                 <div class="" style="position:relative;display:block;height:100%;margin-left:5%;background-color: black">
                     <div style="position:absolute;top:0;left:0px;height:102%;" id="progressBar">
-                         <center style="margin-top: 30px">
-                             <b><span style="font-size: 14px;color: white;">{{totalQuantity}} quintals</span></b>
-                        </center>
+                    </div>
+                    <div style="position:absolute;left:0px;top:30px;">
+                        <b><span style="font-size: 14px;color: white;">{{totalQuantity}} quintals / {{selectedLorrySize}} tonnes</span></b>
                     </div>
                 </div>
             </div>
