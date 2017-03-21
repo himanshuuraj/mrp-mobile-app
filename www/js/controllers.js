@@ -1549,7 +1549,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 return 0;
             }
             if(!$scope.shop.areaId){
-                showPopUp('Enter Shop Tin');
+                showPopUp('Enter Shop AreaId');
                 return 0;
             }
             return 1;
