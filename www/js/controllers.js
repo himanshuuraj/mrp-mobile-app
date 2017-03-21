@@ -671,7 +671,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var myPopup = $ionicPopup.show({
                 template: '<div class="list">'+
                 '<label class="item item-input">'+
-                '<input type="text" id="searchElement" ng-model = "shopSearchElement.name"/>'+
+                '<input type="text" id="searchElement" ng-model = "shopSearchElement.name" placeholder="Select a shop"/>'+
                 '</label></div><ion-list> ' +
                 '<ion-radio ng-repeat="shop in shopArray | filter:filterSearchedArray" ng-value="shop" ng-click="setSearchedShop(shop)" style="font-size:20px;">'+
                 '{{shop.name}}<br><span class="mobileFont">{{shop.mobile}}</span></ion-radio>'+
