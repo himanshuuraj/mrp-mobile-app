@@ -1927,9 +1927,9 @@ angular.module('starter.controllers', ['ngCordova'])
             
             var priceArray = window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
             var price = 'N/A';
-            if(!priceArray[window.localStorage.tin])
+            if(!priceArray[tin])
                 return;
-            var obj = priceArray[window.localStorage.tin][type];
+            var obj = priceArray[tin][type];
             if(obj && obj[key] && obj[key][shopContext])
                 price = obj[key][shopContext];           
             
