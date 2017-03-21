@@ -22,7 +22,7 @@
                     <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded"
                          style="background-color:#fff;display: none;" >
                         <div class="row card">
-                            <div class="col-75">
+                            <div class="col-75" style="padding-left: 15px;padding-top: 5px;">
                                 STATUS : {{value.status}}
                             </div>
                             <div class="col">
@@ -36,63 +36,98 @@
                                 <div class="padding col" ng-repeat="shop in shopArrayOrderDetail" style="width: 108%">
                                     <h4 style="margin-left:10px">{{shop.name}}</h4>
                                     <hr style="margin-left:10px">
-                                    <div class="row"  style="margin-top: 5px">
-                                        <div class="col-25">
-                                            <p  style="text-align: right;margin-right: 25%"><i>Item Name</i></p>
-                                        </div>
-                                        <div class="col-10">
-                                            <p style="text-align: right;margin-right: 25%">Wt in Qtls</p>
-                                        </div>
-                                        <div class="col">
-                                            <p style="text-align: right;margin-right: 25%">Qtl Price</span>
-                                        </div>
-                                         <div class="col">
-                                            <p style="text-align: right;margin-right: 25%">Price Aft Disc</p>
-                                        </div>
-                                        <div class="col-25">
-                                            <p style="text-align: right;margin-right: 25%">Price</p>
-                                        </div>
-
-                                    </div>
 
                                     <div ng-repeat="(key,item) in shop.items" >
                                         <div ng-repeat="(k,v) in item" >
-                                           <div class="row">
-                                                <div class="col-25">
-                                                    <p style="text-align: right;margin-right: 25%">{{v.name}}</p>
+                                           <div class="card" style="width:92%;">
+                                                <div class="row">
+                                                    <p style="width: 100%;">
+                                                        <span><b>Item Name</b></span>
+                                                        <span style="float:right;">{{v.name}}</span>
+                                                    </p>
                                                 </div>
-                                                <div class="col-10">
-                                                    <p style="text-align: right;margin-right: 25%">{{v.weight}}</p>
+                                                <div class="row">
+                                                    <p style="width: 100%;">
+                                                        <span><b>Weight in Quintals</b></span>
+                                                        <span style="float:right;">{{v.weight}}</span>
+                                                    </p>
                                                 </div>
-                                                <div class="col">
-                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.quintalWeightPrice}}</p>
+                                                <div class="row">
+                                                    <p style="width: 100%;">
+                                                        <span><b>Quintal Price</b></span>
+                                                        <span style="float:right;">&#8377;{{v.quintalWeightPrice}}</span>
+                                                    </p>
                                                 </div>
-                                                <div class="col">
-                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.discountedQuintalPrice}}</p>
+                                                <div class="row">
+                                                    <p style="width: 100%;">
+                                                        <span><b>Price After Discount</b></span>
+                                                        <span style="float:right;">&#8377;{{v.discountedQuintalPrice}}</span>
+                                                    </p>
                                                 </div>
-                                                <div class="col-25">
-                                                    <p style="text-align: right;margin-right: 25%">&#8377;{{v.price}}</p>
+                                                <div class="row">
+                                                    <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Price</b>
+                                                            <span style="float:right;">&#8377;{{v.price}}</span>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                          </div>
                                         </div>
                                     </div>
-                                     <div class="row" style="color:green">            
-                                            <div class="col">
-                                                <span>Total: {{shop.totalShopPrice}}</span>
-                                            </div>
-                                            <div class="col-20">
-                                                <span>Discount: {{shop.shopDiscountAmount}}</span>
-                                            </div>
-                                            <div class="col-40">
-                                                <span>Amount Payable: {{shop.shopGrossAmount}}</span>
-                                            </div>
-                
-                                     </div>
+                                         <div class="row" style="width: 92%;color:green;">
+                                             <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Total</b>
+                                                            <span style="float:right;">&#8377;{{shop.totalShopPrice}}</span>
+                                                        </span>
+                                             </p>
+                                         </div>
+                                         <div class="row" style="width: 92%;color:green;">
+                                             <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Discount</b>
+                                                            <span style="float:right;">&#8377;{{shop.shopDiscountAmount}}</span>
+                                                        </span>
+                                             </p>
+                                         </div>
+                                         <div class="row" style="width: 92%;color:green;">
+                                             <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Amount Payable:</b>
+                                                            <span style="float:right;">&#8377;{{shop.shopGrossAmount}}</span>
+                                                        </span>
+                                             </p>
+                                         </div>
                                     <hr style="border-top: 1px dotted">
                                     <br>
                                 </div>
                             </div>
-                            <div class="row card" >
+                            <div class="row" style="padding-left:2%;width: 96%;">
+                                <p style="width: 100%;">
+                                                        <span>
+                                                            <b>TOTAL PRICE</b>
+                                                            <span style="float:right;" id="gross_price">&#8377;{{cartArrayOrderDetail.grossPrice}}</span>
+                                                        </span>
+                                </p>
+                            </div>
+                            <div class="row" style="padding-left:2%;width: 96%;">
+                                <p style="width: 100%;">
+                                                        <span>
+                                                            <b>Discount</b>
+                                                            <span id="discount_amount" style="float:right;" id="discount_amount">&#8377;{{cartArrayOrderDetail.discount_amount}}</span>
+                                                        </span>
+                                </p>
+                            </div>
+                            <div class="row" style="padding-left:2%;width: 96%;">
+                                <p style="width: 100%;">
+                                                        <span>
+                                                            <b>GRAND TOTAL</b>
+                                                            <span id="grand_total" style="float:right;">&#8377;{{cartArrayOrderDetail.totalPrice}}</span>
+                                                        </span>
+                                </p>
+                            </div>
+                            <!--<div class="row card" >
                                 <div class="col-60">
                                 </div>
                                 <div class="col">
@@ -129,7 +164,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
 
 
