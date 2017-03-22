@@ -530,7 +530,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         $scope.showShopPopUp();
                 }
                 $scope.$apply();
-                console.log(existingShops);
+                //console.log(existingShops);
             });
         }
 
@@ -1012,16 +1012,16 @@ angular.module('starter.controllers', ['ngCordova'])
             if(obj && obj[key] && obj[key][shopContext])
                 price = obj[key][shopContext];
                             
-            var x = document.getElementById(key+"buy");
+            //var x = document.getElementById(key+"buy");
 
             if(price == 'N/A'){
-                document.getElementById(key+"card").style.opacity = "0.3";
-                if(x)
-                    x.style.display = "none";
+                document.getElementById(key+"card").style.display = "none";
+                /*if(x)
+                    x.style.display = "none";*/
             }else{
-                document.getElementById(key+"card").style.opacity = "1";
-                if(x)
-                    x.style.display = "";
+                document.getElementById(key+"card").style.display = "";
+                /*if(x)
+                    x.style.display = "";*/
             }
             return price;
 
