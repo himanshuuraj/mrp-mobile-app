@@ -77,26 +77,32 @@
                         </div>
                         <div class="row">
                             <p style="width: 100%;">
-                                                        <span>
-                                                            <b>Price</b>
-                                                            <span style="float:right;">&#8377;{{v.price}}</span>
-                                                        </span>
+                                <span>
+                                    <b>Price</b>
+                                    <span style="float:right;">&#8377;{{v.price}}</span>
+                                </span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row" style="color:green">            
-                <div class="col">
-                    <span>Total: {{shop.totalShopPrice}}</span>
-                </div>
-                <div class="col-25">
-                    <span>Discount: {{shop.shopDiscountAmount}}</span>
-                </div>
-                <div class="col-40">
-                    <span>Amount Payable: {{shop.shopGrossAmount}}</span>
-                </div>
-                
+            <div class="row" style="color:green">
+                    <p style="width: 100%;">
+                        <span><b>Total:</b></span>
+                        <span style="float:right;">&#8377;{{shop.totalShopPrice}}</span>
+                    </p>
+            </div>
+            <div class="row" style="color:green">
+                <p style="width: 100%;">
+                    <span><b>Discount:</b></span>
+                    <span style="float:right;">&#8377;{{shop.shopDiscountAmount}}</span>
+                </p>
+            </div>
+            <div class="row" style="color:green">
+                <p style="width: 100%;">
+                    <span><b>Amount Payable:</b></span>
+                    <span style="float:right;">&#8377;{{shop.shopGrossAmount}}</span>
+                </p>
             </div>
             <hr style="border-top: 1px dotted">
             <br>
