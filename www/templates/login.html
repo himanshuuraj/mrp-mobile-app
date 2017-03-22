@@ -100,14 +100,16 @@
                             <input type="text" class="animateInput" placeholder="Tin" ng-model="signUpData.shop.tin" required="" style="width: 98%;">
                         </div>
                     </div>
-                    <div class="row" style="margin-top: 1%">
-                        <div class="col">
-                            <span class="row" style="font-style: bold"><strong>Tax Type(CST/VAT)</strong></span>
+                    <div style="background-color: lightgray; margin-top: 2%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+                        <label class = "item item-input item-select">
+                            <div class = "input-label">
+                                Tax Type
+                            </div>
                             <select ng-model="signUpData.shop.taxType">
                                 <option value="VAT">VAT</option>
                                 <option value="CST">CST</option>
                             </select>
-                        </div>
+                        </label>
                     </div>
                     <div class="row" style="margin-top: 1%">
                         <div class="col">
@@ -128,11 +130,23 @@
                                 </div>
                             </div>
                             <span class="row" style="padding-left: 5%;padding-top: 5%">Please Select Area</span>
-                            <div id="selectarea" style="background-color: lightgray; margin-top: 5%; width: 70%; height:40px; border: 1px ">
+                            <!--<div id="selectarea" style="background-color: lightgray; margin-top: 5%; width: 70%; height:40px; border: 1px ">
                                 <select ng-model="signUpData.shop.area"
                                         ng-options="item.id as item.name for item in areas">
                                     <option value="">Select Area</option>
                                 </select>
+                            </div>-->
+                            <div id="selectarea" style="background-color: lightgray; margin-top: 5%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+                                <label class = "item item-input item-select">
+                                    <div class = "input-label">
+                                        Select Area
+                                    </div>
+
+                                    <select ng-model="signUpData.shop.area"
+                                            ng-options="item.id as item.name for item in areas">
+                                        <option value="">--No Area--</option>
+                                    </select>
+                                </label>
                             </div>
                             <div class="row" style="margin-top: 1%">
                                 <div class="col">

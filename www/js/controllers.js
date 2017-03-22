@@ -508,8 +508,8 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.isAgent = window.localStorage.isAgent;
         if(window.localStorage.isAgent == "true")
             $scope.isAgent = true;
-        if(window.localStorage.isAgent == "true")
-            $scope.isAgent = true;
+        else
+            $scope.isAgent = false;
         var shopInfo = {};
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
@@ -1383,6 +1383,8 @@ angular.module('starter.controllers', ['ngCordova'])
             var authId = window.localStorage.authId;
 
             var shops = [];
+            if(!validateField())
+                return;
             if(!$scope.signUpData.isAgent){
                 var areaId = $scope.signUpData.shop.area;
                 var areaName = $scope.areasObj[areaId].displayName;
