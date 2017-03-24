@@ -27,7 +27,7 @@
             <div class="card" ng-repeat="value in data track by $index" style="position:relative;height:160px;background-color: white">
                 <!--here-->
                 <div class = "row" style="height:30%;">
-                    <div class="col col-75 text-left" style="margin:0;padding-left:4%;">
+                    <div class="col col-80 text-left" style="margin:0;padding-left:4%;">
                         <p style="text-align: left;padding:0;padding:0;font-weight: 500;font-size: 16px" id="{{key}}name">
                             {{value.name.toUpperCase()}}
                         </p>
@@ -88,7 +88,9 @@
                             <p style="color:#212121;font-family: Roboto,Arial,sans-serif; text-align:right;width:100%;font-weight: 700;font-size: 20px;" id="{{key}}computedPrice{{value.productId}}"></p>
                         </div>
                         <div class="row" style="margin-top: 10%;">
-                            <button class="button" style="background-color:#fb641b;margin-left: 30px" id="{{key}}button{{value.productId}}" ng-click="addToDelivery(key,value,$index)">
+                            <button class="button"
+                                    style="background-color:#fb641b;margin-left: 10px" id="{{key}}button{{value.productId}}"
+                                    ng-click="addToDelivery(key,value,$index)">
                                 ADD
                             </button>
                         </div>

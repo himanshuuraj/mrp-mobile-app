@@ -175,6 +175,8 @@ angular.module('starter.controllers', ['ngCordova'])
             $rootScope.$broadcast("cached",{});
         };
 
+        var updateCart = loginCred.updateCart;
+
         $scope.validateIfLatestPrice = function(dbRef){
             var shopArray = $scope.shopArray;
             $scope.flagForPriceModified=false;
@@ -465,10 +467,38 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
                          "You can track your order from the orders page","Yay!!");
-                window.localStorage.removeItem("cartArray");
                 window.localStorage.removeItem("cartInfo");
+                removeOrderedFromCartArray();
+                updateCart();
                 window.location.hash = "#/app/search";
-            }).catch(function(e){ console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")})
+            }).catch(function(e){
+                console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")
+            });
+
+            function removeOrderedFromCartArray(){
+                var cartArray1 = JSON.parse(window.localStorage.cartArray);
+                var length = cartArray.shopDetail.length;
+                for(var index = 0; index < length; index++){
+                    var shopDetail = cartArray.shopDetail[index];
+                    var tin = shopDetail.tin;
+                    for(var itemkey in shopDetail.items) {
+                        for(var itemkey2 in shopDetail.items[itemkey]) {
+                            var array = cartArray1[tin];
+                            for (var index1 = 0; index1 < array.length; index1++) {
+                                if (array[index1].productId == itemkey2){
+                                    array.splice(index1,1);
+                                    break;
+                                }
+                            }
+                            if(array.length == 0)
+                                delete cartArray1[tin];
+                            else
+                                cartArray1[tin] = array;
+                        }
+                    }
+                }
+                window.localStorage.cartArray = JSON.stringify(cartArray1);
+            }
         };
         $scope.showConfirmPopUp = function() {
             var myPopup = $ionicPopup.show({
@@ -1952,7 +1982,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.removeItemFromDeliverable(key,value);
                 buttonElement.innerHTML = "ADD";
                 buttonElement.style.backgroundColor ="#fb641b";
-                buttonElement.style.marginLeft = "25%";
+                buttonElement.style.marginLeft = "10px";
             }
         }
         $scope.checkoutOrder = function(){
@@ -2027,6 +2057,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 x["address"] = shopInfo[key].address;
                 x["name"] = shopInfo[key].name;
+                x["tin"] = key;
                 x["areaId"] = shopInfo[key].areaId;
                 x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
                 x["totalWeight"] = Number(totalWeight);
@@ -2080,32 +2111,29 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
 
-            for (var index in $scope.shopArrayOrderDetail){
-                var shop = $scope.shopArrayOrderDetail[index];
-                for(var item in shop.items){
-                    var itemObj = shop.items[item];
-                    for( var product in itemObj){
-                        var productObj = itemObj[product];
-                        //console.log(productObj);
-                        productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
-                        productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
-                        productObj['price'] = loginCred.toCommaFormat(productObj['price']);
-                        //console.log(productObj);
+                for (var index in $scope.shopArrayOrderDetail){
+                    var shop = $scope.shopArrayOrderDetail[index];
+                    for(var item in shop.items){
+                        var itemObj = shop.items[item];
+                        for( var product in itemObj){
+                            var productObj = itemObj[product];
+                            //console.log(productObj);
+                            productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
+                            productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
+                            productObj['price'] = loginCred.toCommaFormat(productObj['price']);
+                            //console.log(productObj);
+
+                        }
 
                     }
-
+                    shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
+                    shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
+                    shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
                 }
-                shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
-                shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
-                shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
-            }
 
-            $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
-            $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
-            $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
-
-
-
+                $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
+                $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
+                $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
                 $scope.$apply();
             });
 
@@ -2144,10 +2172,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     "August", "September", "October",
                     "November", "December"
                 ];
-
-                        var d = new Date();
-
-
+                var d = new Date();
                 var promise = ordersRef.update(orderObject);
                 promise.then(function(data){
                     var singleMsg = {
@@ -2222,7 +2247,7 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         $scope.getOrderStatus = function(orderId) {
-            var a = { orderId : $scope.orderStatusArray[orderId]}
+            var a = { orderId : $scope.orderStatusArray[orderId]};
             return a;
         };
     })
