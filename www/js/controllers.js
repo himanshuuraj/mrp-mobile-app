@@ -287,7 +287,7 @@ angular.module('starter.controllers', ['ngCordova'])
             document.getElementById('discount_amount').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.totaldiscountedPrice);
             document.getElementById('gross_price').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.grossPrice);
             document.getElementById('grand_total').innerHTML = "&#8377;"+loginCred.toCommaFormat($scope.cartArray.totalPrice);
-
+            window.localStorage.cartInfo = JSON.stringify($scope.cartArray);
         };
 
         $scope.applyDiscount = function(){
@@ -373,7 +373,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
 
                 shop['items']['rice'] = riceObject;
-                                shop['items']['ravva'] = ravvaObject;
+                    shop['items']['ravva'] = ravvaObject;
                 shop['items']['broken'] = brokenObject;
 
                 shop['shopDiscountAmount'] = shopDiscountAmount;
@@ -468,6 +468,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
                          "You can track your order from the orders page","Yay!!");
                 window.localStorage.removeItem("cartInfo");
+                sendSMS();
                 removeOrderedFromCartArray();
                 updateCart();
                 window.location.hash = "#/app/search";
@@ -483,10 +484,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     var tin = shopDetail.tin;
                     var replacedTin = tin.replace(/\./g,'dot');
                     var replacedTin = replacedTin.replace(/\//g,'forwardslash');
-
                     var shopInfoRef = dbRef.child('shopInfo/' + replacedTin);
                     shopInfoRef.set(new Date().getTime());
-
                     for(var itemkey in shopDetail.items) {
                         for(var itemkey2 in shopDetail.items[itemkey]) {
                             var array = cartArray1[tin];
@@ -504,6 +503,34 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                 }
                 window.localStorage.cartArray = JSON.stringify(cartArray1);
+            }
+
+            var sendSMS  = function(){
+                var cartInfo = JSON.parse(window.localStorage.cartInfo);
+                var shopInfo = JSON.parse(window.localStorage.shopInfo);
+                cartInfo.shopDetail.forEach(function(shop,index){
+                    var text = "";
+                    var mobile = shopInfo[shop.tin].mobile;
+                    var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
+                    objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
+                    for(var key in objectOfAllItems){
+                        text += objectOfAllItems[key].name + " " + objectOfAllItems[key].weight;
+                        text += " quintals " + objectOfAllItems[key].discountedQuintalPrice ;
+                    }
+                    text += " Total Weight = " + shop.totalWeight + " Total Discount = " + shop.shopDiscountAmount ;
+                    text += "Total Amount = " + shop[totalShopPrice];
+                    var url = "";
+                    var obj = {};
+                    obj[mobile] = text;
+                    $http.post(url,obj).then(function(e){}).error(function(e){});
+                });
+
+            }
+            function jsonConcat(o1, o2) {
+                for (var key in o2) {
+                    o1[key] = o2[key];
+                }
+                return o1;
             }
         };
         $scope.showConfirmPopUp = function() {
@@ -1412,9 +1439,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.areas = foo;
                 $scope.$apply();
-                //console.log($scope.areas);
-
-            })
+            });
         }
 
         $scope.fillSignUpData = function(){

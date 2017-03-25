@@ -56,7 +56,7 @@
                     <div class="col">
                         <img src="{{getImageUrl(value.productId,value.itemType)}}" style="margin-top: 10px;height: 100px;max-width: 100%;"/>
                     </div>
-                    <div class="col-20" style="margin-left: 0;margin-top: -5px">
+                    <div class="col-20" style="margin-left: 0;margin-top: 3px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Quintals</span>
                         </div>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}quantity{{value.productId}}" ng-keyup="textInQuantity(key,this.value,$index);" ng-value="value.quantity"
-                                   style="text-align:center;width:50%;background-color: white;border:1px solid black;font-size: 14px;" placeholder="quantity"/>
+                                   style="text-align:center;width:60%;background-color: white;border:1px solid black;font-size: 14px;" placeholder="quantity"/>
 
                         </div>
                         <div class="row" style="padding-left:17px;" ng-click="minusQuantity(key,this.value,$index)">
@@ -78,7 +78,7 @@
                         </div>
 
                     </div>
-                    <div class="col-20" style="margin-bottom: 0;margin-top: -5px">
+                    <div class="col-20" style="margin-bottom: 0;margin-top: 3px">
                         <div class="row" style="margin-top: 0">
                             <span style="padding:0;font-weight: 200">Bags</span>
                         </div>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="row" style="padding-left:10px;">
                             <input type="number" id="{{key}}bag{{value.productId}}" ng-keyup="textInBag(key,this.value,$index);"  ng-value="value.bag"
-                                   style="text-align:center;width:50%;background-color: white;border:1px solid black;"/>
+                                   style="text-align:center;width:60%;background-color: white;border:1px solid black;"/>
 
                         </div>
                         <div class="row" style="padding-left:17px;" ng-click="minusBag(key,this.value,$index);">
