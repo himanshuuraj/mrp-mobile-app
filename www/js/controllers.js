@@ -467,10 +467,10 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
                          "You can track your order from the orders page","Yay!!");
-                window.localStorage.removeItem("cartInfo");
                 sendSMS();
                 removeOrderedFromCartArray();
                 updateCart();
+                window.localStorage.removeItem("cartInfo");
                 window.location.hash = "#/app/search";
             }).catch(function(e){
                 console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")
@@ -518,11 +518,11 @@ angular.module('starter.controllers', ['ngCordova'])
                         text += " quintals " + objectOfAllItems[key].discountedQuintalPrice ;
                     }
                     text += " Total Weight = " + shop.totalWeight + " Total Discount = " + shop.shopDiscountAmount ;
-                    text += "Total Amount = " + shop[totalShopPrice];
+                    text += "Total Amount = " + shop["totalShopPrice"];
                     var url = "";
                     var obj = {};
                     obj[mobile] = text;
-                    $http.post(url,obj).then(function(e){}).error(function(e){});
+                    //$http.post(url,obj).then(function(e){}).error(function(e){});
                 });
 
             }
@@ -1114,8 +1114,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.brokenPriceArray = productsList.broken;
                 $scope.ravvaPriceArray = productsList.ravva;
                 $scope.ricePriceArray = productsList.rice;
-
-                var tin  = window.localStorage.tin ;
+                var tin  = window.localStorage.tin;
+                if(!tin)
+                    return;
                 var x= window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
                 x[tin] = {'rice' : productsList.rice,
                     'ravva': productsList.ravva,
@@ -1142,7 +1143,7 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.shop = shop;
             earlySelectedShop["tin"] = $scope.shopDetail.tin;
             window.localStorage.shopName = $scope.shopDetail.name = shop.name;
-            window.localStorage.areaId = $scope.shopDetail.areaId=shop.areaId
+            window.localStorage.areaId = $scope.shopDetail.areaId = shop.areaId
             window.localStorage.tin = $scope.shopDetail.tin = shop.tin;
             shopInfo[shop.tin] = shop;
             window.localStorage.shopInfo = JSON.stringify(shopInfo);
@@ -1160,7 +1161,16 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.lorryArray = JSON.stringify($scope.lorryArray.sort());
             }).catch(function(data){
                console.log(data);
+               alert("Network Problem");
             });
+            try{
+                $timeout(function(){
+                    var x = document.getElementById($scope.selectedItem + "tab");
+                    if(x)
+                        x.className = "button btnSelected";
+                },100);
+
+            }catch(e){}
         };
 
         var deleteUI = function(){
@@ -1532,7 +1542,7 @@ angular.module('starter.controllers', ['ngCordova'])
         if(window.localStorage.userInfo)
             userInfo = JSON.parse(window.localStorage.userInfo);
         $scope.shopArray = userInfo.shops || [];  $scope.lastOrderedTimeForShop = {};
-        
+
         $scope.shopArray.forEach(function(shop) {
            
             var tin = shop.tin;
@@ -2122,6 +2132,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 x["areaId"] = shopInfo[key].areaId;
                 x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
                 x["totalWeight"] = Number(totalWeight);
+                x["mobile"] = shopInfo[key].mobile;
                 overAllPrice += totalShopPrice;
                 overAllWeight += totalWeight;
                 arr.push(x);
