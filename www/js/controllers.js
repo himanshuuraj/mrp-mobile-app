@@ -1335,7 +1335,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.authId = e.uid;
                 $scope.showUserInputField = true;
                 $scope.$apply();
-            }).catch(e => console.log(e))
+            }).catch(function(e){
+                alert("Network error");
+            });
 
         };
 
