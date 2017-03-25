@@ -508,6 +508,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var sendSMS  = function(){
                 var cartInfo = JSON.parse(window.localStorage.cartInfo);
                 var shopInfo = JSON.parse(window.localStorage.shopInfo);
+                var smsURL = window.localStorage.smsURL;
                 cartInfo.shopDetail.forEach(function(shop,index){
                     var text = "";
                     var mobile = shopInfo[shop.tin].mobile;
@@ -519,10 +520,27 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     text += " Total Weight = " + shop.totalWeight + " Total Discount = " + shop.shopDiscountAmount ;
                     text += "Total Amount = " + shop["totalShopPrice"];
-                    var url = "";
+                    var url = "https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS";
                     var obj = {};
-                    obj[mobile] = text;
-                    //$http.post(url,obj).then(function(e){}).error(function(e){});
+                    obj["9901250919"] = text;
+                    console.log('----' + smsURL);
+                   if(smsURL) {
+                       var config = {
+                           headers: {
+                               'Content-Type': 'application/json;charset=utf-8;',
+                               'Access-Control-Allow-Origin': '*'
+                           }
+                       };
+                       $http.post(url, obj, config)
+                           .success(function (data, status, headers, config) {
+                               alert("DONE");
+                               console.log("done ajax");
+                           })
+                           .error(function (data, status, header, config) {
+                               alert("ERROR");
+                               console.log("done ajax");
+                           });
+                   }
                 });
 
             }
@@ -559,6 +577,10 @@ angular.module('starter.controllers', ['ngCordova'])
             alert("User not activated. Please contact administrator");
             return;
         }
+        var smsURLRef = loginCred.dbRef.child('smsURL'); var smsURL = '';
+        smsURLRef.once('value', function(data) {
+            window.localStorage.smsURL = data.val();
+        });
         var earlySelectedTab = "rice";
         var uid = window.localStorage.uid;
         var existingShops;
