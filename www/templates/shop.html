@@ -43,6 +43,15 @@
                             {{value.trim()}}
                         </div>
                     </div>
+                    <div class="row" style="color:#e40e46">
+                        <div class="col" >
+                            Last ordered
+                        </div>
+                        <div class="col" style="width:50%;word-wrap: break-word;">
+                            {{getTimeSinceLastOrdered(shop)}}
+                        </div>
+                    </div>
+                
             </ion-item>
           </div>
         </ion-list>

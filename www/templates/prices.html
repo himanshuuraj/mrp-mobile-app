@@ -15,6 +15,10 @@
                         <span style="font-size: 20px;color: white;font-weight: 600">{{area}}</span></center>
                 <div ng-repeat="(itemType, items ) in product">
                     <div class="card" style="margin-top: 20px;padding-left: 5%;font-size: 16px;padding-top: 10px;background-color: #d4db2b">{{itemType}}</div>
+                     <div class="row">
+                            <div class="col-75" style="font-size: 14px;" ></div>
+                            <div class="col" >Per Quintal Price</div>
+                        </div>
                     <div ng-repeat="key in items">
                         <div class="row">
                             <div class="col-75" style="font-size: 14px;" >{{key.name}}</div>

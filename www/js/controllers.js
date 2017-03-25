@@ -481,6 +481,12 @@ angular.module('starter.controllers', ['ngCordova'])
                 for(var index = 0; index < length; index++){
                     var shopDetail = cartArray.shopDetail[index];
                     var tin = shopDetail.tin;
+                    var replacedTin = tin.replace(/\./g,'dot');
+                    var replacedTin = replacedTin.replace(/\//g,'forwardslash');
+
+                    var shopInfoRef = dbRef.child('shopInfo/' + replacedTin);
+                    shopInfoRef.set(new Date().getTime());
+
                     for(var itemkey in shopDetail.items) {
                         for(var itemkey2 in shopDetail.items[itemkey]) {
                             var array = cartArray1[tin];
@@ -1500,7 +1506,31 @@ angular.module('starter.controllers', ['ngCordova'])
         var userInfo = {};
         if(window.localStorage.userInfo)
             userInfo = JSON.parse(window.localStorage.userInfo);
-        $scope.shopArray = userInfo.shops || [];
+        $scope.shopArray = userInfo.shops || [];  $scope.lastOrderedTimeForShop = {};
+        
+        $scope.shopArray.forEach(function(shop) {
+           
+            var tin = shop.tin;
+            if(!tin)
+                return;
+            var replacedTin = tin.replace(/\./g,'dot');
+            var replacedTin = replacedTin.replace(/\//g,'forwardslash');
+            var dbRef = loginCred.dbRef.child('shopInfo/' + replacedTin);
+            dbRef.once('value', function(data){
+                var currentTime = new Date().getTime();
+                if(!data.val())
+                    $scope.lastOrderedTimeForShop[tin]= "N/A";
+                else {
+                var lastOrdered = data.val() ? data.val() : 0; 
+                var diff = currentTime - lastOrdered;     
+                var hours = Math.round(diff/(1000*3600));
+                var days = Math.floor(hours/24);
+                $scope.lastOrderedTimeForShop[tin]= days + " days " + hours + " hours ago" ;
+                }
+            } );
+        
+        });
+        
         $scope.showShopInput = false;
         var showPopUp = loginCred.showPopup;
         var userId;
@@ -1511,6 +1541,10 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.showNewShopEdit = function () {
             $scope.showShopInput = true;
         };
+        
+        $scope.getTimeSinceLastOrdered = function(shop){
+            return $scope.lastOrderedTimeForShop[shop.tin];
+        }
 
         $scope.showConfirmRemoveShop = function(tin) {
             var myPopup = $ionicPopup.show({
