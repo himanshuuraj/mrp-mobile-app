@@ -522,10 +522,10 @@ angular.module('starter.controllers', ['ngCordova'])
                     text += "Total Amount = " + shop["totalShopPrice"];
                     var url = "https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS";
                     var obj = {};
-                    obj["9901250919"] = text;
+                    obj[mobile] = text;
                     console.log('----' + smsURL);
                    if(smsURL) {
-                       var config = {
+                       /*var config = {
                            headers: {
                                'Content-Type': 'application/json;charset=utf-8;',
                                'Access-Control-Allow-Origin': '*'
@@ -539,7 +539,20 @@ angular.module('starter.controllers', ['ngCordova'])
                            .error(function (data, status, header, config) {
                                alert("ERROR");
                                console.log("done ajax");
-                           });
+                           });*/
+
+
+                       var http = new XMLHttpRequest();
+                       var url = 'https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS';
+                       /*var params = '{"7022623975,9066552096":"Final test after light off"}';*/
+                       http.open("POST", url, true);
+                       http.setRequestHeader('Content-type', 'application/json');
+                       http.onreadystatechange = function() {//Call a function when the state changes.
+                           if(http.readyState == 4 && http.status == 200) {
+                               alert(http.responseText);
+                           }
+                       }
+                       http.send(obj);
                    }
                 });
 
