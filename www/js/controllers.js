@@ -515,47 +515,60 @@ angular.module('starter.controllers', ['ngCordova'])
                     var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
                     objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
                     for(var key in objectOfAllItems){
-                        text += objectOfAllItems[key].name + " " + objectOfAllItems[key].weight;
-                        text += " quintals " + objectOfAllItems[key].discountedQuintalPrice ;
+                        text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
+                        text += " quintals - " + objectOfAllItems[key].discountedQuintalPrice + "; ";
                     }
-                    text += " Total Weight = " + shop.totalWeight + " Total Discount = " + shop.shopDiscountAmount ;
-                    text += "Total Amount = " + shop["totalShopPrice"];
+                    text += " Total Weight = " + shop.totalWeight +"Quintals;"+ "; Total Discount = " + shop.shopDiscountAmount ;
+                    text += ";  Total Amount = " + shop["totalShopPrice"];
                     var url = "https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS";
                     var obj = {};
                     obj[mobile] = text;
-                    console.log('----' + smsURL);
-                   if(smsURL) {
-                       /*var config = {
-                           headers: {
-                               'Content-Type': 'application/json;charset=utf-8;',
-                               'Access-Control-Allow-Origin': '*'
-                           }
-                       };
-                       $http.post(url, obj, config)
-                           .success(function (data, status, headers, config) {
-                               alert("DONE");
-                               console.log("done ajax");
-                           })
-                           .error(function (data, status, header, config) {
-                               alert("ERROR");
-                               console.log("done ajax");
-                           });*/
-
-
-                       var http = new XMLHttpRequest();
-                       var url = 'https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS';
-                       /*var params = '{"7022623975,9066552096":"Final test after light off"}';*/
-                       http.open("POST", url, true);
-                       http.setRequestHeader('Content-type', 'application/json');
-                       http.onreadystatechange = function() {//Call a function when the state changes.
-                           if(http.readyState == 4 && http.status == 200) {
-                               alert(http.responseText);
-                           }
-                       }
-                       http.send(obj);
+                   if(smsURL) {                      
+                       makeCorsRequest(smsURL,obj);                      
                    }
                 });
 
+            }
+            
+            
+            // Create the XHR object.
+            function createCORSRequest(method, url) {
+              var xhr = new XMLHttpRequest();
+              if ("withCredentials" in xhr) {
+                // XHR for Chrome/Firefox/Opera/Safari.
+                xhr.open(method, url, true);
+              } else if (typeof XDomainRequest != "undefined") {
+                // XDomainRequest for IE.
+                xhr = new XDomainRequest();
+                xhr.open(method, url);
+              } else {
+                // CORS not supported.
+                xhr = null;
+              }
+              xhr.setRequestHeader("Content-Type", "application/json");
+
+              return xhr;
+            }
+
+          
+            // Make the actual CORS request.
+            function makeCorsRequest(smsURL,object) {
+              var xhr = createCORSRequest('POST', smsURL);
+              if (!xhr) {
+                return;
+              }
+
+//              // Response handlers.
+//              xhr.onload = function() {
+//                var text = xhr.responseText;           
+//              };
+//
+//              xhr.onerror = function() {
+//              };
+
+              var params = JSON.stringify(object);
+              xhr.send(params);
+              
             }
             function jsonConcat(o1, o2) {
                 for (var key in o2) {
@@ -803,7 +816,7 @@ angular.module('starter.controllers', ['ngCordova'])
             });
         };
 
-        if(!$scope.isAgent){
+        if(!$scope.isAgent && userInfo && userInfo.shops && userInfo.shops.length >0){           
             window.localStorage.shopName = $scope.shopDetail.name = userInfo.shops[0].name;
             window.localStorage.tin = $scope.shopDetail.tin = userInfo.shops[0].tin;
             $scope.cartArray[$scope.shopDetail.tin] = [];
