@@ -510,7 +510,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 var shopInfo = JSON.parse(window.localStorage.shopInfo);
                 var smsURL = window.localStorage.smsURL;
                 cartInfo.shopDetail.forEach(function(shop,index){
-                    var text = "Namaste ! \n Your order has been successfully placed. \n";
+                    var userName = shop.proprietorName || "";
+                    var text = "Namaste " + userName + "! \n Your order has been successfully placed. \n";
                     var mobile = shopInfo[shop.tin].mobile;
                     var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
                     objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
@@ -520,8 +521,8 @@ angular.module('starter.controllers', ['ngCordova'])
                         text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
                     }
                     text += " Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
-                    text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thankyou! \n Team Lalitha";
-                    var url = "https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS";
+                    text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
+                    console.log(text);
                     var obj = {};
                     obj[mobile] = text;
                    if(smsURL) {                      
@@ -765,7 +766,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
             $scope.getItemsPrice();
             if(window.localStorage.shopName){
-                $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin};
+                $scope.shopDetail = {name : window.localStorage.shopName,tin : window.localStorage.tin
+                            };
             }
             if(window.localStorage.cartArray){
                 $scope.cartArray = JSON.parse(window.localStorage.cartArray);
@@ -2178,6 +2180,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 x["address"] = shopInfo[key].address;
                 x["name"] = shopInfo[key].name;
                 x["tin"] = key;
+                x["proprietorName"] = shopInfo[key].proprietor_name;
                 x["areaId"] = shopInfo[key].areaId;
                 x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
                 x["totalWeight"] = Number(totalWeight);
