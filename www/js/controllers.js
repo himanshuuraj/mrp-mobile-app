@@ -510,16 +510,17 @@ angular.module('starter.controllers', ['ngCordova'])
                 var shopInfo = JSON.parse(window.localStorage.shopInfo);
                 var smsURL = window.localStorage.smsURL;
                 cartInfo.shopDetail.forEach(function(shop,index){
-                    var text = "";
+                    var text = "Namaste ! \n Your order has been successfully placed. \n";
                     var mobile = shopInfo[shop.tin].mobile;
                     var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
                     objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
                     for(var key in objectOfAllItems){
                         text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
-                        text += " quintals - " + objectOfAllItems[key].discountedQuintalPrice + "; ";
+                        text += " quintals - Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
+                        text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
                     }
-                    text += " Total Weight = " + shop.totalWeight +"Quintals;"+ "; Total Discount = " + shop.shopDiscountAmount ;
-                    text += ";  Total Amount = " + shop["totalShopPrice"];
+                    text += " Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
+                    text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thankyou! \n Team Lalitha";
                     var url = "https://us-central1-mrpsms-d07b1.cloudfunctions.net/sendSMS";
                     var obj = {};
                     obj[mobile] = text;
