@@ -522,7 +522,6 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     text += " Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
                     text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
-                    console.log(text);
                     var obj = {};
                     obj[mobile] = text;
                    if(smsURL) {                      
