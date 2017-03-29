@@ -443,13 +443,14 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var ordersRef =  dbRef.child('orders/' + orderId);
             var orderMsg = document.getElementById("specialMsg").value || '';
+            var now = (new Date().getTime()) * -1;
 
             var newOrder = {
                 uid : window.localStorage.uid,
                 time :  now.getTime(),
                 userName : userInfo.name,
                 status : "received",
-                priority : (new Date).getTime(),
+                priority : now,
                 orderMsg : orderMsg,
                 cart :  cartArray
             };
@@ -510,18 +511,20 @@ angular.module('starter.controllers', ['ngCordova'])
                 var shopInfo = JSON.parse(window.localStorage.shopInfo);
                 var smsURL = window.localStorage.smsURL;
                 cartInfo.shopDetail.forEach(function(shop,index){
-                    var userName = shop.proprietorName || "";
-                    var text = "Namaste " + userName + "! \n Your order has been successfully placed. \n";
+                    var shopName = shop.name || "";
+                    var text = "Dear " + shopName + "! \nYour order has been  placed successfully.\n";
                     var mobile = shopInfo[shop.tin].mobile;
                     var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
                     objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
                     for(var key in objectOfAllItems){
                         text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
-                        text += " quintals - Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
-                        text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
+                        text += " quintals\n"
+                                //- Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
+                       // text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
+                       text += "We will deliver your goods as soon as possible.\n Thank-you!"
                     }
-                    text += " Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
-                    text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
+                  //  text += "Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
+                  //  text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
                     var obj = {};
                     obj[mobile] = text;
                    if(smsURL) {                      
@@ -1539,7 +1542,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             }
 
-            var foo = {};
+            var foo = {}; var now = (new Date().getTime()) * -1;
             foo = {
                 email : $scope.userData.username,
                 active:false,
@@ -1548,6 +1551,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 isAgent : $scope.signUpData.isAgent,
                 address : $scope.signUpData.address,
                 authId : authId,
+                priority : now,
                 shops : shops
             };
             if($scope.signUpData.isAgent){
