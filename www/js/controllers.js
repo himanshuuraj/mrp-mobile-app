@@ -512,16 +512,17 @@ angular.module('starter.controllers', ['ngCordova'])
                 var smsURL = window.localStorage.smsURL;
                 cartInfo.shopDetail.forEach(function(shop,index){
                     var shopName = shop.name || "";
-                    var text = "Dear " + shopName + "! \nYour order has been  placed successfully.\n";
+                    var text = "Dear " + shopName + "! \nYour order has been  placed successfully.";
                     var mobile = shopInfo[shop.tin].mobile;
                     var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
                     objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
-                    for(var key in objectOfAllItems){
-                        text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
-                        text += " quintals\n"
-                                //- Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
-                       // text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
-                    }
+                    text += "Total Weight = " + shop.totalWeight +" Quintals\n";
+//                    for(var key in objectOfAllItems){
+//                        text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
+//                        text += " quintals\n"
+//                                //- Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
+//                       // text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
+//                    }
                     text += "We will deliver your goods as soon as possible.\n Thank-you!";
                   //  text += "Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
                   //  text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
