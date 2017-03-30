@@ -26,8 +26,7 @@
                                 STATUS : {{value.status}}
                             </div>
                             <div class="col">
-                                <i class="icon ion-close-round" ng-click="showDeletePopUp(order)" style="color:red;font-size: 20px;margin-right: 20px;float: right"></i>
-                                <i class="icon ion-eye" ng-click="showOrder(order)" style="font-size: 20px;"></i>
+                                <i class="icon ion-eye" ng-click="showOrder(order)" style="font-size: 22px;float:right;margin-right: 8px"></i>
                             </div>
                         </div>
                         <div id="{{order}}OrderEye" ng-show="isViewDetailClicked(order)">
@@ -125,6 +124,14 @@
                                                             <b>GRAND TOTAL</b>
                                                             <span id="grand_total" style="float:right;">&#8377;{{cartArrayOrderDetail.totalPrice}}</span>
                                                         </span>
+                                </p>
+                            </div>
+                            <div class="button button-bar row" style="padding-left:2%;width: 25%;height: 10px;background-color: #af2020;margin-left: 72%"
+                                 ng-click="showDeletePopUp(order)">                          
+                                <p style="width: 100%;color: white;margin-top: 2px">
+                                    <span style="color:white">
+                                        <b>CANCEL</b>
+                                </span>
                                 </p>
                             </div>
                         </div>

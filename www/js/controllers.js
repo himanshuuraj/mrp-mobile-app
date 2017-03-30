@@ -2266,7 +2266,50 @@ angular.module('starter.controllers', ['ngCordova'])
             });
 
         }
+        
+        
 
+        $scope.fillCartArrayForReOrder = function(reOrderId) {
+            var shopDetail = $scope.cartArrayOrderDetail.shopDetail;
+            var existingcartArray = JSON.parse(window.localStorage.cartArray);
+            var shopObjectsGroup = {};
+            for(var index  in shopDetail) {
+                var tin = shopDetail[index].tin;
+                var objectsArray = [];
+                for(var item in shopDetail[index].items){
+                    var itemTypeValue = item;
+                    var groupOfitemObjects = shopDetail[index].items[item];
+                    for (var key in groupOfitemObjects) {
+                        var itemObject = groupOfitemObjects[key];
+                        var bagValue = itemObject['bags'];
+                        var masterWeightValueNumber = Number(itemObject['weight'])*100 / Number(bagValue);
+                        var masterWeightValue = masterWeightValueNumber + 'KG';
+                        var nameValue = itemObject['name'];
+                        var priceValue = loginCred.toNumberFormat(itemObject['price']);
+                        var productIdValue = key;
+                        var quantityValue = itemObject['weight'];
+                        
+                        var productObj = {
+                            'bag' : bagValue,
+                            'itemType' : itemTypeValue,
+                            'master_weight' : masterWeightValue,
+                            'name' : nameValue,
+                            'price' : priceValue,
+                            'productId' : productIdValue,
+                            'quantity' : quantityValue
+                            
+                        };
+                        
+                        objectsArray.push(productObj);
+                                                
+                    }                                        
+                }
+                 
+                    shopObjectsGroup[tin]= objectsArray;
+            }           
+            console.log(shopObjectsGroup);
+        }
+        
         $scope.showDeletePopUp = function(orderId) {
             var myPopup = $ionicPopup.show({
                 template: 'Are you sure you want to cancel the order ?',
