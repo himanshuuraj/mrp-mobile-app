@@ -447,7 +447,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var newOrder = {
                 uid : window.localStorage.uid,
-                time :  now.getTime(),
+                time :  now,
                 userName : userInfo.name,
                 status : "received",
                 priority : now,
@@ -521,8 +521,8 @@ angular.module('starter.controllers', ['ngCordova'])
                         text += " quintals\n"
                                 //- Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
                        // text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
-                       text += "We will deliver your goods as soon as possible.\n Thank-you!"
                     }
+                    text += "We will deliver your goods as soon as possible.\n Thank-you!";
                   //  text += "Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
                   //  text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
                     var obj = {};
