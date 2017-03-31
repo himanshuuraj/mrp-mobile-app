@@ -443,14 +443,14 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var ordersRef =  dbRef.child('orders/' + orderId);
             var orderMsg = document.getElementById("specialMsg").value || '';
-            var now = (new Date().getTime()) * -1;
+            var now = (new Date().getTime());
 
             var newOrder = {
                 uid : window.localStorage.uid,
-                time :  now,
+                time : now,
                 userName : userInfo.name,
                 status : "received",
-                priority : now,
+                priority : (now * -1),
                 orderMsg : orderMsg,
                 cart :  cartArray
             };
