@@ -1048,62 +1048,65 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.ravvaObject = productsList.ravva;
                 $scope.riceObject = productsList.rice;
                 
-                var arrayForSort = [];
+                var riceItemsPriorityArray = [];
                 for(var productId in $scope.riceObject) {
                     var prty = $scope.riceObject[productId]['priority'] || 0;
-                    arrayForSort.push({
+                    riceItemsPriorityArray.push({
                         'key': productId,
                         'value' : prty
                     });
                 }
-                arrayForSort.sort(function(a,b){
+                riceItemsPriorityArray.sort(function(a,b){
                     return a.value - b.value; 
                 })
                 $scope.riceArray = [];
                 
-                arrayForSort.forEach(function(entry){
+                riceItemsPriorityArray.forEach(function(entry){
                     var ob={};
                     ob[entry.key]=$scope.riceObject[entry.key];
                     $scope.riceArray.push(ob);
                 })
-                //broken
-                 var arrayForSort = [];
-                for(var productId in $scope.brokenObject) {
-                    var prty = $scope.brokenObject[productId]['priority'] || 0;
-                    arrayForSort.push({
-                        'key': productId,
-                        'value' : prty
-                    });
-                }
-                arrayForSort.sort(function(a,b){
-                    return a.value - b.value; 
-                })
-                $scope.brokenArray = [];
-                
-                arrayForSort.forEach(function(entry){
-                    var ob={};
-                    ob[entry.key]=$scope.brokenObject[entry.key];
-                    $scope.brokenArray.push(ob);
-                })
+                window.localStorage.riceItemsPriorityArray = JSON.stringify(riceItemsPriorityArray)
                 //ravva
-                 var arrayForSort = [];
+                 var ravvaItemsPriorityArray = [];
                 for(var productId in $scope.ravvaObject) {
                     var prty = $scope.ravvaObject[productId]['priority'] || 0;
-                    arrayForSort.push({
+                    ravvaItemsPriorityArray.push({
                         'key': productId,
                         'value' : prty
                     });
                 }
-                arrayForSort.sort(function(a,b){
+                ravvaItemsPriorityArray.sort(function(a,b){
                     return a.value - b.value; 
                 })
                 $scope.ravvaArray = [];
                 
-                arrayForSort.forEach(function(entry){
+                ravvaItemsPriorityArray.forEach(function(entry){
                     var ob={};
                     ob[entry.key]=$scope.ravvaObject[entry.key];
                     $scope.ravvaArray.push(ob);
+                })
+                window.localStorage.ravvaItemsPriorityArray = JSON.stringify(ravvaItemsPriorityArray)
+                //broken
+                 var brokenItemsPriorityArray = [];
+                for(var productId in $scope.brokenObject) {
+                    var prty = $scope.brokenObject[productId]['priority'] || 0;
+                    brokenItemsPriorityArray.push({
+                        'key': productId,
+                        'value' : prty
+                    });
+                }
+                brokenItemsPriorityArray.sort(function(a,b){
+                    return a.value - b.value; 
+                })
+                $scope.brokenItemsArray = [];
+                
+                brokenItemsPriorityArray.forEach(function(entry){
+                    var ob={};
+                    ob[entry.key]=$scope.brokenObject[entry.key];
+                    $scope.brokenItemsArray.push(ob);
                 });
+                window.localStorage.brokenItemsPriorityArray = JSON.stringify(brokenItemsPriorityArray)
                 if(!$scope.$$phase) {
                     $scope.$apply();
                 }
@@ -2452,6 +2455,11 @@ angular.module('starter.controllers', ['ngCordova'])
                   }
 
                  $scope.pricesForAreas ={};
+                 var ricePriorityArray = JSON.parse(window.localStorage.riceItemsPriorityArray);
+                var ravvaPriorityArray = JSON.parse(window.localStorage.ravvaItemsPriorityArray);
+
+                 var brokenPriorityArray = JSON.parse(window.localStorage.brokenItemsPriorityArray);
+
              for(j=0;j<areas.length;j++){
 
                 (function(j){
@@ -2466,43 +2474,49 @@ angular.module('starter.controllers', ['ngCordova'])
                     var bar=[]; var userType = 'Agent';
                     if(!window.localStorage.isAgent)
                         userType='Outlet';
-                    for(product in riceArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
+                   ricePriorityArray.forEach( function(object) {
+                        var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
+                            displayNameOfProduct = object['key'];
 
+                                    if( ! riceArray[object['key']] )
+                                            return;
                           var foo={
                               name:displayNameOfProduct,
-                              price:riceArray[product][userType]
+                              price:riceArray[object['key']][userType]
                           };
                           bar.push(foo);
-                    }
+                    })
                     foobar['Rice']= bar;
                                        var bar=[]
 
-                    for(product in ravvaArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
+                    ravvaPriorityArray.forEach( function(object) {
+                        var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
-                           var foo={
+                            displayNameOfProduct = object['key'];
+                            if( ! ravvaArray[object['key']] )
+                                            return;
+                          var foo={
                               name:displayNameOfProduct,
-                              price:ravvaArray[product][userType]
+                              price:ravvaArray[object['key']][userType]
                           };
                           bar.push(foo);
-                    }
+                    })
                     foobar['Ravva']= bar;
                                        var bar=[]
 
-                    for(product in brokenArray){
-                        var displayNameOfProduct = $scope.intVsDisp[product];
+                    brokenPriorityArray.forEach( function(object) {
+                        var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
-                            displayNameOfProduct = product;
+                            displayNameOfProduct = object['key'];
+                           if( ! brokenArray[object['key']] )
+                                            return;
                           var foo={
                               name:displayNameOfProduct,
-                              price:brokenArray[product][userType]
+                              price:brokenArray[object['key']][userType]
                           };
                           bar.push(foo);
-                    }
+                    })
                     foobar['Broken']= bar;
 
                      $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
