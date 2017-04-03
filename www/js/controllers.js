@@ -2479,7 +2479,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
 
-                                    if( ! riceArray[object['key']] )
+                        if( (!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType]=="" ))
                                             return;
                           var foo={
                               name:displayNameOfProduct,
@@ -2494,7 +2494,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
-                            if( ! ravvaArray[object['key']] )
+                            if( ((!ravvaArray[object['key']]) || (!ravvaArray[object['key']][userType]) || (ravvaArray[object['key']][userType]=="" )) )
                                             return;
                           var foo={
                               name:displayNameOfProduct,
@@ -2509,7 +2509,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
-                           if( ! brokenArray[object['key']] )
+                        if(((!brokenArray[object['key']]) || (!brokenArray[object['key']][userType]) || (brokenArray[object['key']][userType]=="" )))
                                             return;
                           var foo={
                               name:displayNameOfProduct,
