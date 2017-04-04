@@ -1618,6 +1618,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 var diff = currentTime - lastOrdered;     
                 var hours = Math.round(diff/(1000*3600));
                 var days = Math.floor(hours/24);
+                hours = hours - (days*24);
                 $scope.lastOrderedTimeForShop[tin]= days + " days " + hours + " hours ago" ;
                 }
             } );
