@@ -1636,6 +1636,14 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.showShopInput = true;
         };
         
+        $scope.callShop = function(shop) {
+           return "+91"+shop.mobile;
+        }
+
+
+
+
+        
         $scope.getTimeSinceLastOrdered = function(shop){
             return $scope.lastOrderedTimeForShop[shop.tin];
         }
