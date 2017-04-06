@@ -1637,7 +1637,7 @@ angular.module('starter.controllers', ['ngCordova'])
         };
         
         $scope.callShop = function(shop) {
-           return "+91"+shop.mobile;
+           return "tel:+91"+shop.mobile;
         }
 
 
