@@ -352,7 +352,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 
 
                 //simple and quick fix - dont calculate discounts for subagents
-                if(window.localStorage.userRole == 'subagent')
+                if(window.localStorage.superAgentMobileNum)
                     ricediscount=0, ravvadiscount=0,brokendiscount=0
                     
                
