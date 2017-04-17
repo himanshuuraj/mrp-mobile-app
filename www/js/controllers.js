@@ -539,6 +539,8 @@ angular.module('starter.controllers', ['ngCordova'])
             }
 
             var sendSMS  = function(){
+                var userInfo=JSON.parse(window.localStorage.userInfo);
+                if(!userInfo.superAgentMobileNum) {   
                 var cartInfo = JSON.parse(window.localStorage.cartInfo);
                 var shopInfo = JSON.parse(window.localStorage.shopInfo);
                 var smsURL = window.localStorage.smsURL;
@@ -564,6 +566,7 @@ angular.module('starter.controllers', ['ngCordova'])
                        makeCorsRequest(smsURL,obj);                      
                    }
                 });
+            }
 
             }
             
@@ -1543,7 +1546,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.fillSignUpData = function(){
             var authId = window.localStorage.authId;
-
             var shops = [];
             if(!validateField())
                 return;
@@ -1577,9 +1579,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 }];
 
             }
-
+            
             var foo = {}; var now = (new Date().getTime()) * -1;
-            foo = {
+             foo = {
                 email : $scope.userData.username,
                 active:false,
                 name : $scope.signUpData.name,
@@ -1590,14 +1592,23 @@ angular.module('starter.controllers', ['ngCordova'])
                 priority : now,
                 shops : shops
             };
-            if($scope.signUpData.isAgent){
-                foo.shops = [];
-            }
-            
-            if($scope.signUpData.superAgentMobile) {
+
+             if($scope.signUpData.superAgentMobile) {
                 foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
+                var superAgentShopsRef=dbRef.child('users/'+ $scope.signUpData.superAgentMobile + '/shops');
+                superAgentShopsRef.once('value', function(shopData){
+                   var allshops=shopData.val();
+                   foo['shops'] = allshops;
+                    createUser(foo);
+                })
+            }else{
+                createUser(foo);
             }
 
+        };
+        
+        var createUser = function(foo){
+            var authId = window.localStorage.authId;
             var uid = $scope.signUpData.mobile
             var authIdMobileMapRef = dbRef.child('authMobileMap/' + authId);
             var promiseFromAuthMobile = authIdMobileMapRef.set(uid);
@@ -1624,9 +1635,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     window.localStorage.superAgentMobileNum=superAgentMobileNum;
                 }).catch(e => showPopUp("Could not update super agent information"));
             }
-            
-
-        };
+        }
 
         $scope.moveToLoginScreen = function(){
             $scope.showUserInputField = true;
@@ -1945,15 +1954,18 @@ angular.module('starter.controllers', ['ngCordova'])
             if(window.localStorage.cartArray)
                 temp = JSON.parse(window.localStorage.cartArray);
             
+            $scope.cartArray = temp || [];                 
+
             var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid + '/suborders');
             subAgentOrdersRef.on('value', function(data){
                 $scope.suborders= data.val();
-                 $scope.cartArray = temp || [];
-                 $timeout(function () {
-                    showInitialPrice();
-                 },0);
-                $rootScope.$broadcast("cached",{});
+                $scope.$apply();
             });
+            
+            $timeout(function () {
+                    showInitialPrice();
+            },1);
+            $rootScope.$broadcast("cached",{});
             
            
         };
