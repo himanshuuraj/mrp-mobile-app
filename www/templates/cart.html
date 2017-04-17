@@ -119,6 +119,19 @@
                 </div>
             </div>
         </div>
+        <div class="padding " style="background-color:white;position:relative;margin-top: 15px;" ng-repeat = "(key,data) in suborders">
+            <div class="col card">Order from {{key}}
+                <div class="row" style="margin-top: 10px" ng-repeat="(k,v) in data">
+                    <div class="col">{{k}}</div>
+                    <div class="col">
+                        <i  class="icon ion-checkmark-round" style="float:right" ng-click="moveSubAgentOrderToCart(key,k)"></i>
+                    </div>
+                    <div class="col">
+                        <i  class="icon icon ion-close-round" style="float: right"  ng-click="deleteSubAgentOrder(key,k)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </ion-content>
 
      <ion-footer-bar align-title="center" style="height: 70px;background-color:transparent;margin-bottom: 5px">

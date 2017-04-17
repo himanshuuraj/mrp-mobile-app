@@ -171,7 +171,8 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArray = JSON.parse(window.localStorage.cartInfo);
             $scope.shopArray=$scope.cartArray.shopDetail;
 
-            $scope.applyDiscount();
+                $scope.applyDiscount();
+            
             $rootScope.$broadcast("cached",{});
         };
 
@@ -255,8 +256,8 @@ angular.module('starter.controllers', ['ngCordova'])
             var calcDiscount = function() {
              
              console.log('------------ entered discount');
-             console.log($scope.cartArray);
-            $scope.cartArray["discount_amount"] = $scope.totaldiscountedPrice;
+             console.log($scope.cartArray);$scope.totaldiscountedPrice = $scope.totaldiscountedPrice || 0 ;
+             $scope.cartArray["discount_amount"] = $scope.totaldiscountedPrice;
             $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - $scope.totaldiscountedPrice;
 
             //convert to comma separated
@@ -317,7 +318,7 @@ angular.module('starter.controllers', ['ngCordova'])
                (function() {
                    
                    var ravvaObject = ravvaObjectOrg ? JSON.parse(JSON.stringify(ravvaObjectOrg)) : {};
-                    var riceObject = riceObjectOrg ? JSON.parse(JSON.stringify(riceObjectOrg)): {};
+                   var riceObject = riceObjectOrg ? JSON.parse(JSON.stringify(riceObjectOrg)): {};
                    var brokenObject = brokenObjectOrg ? JSON.parse(JSON.stringify(brokenObjectOrg)): {};
 
                 areasRef.once('value', function(data){
@@ -349,8 +350,11 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     });
                 
-                console.log(ricediscount + '======' + ravvadiscount + '=======' + brokendiscount);
 
+                //simple and quick fix - dont calculate discounts for subagents
+                if(window.localStorage.userRole == 'subagent')
+                    ricediscount=0, ravvadiscount=0,brokendiscount=0
+                    
                
                  for(var productId in riceObject){
                         riceObject[productId]['discountedQuintalPrice']=  riceObject[productId].quintalWeightPrice - ricediscount;
@@ -373,7 +377,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
 
                 shop['items']['rice'] = riceObject;
-                    shop['items']['ravva'] = ravvaObject;
+                shop['items']['ravva'] = ravvaObject;
                 shop['items']['broken'] = brokenObject;
 
                 shop['shopDiscountAmount'] = shopDiscountAmount;
@@ -444,6 +448,10 @@ angular.module('starter.controllers', ['ngCordova'])
             var ordersRef =  dbRef.child('orders/' + orderId);
             var orderMsg = document.getElementById("specialMsg").value || '';
             var now = (new Date().getTime());
+            
+            var isSubAgentOrder = false;
+            if(window.localStorage.superAgentMobileNum)
+                isSubAgentOrder=true;
 
             var newOrder = {
                 uid : window.localStorage.uid,
@@ -452,7 +460,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 status : "received",
                 priority : (now * -1),
                 orderMsg : orderMsg,
-                cart :  cartArray
+                cart :  cartArray,
+                isSubAgentOrder : isSubAgentOrder
             };
 
             var usersRef = dbRef.child('users/' + window.localStorage.uid );
@@ -468,14 +477,37 @@ angular.module('starter.controllers', ['ngCordova'])
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
                          "You can track your order from the orders page","Yay!!");
+                populateInfoToSuperAgent();
                 sendSMS();
                 removeOrderedFromCartArray();
                 updateCart();
                 window.localStorage.removeItem("cartInfo");
                 window.location.hash = "#/app/search";
             }).catch(function(e){
-                console.log(e);showPopUp('Some problem occured while submitting the order',"Sorry!!")
+                showPopUp('Some problem occured while submitting the order',"Sorry!!")
             });
+            
+            
+            //populate order for super agent
+           function populateInfoToSuperAgent(){
+               var userInfo=JSON.parse(window.localStorage.userInfo);
+                if(userInfo.superAgentMobileNum) {                   
+                    var superAgentsRef = dbRef.child('users/' + userInfo.superAgentMobileNum );
+                    superAgentsRef.once('value', function(data){
+                        var userValue = data.val();
+                        userValue["suborders"] = userValue["suborders"] || {};
+                        userValue["suborders"][window.localStorage.uid]=userValue["suborders"][window.localStorage.uid] || {};
+                        userValue["suborders"][window.localStorage.uid][orderId] = orderId;
+                        var prom = superAgentsRef.update(userValue);
+                        prom.then(function(w){
+                            
+                        }).catch(function(e){
+                            showPopUp('Some problem occured while submitting the order. Please resubmit the order',"OOPS!!")
+                        })
+                    });
+                }
+            }
+            
 
             function removeOrderedFromCartArray(){
                 var cartArray1 = JSON.parse(window.localStorage.cartArray);
@@ -1561,6 +1593,11 @@ angular.module('starter.controllers', ['ngCordova'])
             if($scope.signUpData.isAgent){
                 foo.shops = [];
             }
+            
+            if($scope.signUpData.superAgentMobile) {
+                foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
+            }
+
             var uid = $scope.signUpData.mobile
             var authIdMobileMapRef = dbRef.child('authMobileMap/' + authId);
             var promiseFromAuthMobile = authIdMobileMapRef.set(uid);
@@ -1577,6 +1614,17 @@ angular.module('starter.controllers', ['ngCordova'])
                 //window.sessionStorage.clear();
                 $scope.$apply();
             }).catch(e => showPopUp("Please try again"));
+            
+            if($scope.signUpData.superAgentMobile) {
+                var superAgentMobileNum = $scope.signUpData.superAgentMobile;
+                //what if user gives wrong mobile - then the whole data will be wiped out
+                var superAgentsRef = dbRef.child('users/' +  superAgentMobileNum + '/subagents/' + uid);
+                var promise = superAgentsRef.set(uid);
+                promise.then(function(e) {
+                    window.localStorage.superAgentMobileNum=superAgentMobileNum;
+                }).catch(e => showPopUp("Could not update super agent information"));
+            }
+            
 
         };
 
@@ -1896,13 +1944,125 @@ angular.module('starter.controllers', ['ngCordova'])
             var temp = [];
             if(window.localStorage.cartArray)
                 temp = JSON.parse(window.localStorage.cartArray);
-            $scope.cartArray = temp || [];
-            //console.log($scope.cartArray);
-            $timeout(function () {
-                showInitialPrice();
-            },0);
-            $rootScope.$broadcast("cached",{});
+            
+            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid + '/suborders');
+            subAgentOrdersRef.on('value', function(data){
+                $scope.suborders= data.val();
+                 $scope.cartArray = temp || [];
+                 $timeout(function () {
+                    showInitialPrice();
+                 },0);
+                $rootScope.$broadcast("cached",{});
+            });
+            
+           
         };
+        
+        $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
+            var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
+            ordersRef.once('value', function(order){
+                var shopDetailArray = order.val().cart.shopDetail;
+                shopDetailArray.forEach(function(eachShop){
+                    var tin= eachShop.tin;var areaId=eachShop.areaId;
+                    fetchPriceForEachShop(areaId,tin);
+                    var shopInfo=JSON.parse(window.localStorage.shopInfo);
+                    var x ={};
+                      x["address"] = eachShop.address;
+                      x["name"] = eachShop.name;
+                      x["tin"] = eachShop.tin;
+                    x["proprietorName"] = eachShop.proprietor_name;
+                    x["areaId"] = eachShop.areaId;
+                    x["mobile"] = eachShop.mobile;
+                    shopInfo[tin] = x;
+                    window.localStorage.shopInfo = JSON.stringify(shopInfo);
+        
+                    var itemsInEachShop = eachShop.items;
+                    var riceItems=itemsInEachShop.rice;
+                    var ravvaItems = itemsInEachShop.ravva;
+                    var brokenItems = itemsInEachShop.broken;
+                    for(var productId in riceItems){
+                        var riceProductObject = riceItems[productId];
+                        var ob = {};
+                        ob.itemType = "rice";
+                        ob.bag = riceProductObject.bags;
+                        ob.master_weight = Number(riceProductObject.weight)*100/Number(riceProductObject.bags)+'KG';
+                        ob.name=riceProductObject.name;
+                        ob.price=riceProductObject.price;
+                        ob.productId=productId;
+                        ob.quantity=riceProductObject.weight;
+                       var existingObjects = $scope.cartArray[tin] || [];
+                       existingObjects.push(ob);
+                       $scope.cartArray[tin] = existingObjects;
+                       
+                    }
+                    for(var productId in brokenItems){
+                        var brokenProductObject = brokenItems[productId];
+                        var ob = {};
+                        ob.itemType = "broken";
+                        ob.bag = brokenProductObject.bags;
+                        ob.master_weight = Number(brokenProductObject.weight)*100/Number(brokenProductObject.bags)+'KG';
+                        ob.name=brokenProductObject.name;
+                        ob.price=brokenProductObject.price;
+                        ob.productId=productId;
+                        ob.quantity=brokenProductObject.weight;
+                         var existingObjects = $scope.cartArray[tin] || [];
+                       existingObjects.push(ob);
+                       $scope.cartArray[tin] = existingObjects;       
+                    }
+                    for(var productId in ravvaItems){
+                        var ravvaProductObject = ravvaItems[productId];
+                        var ob = {};
+                        ob.itemType = "ravva";
+                        ob.bag = ravvaProductObject.bags;
+                        ob.master_weight = Number(ravvaProductObject.weight)*100/Number(ravvaProductObject.bags)+'KG';
+                        ob.name=ravvaProductObject.name;
+                        ob.price=ravvaProductObject.price;
+                        ob.productId=productId;
+                        ob.quantity=ravvaProductObject.weight;
+                        var existingObjects = $scope.cartArray[tin] || [];
+                       existingObjects.push(ob);
+                       $scope.cartArray[tin] = existingObjects;         
+                    }
+                    $scope.$apply();
+                    window.localStorage.cartArray=JSON.stringify($scope.cartArray);
+                     $timeout(function () {
+                        showInitialPrice();
+                    },1);
+                }                       
+                );
+                
+                
+            });
+//            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid + 
+//                    '/suborders/'+subAgentMobileNum + '/' +orderId);
+//            subAgentOrdersRef.remove();
+        };
+        
+        var fetchPriceForEachShop = function(areaId,tin){
+            var areaRef = dbRef.child('priceList/'+ areaId);
+            areaRef.on('value',function(areaSnapshot){
+                var productsList = areaSnapshot.val();
+                $scope.brokenPriceArray = productsList.broken;
+                $scope.ravvaPriceArray = productsList.ravva;
+                $scope.ricePriceArray = productsList.rice;               
+               
+                 var existingPriceArray = {};
+                if(window.localStorage.priceArray)
+                    var existingPriceArray = JSON.parse(window.localStorage.priceArray);
+                existingPriceArray[tin]={'rice' : productsList.rice,
+                    'ravva': productsList.ravva,
+                    'broken': productsList.broken
+                     } ;
+                window.localStorage.priceArray = JSON.stringify(existingPriceArray);
+            });
+        }
+        
+        $scope.deleteSubAgentOrder = function(subAgentMobileNum, orderId){
+            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid + 
+                    '/suborders/'+subAgentMobileNum + '/' +orderId);
+            subAgentOrdersRef.remove();
+            
+        }
 
         var showInitialPrice = function () {
             for(var key in  $scope.cartArray){
@@ -1912,7 +2072,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     var itemType = $scope.cartArray[key][index].itemType
                     var element = document.getElementById(key + "computedPrice" + pid);
                     var qty = document.getElementById(key + "quantity" + pid).value;
-                    var price = $scope.getPrice(pid, itemType, key) * qty;
+                    var price = $scope.getPrice(pid, itemType, key) * qty;                   
                     element.innerHTML = '₹​' + loginCred.toCommaFormat(price);
                 }
             }
@@ -2164,6 +2324,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
          var massageDataToSummaryCtrl=  function () {
               var cartInfo = {};
+              var shopInfo=JSON.parse(window.localStorage.shopInfo);
                 var arr = [];
             var grossPrice =0;
             var overAllPrice = 0;

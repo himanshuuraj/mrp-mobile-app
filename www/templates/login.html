@@ -1,6 +1,3 @@
-
-
-
 <ion-view hide-nav-bar="true" cache-view="false" ng-init="initOnSignup();"><!-- hide-nav-bar="true"-->
     
 
@@ -60,15 +57,16 @@
                         <input type="tel" class="animateInput" placeholder="Mobile Number" ng-model="signUpData.mobile" required="" style="width: 98%;">
                     </div>
                 </div>
-                <div class="row" style="margin-top: 1%">
+                 <div class="row" style="margin-top: 1%">
                     <div class="col">
-                        <span class="row"><strong>Are you an agent?</strong></span>
-                        <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)" style="width: 70%">is Agent</ion-checkbox>
+                        <input type="text" class="animateInput" placeholder="Address" ng-model="signUpData.address" required="" style="width: 98%;">
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1%">
-                    <div class="col">
-                        <input type="text" class="animateInput" placeholder="Address" ng-model="signUpData.address" required="" style="width: 98%;">
+                    <div class="col">                        
+                        <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)" style="width: 70%">
+                            <span class="row"><strong>Are you an agent?</strong></span>
+                        </ion-checkbox>
                     </div>
                 </div>
                 <div class="padding" ng-hide="isChecked">
@@ -155,9 +153,28 @@
                             </div>
                         </div>
                     </div>
+                </div> 
                 </div>
+                <div class="row" style="margin-top: 1%"  ng-show="isChecked">
+                    <div class="col">
+                        <ion-checkbox ng-model="isSubAgentChecked" style="width: 70%">
+                            <span class="row"><strong>Are you a sub-agent?</strong></span>
+                        </ion-checkbox>
+                    </div>
+                </div>
+            
+                <div >
+                    <div class="list list-inset" ng-show="isSubAgentChecked">                        
+                        <div class="row" style="margin-top: 1%">
+                            <div class="col">
+                                <input type="text" class="animateInput" placeholder="Agent Mobile Number" ng-model="signUpData.superAgentMobile" required="" style="width: 98%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <button class="button button-block button-positive"  ng-click="fillSignUpData()">Submit</button>
-            </div>
+            
         </div>
     </ion-content>
 
