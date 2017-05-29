@@ -1,4 +1,4 @@
-ngular.module('starter.controllers', ['ngCordova'])
+angular.module('starter.controllers', ['ngCordova'])
 
     .service('loginCred', function($ionicPopup) {
         var config = {
