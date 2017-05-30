@@ -1888,10 +1888,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.onInit = function () {
             var areasRef = loginCred.dbRef.child('areas');
-            if(window.localStorage.isAgent=="true")
-                $scope.addShopEnabled = true;
-            else
-                $scope.addShopEnabled=false;
+//            if(window.localStorage.isAgent=="true")
+//                $scope.addShopEnabled = true;
+//            else
+//                $scope.addShopEnabled=false;
             $scope.areasObj = {};
             areasRef.once('value', function (data) {
                 //console.log(data.val());
