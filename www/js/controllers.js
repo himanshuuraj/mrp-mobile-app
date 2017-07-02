@@ -1347,6 +1347,7 @@ angular.module('starter.controllers', ['ngCordova'])
         var dbRef = loginCred.dbRef;
         var authRef = loginCred.authRef;
         $scope.userData = {};
+        $scope.otpLogin=false;
         $scope.loginAgain = false;
         var showPopUp = loginCred.showPopup;
         $scope.isChecked = true;
@@ -1390,19 +1391,40 @@ angular.module('starter.controllers', ['ngCordova'])
             showPopUp("Please contact administrator", "oops!!" );
         };
 
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('myOption', {
+                    'size': 'invisible',
+                    'callback': function(response) {
+                         // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    this.sendOTP();
+            }
+        });
+            
+        
+        $scope.sendOTP = function() {
+            var phoneNumber = $scope.userData.mobileNumber;
+              phoneNumber = "+919901250919";
+                var appVerifier = window.recaptchaVerifier;
+                firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                    .then(function (confirmationResult) {
+                    window.confirmationResult = confirmationResult;
+                }).catch(function (error) {
+                    console.log(error);
+                    showPopUp("Could not send OTP. Please try again");
+                 });
+        };
+            
+        
+        $scope.ontoggleToOTPLogin = function(){
+            $scope.otpLogin=true;
+        };
+         $scope.ontoggleToEmailLogin = function(){
+            $scope.otpLogin=false;
+        };
         $scope.onClickButton = function() {
             var buttonText = document.getElementById('myOption').textContent;
-            if(buttonText == 'SIGN IN') {
-                if(!$scope.userData.password || !$scope.userData.username){
-                    //showPopUp("Please fill the required info");
-                    $scope.showToast('this is a test', 'long', 'center');
-                    return;
-                }
-
-                var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
-                promise.then(function(e) {
-
-                    var authMobileRef = dbRef.child('authMobileMap/'+ e.uid);
+                         var self=this;
+              var createAuthMobileMap = function(uid){
+              var authMobileRef = dbRef.child('authMobileMap/'+ uid);
                     authMobileRef.once('value').then(function(data){
                         var uid = data.val();
                         if(uid == null) {
@@ -1443,12 +1465,35 @@ angular.module('starter.controllers', ['ngCordova'])
                         }).catch(function(e){console.log(e)});
                     }).catch(function(e){console.log(e)});
 
+            };
 
+            if(buttonText == 'SIGN IN') {
+                
+                if($scope.otpLogin==true) {
+                    var confirmationResult =  window.confirmationResult;
+                    var otp = $scope.userData.otp;
+                    confirmationResult.confirm(otp).then(function (result) {
+                        var uid = result.user.uid;
+                        createAuthMobileMap(uid);
+                    }).catch(function (error) {
+                     showPopUp("Invalid login. Please try again");
+                    });        
+                }else{
+                    if(!$scope.userData.password || !$scope.userData.username){
+                    //showPopUp("Please fill the required info");
+                    $scope.showToast('this is a test', 'long', 'center');
+                    return;
+                    }
+                      var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
+                promise.then(function(e) {
+                    createAuthMobileMap(e.uid);
                 }).catch(
                     function(e){
                         showPopUp("Username password doesnt match");
                         console.log(e);
                     });
+                }
+              
             }else {
                 if(!$scope.userData.password || !$scope.userData.username){
                     showPopUp("Please fill the required info");
@@ -1463,11 +1508,13 @@ angular.module('starter.controllers', ['ngCordova'])
                     //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
                     var usersRef = dbRef.child('users/' + authId);
                 }).catch(function(e){
-                    console.log(e);
                     showPopUp(e)
                 });
             }
+            
+          
         }
+        
 
         $scope.signUp = function(){
             if(!$scope.userData.password || !$scope.userData.username){
@@ -2766,4 +2813,8 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
              })
+
+
+
+
 

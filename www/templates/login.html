@@ -17,7 +17,8 @@
 
             </div>
 
-            <div class="row" style="margin-top: 1%">
+            <div ng-hide="otpLogin">
+                 <div class="row" style="margin-top: 1%">
                 <div class="col">
                     <div style='margin-bottom: 2%'>
                         <input type="text" class="animateInput animateText" placeholder="Email" ng-model="userData.username" required=""
@@ -30,12 +31,45 @@
                     <input type="password" class="animateInput animateText  " placeholder="Password" ng-model="userData.password" required=""
                            style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
                 </div>
+            </div>   
+                 <div class="row" >
+                <div class="col">
+                    <a id="toggleToOTPLogin" value="login"  ng-click="ontoggleToOTPLogin()" style="margin-top: 13%;background-color: #065f2c">Login using OTP</a>
+                </div>
             </div>
+            </div>
+            <div ng-show="otpLogin">
+                <div class="row" style="margin-top: 1%">
+                <div class="col">
+                    <div style='margin-bottom: 2%'>
+                        <input type="text" class="animateInput animateText" placeholder="Mobile number" ng-model="userData.mobileNumber" required=""
+                               style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
+                    </div>
+                </div>
+                    <div>
+                        <a id="sendOTP" value="sendOTP"  
+                           ng-click="sendOTP()" style="margin-top: 13%;background-color: #065f2c">Send OTP</a>
+                    </div>
+               </div>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="animateInput animateText" placeholder="Password" ng-model="userData.otp" required=""
+                               style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
+                    </div>
+                </div>  
+                 <div class="row" >
+                <div class="col">
+                    <a id="toggleToEmailLogin" value="login"  ng-click="ontoggleToEmailLogin()" style="margin-top: 13%;background-color: #065f2c">Login using OTP</a>
+                </div>
+                 </div>
+            </div>
+               
             <div class="row" >
                 <div class="col">
                     <button id="myOption" value="login" class="button button-block button-positive" ng-click="onClickButton()" style="margin-top: 13%;background-color: #065f2c">SIGN IN</button>
                 </div>
             </div>
+            
         </div>
         <a href="#" id="forgotPassword" style="color: white; text-decoration: none;margin-left: 30%" ng-click="onForgotPassword()">Forgot Password</a>
         <button class="button button-block button-stable" id="toggle"
