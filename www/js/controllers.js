@@ -1401,8 +1401,9 @@ angular.module('starter.controllers', ['ngCordova'])
             
         
         $scope.sendOTP = function() {
-            var phoneNumber = $scope.userData.mobileNumber;
-              phoneNumber = "+919901250919";
+            var phoneNumber = '+91'+ $scope.userData.mobileNumber;
+             // phoneNumber = "+919901250919";
+             console.log('----------' + phoneNumber);
                 var appVerifier = window.recaptchaVerifier;
                 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                     .then(function (confirmationResult) {
@@ -1423,8 +1424,8 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.onClickButton = function() {
             var buttonText = document.getElementById('myOption').textContent;
                          var self=this;
-              var createAuthMobileMap = function(uid){
-              var authMobileRef = dbRef.child('authMobileMap/'+ uid);
+              var getMobileNumberFromAuthMobileMap = function(uuid){
+              var authMobileRef = dbRef.child('authMobileMap/'+ uuid);
                     authMobileRef.once('value').then(function(data){
                         var uid = data.val();
                         if(uid == null) {
@@ -1474,7 +1475,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     var otp = $scope.userData.otp;
                     confirmationResult.confirm(otp).then(function (result) {
                         var uid = result.user.uid;
-                        createAuthMobileMap(uid);
+                        getMobileNumberFromAuthMobileMap(uid);
                     }).catch(function (error) {
                      showPopUp("Invalid login. Please try again");
                     });        
@@ -1486,7 +1487,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                       var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
                 promise.then(function(e) {
-                    createAuthMobileMap(e.uid);
+                    getMobileNumberFromAuthMobileMap(e.uid);
                 }).catch(
                     function(e){
                         showPopUp("Username password doesnt match");
@@ -1495,21 +1496,37 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
               
             }else {
-                if(!$scope.userData.password || !$scope.userData.username){
-                    showPopUp("Please fill the required info");
-                    return;
+                
+                 if($scope.otpLogin==true) {
+                    var confirmationResult =  window.confirmationResult;
+                    var otp = $scope.userData.otp;
+                    confirmationResult.confirm(otp).then(function (result) {
+                        var uid = result.user.uid;
+                        window.localStorage.authId = uid;
+                        $scope.showUserInputField = true;
+                        $scope.$apply();
+                    }).catch(function (error) {
+                     showPopUp("Invalid login. Please try again");
+                    });        
+                }else{
+                
+                            if(!$scope.userData.password || !$scope.userData.username){
+                                showPopUp("Please fill the required info");
+                                return;
+                            }
+                        
+                            var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
+                            promise.then(function(e) {
+                                var authId=e.uid;
+                                window.localStorage.authId = e.uid;
+                                $scope.showUserInputField = true;
+                                $scope.$apply();
+                                //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
+                                var usersRef = dbRef.child('users/' + authId);
+                            }).catch(function(e){
+                                showPopUp(e)
+                            });
                 }
-                var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
-                promise.then(function(e) {
-                    var authId=e.uid;
-                    window.localStorage.authId = e.uid;
-                    $scope.showUserInputField = true;
-                    $scope.$apply();
-                    //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
-                    var usersRef = dbRef.child('users/' + authId);
-                }).catch(function(e){
-                    showPopUp(e)
-                });
             }
             
           
@@ -1638,6 +1655,8 @@ angular.module('starter.controllers', ['ngCordova'])
             }
 
             var foo = {}; var now = (new Date().getTime()) * -1;
+            if($scope.userData.mobileNumber != null)
+                $scope.userData.username=$scope.userData.mobileNumber;
              foo = {
                 email : $scope.userData.username,
                 active:false,
