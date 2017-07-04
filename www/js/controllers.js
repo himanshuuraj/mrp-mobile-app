@@ -255,7 +255,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var calcDiscount = function() {
 
-             console.log('------------ entered discount');
              console.log($scope.cartArray);$scope.totaldiscountedPrice = $scope.totaldiscountedPrice || 0 ;
              $scope.cartArray["discount_amount"] = $scope.totaldiscountedPrice;
             $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - $scope.totaldiscountedPrice;
@@ -1402,8 +1401,6 @@ angular.module('starter.controllers', ['ngCordova'])
         
         $scope.sendOTP = function() {
             var phoneNumber = '+91'+ $scope.userData.mobileNumber;
-             // phoneNumber = "+919901250919";
-             console.log('----------' + phoneNumber);
                 var appVerifier = window.recaptchaVerifier;
                 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                     .then(function (confirmationResult) {
