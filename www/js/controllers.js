@@ -1436,6 +1436,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                 window.localStorage.userInfo = JSON.stringify(data);
                                 $scope.isAgent = window.localStorage.isAgent = data.isAgent;
                                 window.localStorage.isActive = data.active;
+                                window.localStorage.uid=mobileNum;
                                 $rootScope.$broadcast('isAgent',{});
                                 if(!userInfo.isAgent && userInfo.shops && userInfo.shops.length == 1){
                                     window.localStorage.shopName = userInfo.shops[0].name;
