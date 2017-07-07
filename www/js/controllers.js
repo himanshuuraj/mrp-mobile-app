@@ -1394,7 +1394,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     'size': 'invisible',
                     'callback': function(response) {
                          // reCAPTCHA solved, allow signInWithPhoneNumber.
-                    this.sendOTP();
+                         //TODO confirm with himanshu
+                    $scope.onClickButton();
             }
         });
             
@@ -1422,6 +1423,90 @@ angular.module('starter.controllers', ['ngCordova'])
             var buttonText = document.getElementById('myOption').textContent;
                          var self=this;
               var getMobileNumberFromAuthMobileMap = function(uuid){
+                  
+              var mobileNum=$scope.userData.mobileNumber;
+              if(mobileNum!=null) {
+                //check if existing user
+                var usersRef = dbRef.child('users/' +  mobileNum);
+                 usersRef.once('value', function(data){
+                     data=data.val()
+                     if(data){
+                            console.log('existing user');
+                          var userInfo =data;
+                                window.localStorage.userInfo = JSON.stringify(data);
+                                $scope.isAgent = window.localStorage.isAgent = data.isAgent;
+                                window.localStorage.isActive = data.active;
+                                $rootScope.$broadcast('isAgent',{});
+                                if(!userInfo.isAgent && userInfo.shops && userInfo.shops.length == 1){
+                                    window.localStorage.shopName = userInfo.shops[0].name;
+                                    window.localStorage.areaId = userInfo.shops[0].areaId;
+                                    window.localStorage.tin = userInfo.shops[0].tin;
+                                    var x ={};
+                                    x[userInfo.shops[0].tin] = userInfo.shops[0];
+                                          window.localStorage.shopInfo = JSON.stringify(x);
+                                }
+                                if(!userInfo.shops || (userInfo.shops.length == 0))
+                                    window.location.hash = "#/app/shop";
+                                else if(!data.active){
+                                    alert("User not activated. Please contact administrator")
+                                }else{
+                                    window.location.hash = "#/app/search";
+                                }
+                          var authIdMobileMapRef = dbRef.child('authMobileMap/' + uuid);
+                          var promiseFromAuthMobile = authIdMobileMapRef.set(mobileNum);
+                          promiseFromAuthMobile.then(function(e){
+                            console.log("Successfully added mobile mapping to the auth id");
+                            window.localstorage.uid=mobileNumber;
+                         }).catch(e => console.log("Could not add mobile mapping"));
+                         
+                     }else{
+                         //user signed up using mobile
+                     var authMobileRef = dbRef.child('authMobileMap/'+ uuid);
+                    authMobileRef.once('value').then(function(data){
+                        var uid = data.val();
+                        if(uid == null) {
+                            alert("User not found. Please signup");
+                            return;
+                        }
+                        var usersRef = dbRef.child('users/'+ uid);
+                        uid = window.localStorage.uid = uid;
+                        usersRef.once('value').then(function(data){
+                            data = data.val();
+                            //console.log(data);
+                            if(data){
+                                userInfo = data;
+                                window.localStorage.userInfo = JSON.stringify(data);
+                                $scope.isAgent = window.localStorage.isAgent = data.isAgent;
+                                window.localStorage.isActive = data.active;
+                                $rootScope.$broadcast('isAgent',{});
+                                if(!userInfo.isAgent && userInfo.shops && userInfo.shops.length == 1){
+                                    window.localStorage.shopName = userInfo.shops[0].name;
+                                    window.localStorage.areaId = userInfo.shops[0].areaId;
+                                    window.localStorage.tin = userInfo.shops[0].tin;
+                                    var x ={};
+                                    x[userInfo.shops[0].tin] = userInfo.shops[0];
+                                          window.localStorage.shopInfo = JSON.stringify(x);
+                                }
+                                if(!userInfo.shops || (userInfo.shops.length == 0))
+                                    window.location.hash = "#/app/shop";
+                                else if(!data.active){
+                                    alert("User not activated. Please contact administrator")
+                                }else{
+                                    window.location.hash = "#/app/search";
+                                }
+                            }
+                            else{
+                                $scope.showUserInputField = true;
+                                $scope.$apply();
+                            }
+                        }).catch(function(e){console.log(e)});
+                    }).catch(function(e){console.log(e)});
+                         
+                     }
+                         
+                 })
+             }else{
+                  
               var authMobileRef = dbRef.child('authMobileMap/'+ uuid);
                     authMobileRef.once('value').then(function(data){
                         var uid = data.val();
@@ -1462,6 +1547,7 @@ angular.module('starter.controllers', ['ngCordova'])
                             }
                         }).catch(function(e){console.log(e)});
                     }).catch(function(e){console.log(e)});
+                }
 
             };
 
