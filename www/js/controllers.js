@@ -161,7 +161,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
-    .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope) {
+    .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
         var showPopUp = loginCred.showPopup;
         if(window.localStorage.isActive === 'false') {
             alert("User not activated. Please contact administrator");
@@ -170,9 +170,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.init = function(){
             $scope.cartArray = JSON.parse(window.localStorage.cartInfo);
             $scope.shopArray=$scope.cartArray.shopDetail;
-
-                $scope.applyDiscount();
-
+            $scope.applyDiscount();
             $rootScope.$broadcast("cached",{});
         };
 
@@ -292,10 +290,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.applyDiscount = function(){
             var shopArray = $scope.shopArray;
-            $scope.totaldiscountedPrice = 0; var itemsProcessed = 0;
+            $scope.totaldiscountedPrice = 0;
+            var itemsProcessed = 0;
             shopArray.forEach(function(shop){
                 var shopDiscountAmount = 0;
-
                 var items = shop.items;
                 var riceObjectOrg = items.rice;
                 var ravvaObjectOrg = items.ravva;
@@ -305,7 +303,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     shopRiceWeight += riceObjectOrg[productId].weight;
                 }
                 for(var productId in ravvaObjectOrg){
-                    shopRavvaWeight += ravvaObjectOrg[productId].weight;
+                    shopRavvaWeight += ravvaObjectOrg[prapplyDiscountoductId].weight;
                 }
                 for(var productId in brokenObjectOrg){
                     shopBrokenWeight += brokenObjectOrg[productId].weight;
@@ -324,7 +322,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
                     itemsProcessed++;
                     var discounts = data.val().discounts;
-                    console.log(discounts);
                     if(discounts) {
                         riceDiscArray = discounts.rice || riceDiscArray ;
                         ravvaDiscArray = discounts.ravva ||  ravvaDiscArray;
@@ -337,10 +334,10 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                     });
 
-                 ravvaDiscArray.forEach(function(entry){
-                    if(shopRavvaWeight >= entry.quintals){
-                        ravvadiscount = entry.discount;
-                    }
+                   ravvaDiscArray.forEach(function(entry){
+                      if(shopRavvaWeight >= entry.quintals){
+                          ravvadiscount = entry.discount;
+                      }
                     });
 
                  brokenDiscArray.forEach(function(entry){
@@ -394,6 +391,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         $scope.submitOrder = function(){
+            $ionicLoading.show();
             $scope.validateIfLatestPrice(loginCred.dbRef);
             if($scope.flagForPriceModified==true){
                     //$scope.modifiedPriceList
@@ -466,10 +464,13 @@ angular.module('starter.controllers', ['ngCordova'])
             var usersRef = dbRef.child('users/' + window.localStorage.uid );
 
             usersRef.once('value', function(data){
+                $ionicLoading.hide();
                 var userValue = data.val();
                 userValue["orders"] = userValue["orders"] || [];
                 userValue["orders"].push(orderId);
                 var promise = usersRef.update(userValue);
+            }).catch(function(e){
+                $ionicLoading.hide();
             });
 
             var promise = ordersRef.set(newOrder);
@@ -1398,8 +1399,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     $scope.onClickButton();
             }
         });
-            
-        
+
+
         $scope.sendOTP = function() {
             var phoneNumber = '+91'+ $scope.userData.mobileNumber;
                 var appVerifier = window.recaptchaVerifier;
@@ -1411,8 +1412,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     showPopUp("Could not send OTP. Please try again");
                  });
         };
-            
-        
+
+
         $scope.ontoggleToOTPLogin = function(){
             $scope.otpLogin=true;
         };
@@ -1423,7 +1424,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var buttonText = document.getElementById('myOption').textContent;
                          var self=this;
               var getMobileNumberFromAuthMobileMap = function(uuid){
-                  
+
               var mobileNum=$scope.userData.mobileNumber;
               if(mobileNum!=null) {
                 //check if existing user
@@ -1459,7 +1460,7 @@ angular.module('starter.controllers', ['ngCordova'])
                             console.log("Successfully added mobile mapping to the auth id");
                             window.localstorage.uid=mobileNumber;
                          }).catch(e => console.log("Could not add mobile mapping"));
-                         
+
                      }else{
                          //user signed up using mobile
                      var authMobileRef = dbRef.child('authMobileMap/'+ uuid);
@@ -1502,12 +1503,12 @@ angular.module('starter.controllers', ['ngCordova'])
                             }
                         }).catch(function(e){console.log(e)});
                     }).catch(function(e){console.log(e)});
-                         
+
                      }
-                         
+
                  })
              }else{
-                  
+
               var authMobileRef = dbRef.child('authMobileMap/'+ uuid);
                     authMobileRef.once('value').then(function(data){
                         var uid = data.val();
@@ -1553,7 +1554,7 @@ angular.module('starter.controllers', ['ngCordova'])
             };
 
             if(buttonText == 'SIGN IN') {
-                
+
                 if($scope.otpLogin==true) {
                     var confirmationResult =  window.confirmationResult;
                     var otp = $scope.userData.otp;
@@ -1562,7 +1563,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         getMobileNumberFromAuthMobileMap(uid);
                     }).catch(function (error) {
                      showPopUp("Invalid login. Please try again");
-                    });        
+                    });
                 }else{
                     if(!$scope.userData.password || !$scope.userData.username){
                     //showPopUp("Please fill the required info");
@@ -1578,9 +1579,9 @@ angular.module('starter.controllers', ['ngCordova'])
                         console.log(e);
                     });
                 }
-              
+
             }else {
-                
+
                  if($scope.otpLogin==true) {
                     var confirmationResult =  window.confirmationResult;
                     var otp = $scope.userData.otp;
@@ -1591,14 +1592,14 @@ angular.module('starter.controllers', ['ngCordova'])
                         $scope.$apply();
                     }).catch(function (error) {
                      showPopUp("Invalid login. Please try again");
-                    });        
+                    });
                 }else{
-                
+
                             if(!$scope.userData.password || !$scope.userData.username){
                                 showPopUp("Please fill the required info");
                                 return;
                             }
-                        
+
                             var promise = authRef.createUserWithEmailAndPassword($scope.userData.username,$scope.userData.password);
                             promise.then(function(e) {
                                 var authId=e.uid;
@@ -1612,10 +1613,10 @@ angular.module('starter.controllers', ['ngCordova'])
                             });
                 }
             }
-            
-          
+
+
         }
-        
+
 
         $scope.signUp = function(){
             if(!$scope.userData.password || !$scope.userData.username){
@@ -2605,10 +2606,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
                 $scope.$apply();
             });
-
         }
-
-
 
         $scope.fillCartArrayForReOrder = function(reOrderId) {
             var shopDetail = $scope.cartArrayOrderDetail.shopDetail;
@@ -2916,8 +2914,3 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
              })
-
-
-
-
-
