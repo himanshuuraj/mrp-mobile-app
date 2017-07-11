@@ -479,6 +479,7 @@ angular.module('starter.controllers', ['ngCordova'])
                          "You can track your order from the orders page","Yay!!");
                 populateInfoToSuperAgent();
                 sendSMS();
+                populateOrderList(orderId);
                 removeOrderedFromCartArray();
                 updateCart();
                 window.localStorage.removeItem("cartInfo");
@@ -536,6 +537,16 @@ angular.module('starter.controllers', ['ngCordova'])
                     }
                 }
                 window.localStorage.cartArray = JSON.stringify(cartArray1);
+            }
+            
+            var populateOrderList = function(orderId){
+                console.log('orderid is ' + orderId);
+                var orderListRef = loginCred.dbRef.child('orderList');
+                orderListRef.transaction(function(orders){
+                    orders=orders||[];
+                    orders.push(orderId);
+                    return orders;
+                });
             }
 
             var sendSMS  = function(){
