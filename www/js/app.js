@@ -41,6 +41,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
+    .state('app.loginPage', {
+        cache: false,
+        url: '/loginPage',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/loginPage.html',
+            controller: 'loginCtrl'
+          }
+        }
+      })
     .state('app.cart', {
       cache: false,
       url: '/cart',
@@ -82,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    
+
     .state('app.profile', {
         cache: false,
       url: '/profile',
@@ -93,7 +103,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    
+
      .state('app.prices', {
       url: '/prices',
       views: {
@@ -104,9 +114,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     });
 
-  
+
   $ionicConfigProvider.scrolling.jsScrolling(false);
- 
+
   // Or for only a single platform, use
   // if( ionic.Platform.isAndroid() ) {
     // $ionicConfigProvider.scrolling.jsScrolling(false);
@@ -117,7 +127,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 })
 
 .run(function($ionicPlatform,$state) {
-    
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -138,9 +148,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    if(window.localStorage.userInfo)
        window.location.hash = "#/app/search";
    else
-      window.location.hash = "#/app/login";
+      window.location.hash = "#/app/loginPage";
 
   });
-  
+
     //$ionicConfigProvider.views.swipeBackEnabled(false);
 });

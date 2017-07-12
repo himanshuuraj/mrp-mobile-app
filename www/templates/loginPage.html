@@ -1,0 +1,33 @@
+<ion-view hide-nav-bar="true" cache-view="false">
+    <ion-content scroll="false" ng-show="page == 'first'"
+        style="height:100%;">
+          <div style="text-align:center;margin-top:30%;">Lalitha Brand</div>
+          <hr>
+          <div style="text-align:center;margin-top:30%;">Mobile Number</div>
+          <div>
+            <center><input type="text" ng-model="userData.mobileNumber"/></center>
+          </div>
+          <div style="margin-top:20%;">
+            <center>
+              <button id="sendOTPButton" class="button button-positive" ng-click="sendOTP();">
+                 SEND OTP
+              </button>
+            </center>
+          </div>
+          <div style="color:blue;text-align:center;">Login using Email</div>
+    </ion-content>
+    <ion-content scroll="false" ng-show="page == 'second'"
+        style="height:100%;">
+        <i class="icon ion-arrow-left-c" style="font-size:50px;" ng-click="back();"></i>
+          <div style="text-align:center;margin-top:10%;">Enter OTP</div>
+          <div style="text-align:center;margin-top:10%;">
+            Please Enter The OTP sent to {{number}}
+            <u>Resend OTP</u>
+          </div>
+          <div style="margin-top:10px;">
+            <center><input type="number" ng-model="userData.otp" /></center>
+            <center><button id="myOption" value="login" class="button button-positive" ng-click="onClickButton()" style="margin-top: 13%;">SIGN IN</button></center>
+          </div>
+
+    </ion-content>
+  </ion-view>

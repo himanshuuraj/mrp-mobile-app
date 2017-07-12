@@ -1,7 +1,7 @@
 <ion-view hide-nav-bar="true" cache-view="false" ng-init="initOnSignup();"><!-- hide-nav-bar="true"-->
-    
 
-   
+
+
     <ion-content id="backgroundContent" scroll="false"
                  style="height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;"
                  ng-hide="showUserInputField">
@@ -31,7 +31,7 @@
                     <input type="password" class="animateInput animateText  " placeholder="Password" ng-model="userData.password" required=""
                            style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
                 </div>
-            </div>   
+            </div>
                  <div class="row" >
                 <div class="col">
                     <a id="toggleToOTPLogin" value="login"  ng-click="ontoggleToOTPLogin()" style="margin-top: 13%;background-color: #065f2c">Login using OTP</a>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                     <div>
-                        <a id="sendOTP" value="sendOTP"  
+                        <a id="sendOTP" value="sendOTP"
                            ng-click="sendOTP()" style="margin-top: 13%;background-color: #065f2c">Send OTP</a>
                     </div>
                </div>
@@ -56,20 +56,20 @@
                         <input type="text" class="animateInput animateText" placeholder="Password" ng-model="userData.otp" required=""
                                style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
                     </div>
-                </div>  
+                </div>
                  <div class="row" >
                 <div class="col">
                     <a id="toggleToEmailLogin" value="login"  ng-click="ontoggleToEmailLogin()" style="margin-top: 13%;background-color: #065f2c">Login using Email</a>
                 </div>
                  </div>
             </div>
-               
+
             <div class="row" >
                 <div class="col">
                     <button id="myOption" value="login" class="button button-block button-positive" ng-click="onClickButton()" style="margin-top: 13%;background-color: #065f2c">SIGN IN</button>
                 </div>
             </div>
-            
+
         </div>
         <a href="#" id="forgotPassword" style="color: white; text-decoration: none;margin-left: 30%" ng-click="onForgotPassword()">Forgot Password</a>
         <button class="button button-block button-stable" id="toggle"
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1%">
-                    <div class="col">                        
+                    <div class="col">
                         <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)" style="width: 70%">
                             <span class="row"><strong>Are you an agent?</strong></span>
                         </ion-checkbox>
@@ -187,7 +187,7 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 </div>
                 <div class="row" style="margin-top: 1%"  ng-show="isChecked">
                     <div class="col">
@@ -196,9 +196,9 @@
                         </ion-checkbox>
                     </div>
                 </div>
-            
+
                 <div >
-                    <div class="list list-inset" ng-show="isSubAgentChecked">                        
+                    <div class="list list-inset" ng-show="isSubAgentChecked">
                         <div class="row" style="margin-top: 1%">
                             <div class="col">
                                 <input type="text" class="animateInput" placeholder="Agent Mobile Number" ng-model="signUpData.superAgentMobile" required="" style="width: 98%;">
@@ -206,9 +206,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <button class="button button-block button-positive"  ng-click="fillSignUpData()">Submit</button>
-            
+
         </div>
     </ion-content>
 

@@ -160,6 +160,9 @@ angular.module('starter.controllers', ['ngCordova'])
         }
 
     })
+    .controller('loginPageCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
+
+    })
 
     .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
         var showPopUp = loginCred.showPopup;
@@ -538,7 +541,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 window.localStorage.cartArray = JSON.stringify(cartArray1);
             }
-            
+
             var populateOrderList = function(orderId){
                 console.log('orderid is ' + orderId);
                 var orderListRef = loginCred.dbRef.child('orderList');
@@ -1364,11 +1367,14 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.isChecked = true;
         var userInfo;
         var uid;
+        $scope.page = 'first';
+        $scope.number;
         $scope.signUpData = {
             isAgent : true,
             shop :{
             }
         };
+        $scope.otp = "";
 
         $scope.showToast = function(message, duration, location) {
             $cordovaToast.show(message, duration, location).then(function(success) {
@@ -1402,7 +1408,7 @@ angular.module('starter.controllers', ['ngCordova'])
             showPopUp("Please contact administrator", "oops!!" );
         };
 
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('myOption', {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sendOTPButton', {
                     'size': 'invisible',
                     'callback': function(response) {
                          // reCAPTCHA solved, allow signInWithPhoneNumber.
@@ -1411,9 +1417,9 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         });
 
-
         $scope.sendOTP = function() {
-            var phoneNumber = '+91'+ $scope.userData.mobileNumber;
+            $scope.page = 'second';
+            var phoneNumber   = '+91'+ $scope.userData.mobileNumber || $scope.mobileNumber;
                 var appVerifier = window.recaptchaVerifier;
                 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                     .then(function (confirmationResult) {
@@ -1424,13 +1430,17 @@ angular.module('starter.controllers', ['ngCordova'])
                  });
         };
 
+        $scope.back = function(){
+          $scope.page = 'first';
+        }
 
         $scope.ontoggleToOTPLogin = function(){
             $scope.otpLogin=true;
         };
-         $scope.ontoggleToEmailLogin = function(){
+        $scope.ontoggleToEmailLogin = function(){
             $scope.otpLogin=false;
         };
+
         $scope.onClickButton = function() {
             var buttonText = document.getElementById('myOption').textContent;
                          var self=this;
@@ -1566,9 +1576,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
             if(buttonText == 'SIGN IN') {
 
-                if($scope.otpLogin==true) {
+                if($scope.userData.otp) {
                     var confirmationResult =  window.confirmationResult;
                     var otp = $scope.userData.otp;
+                    otp=otp.toString();
                     confirmationResult.confirm(otp).then(function (result) {
                         var uid = result.user.uid;
                         getMobileNumberFromAuthMobileMap(uid);
