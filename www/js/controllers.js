@@ -135,7 +135,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.shopInfo = shopInfoObject
 
             window.sessionStorage.clear();
-            window.location.hash = "#/app/login";
+            window.location.hash = "#/app/loginPage";
         };
 
         $scope.continue = function(){
@@ -501,7 +501,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var userValue = data.val();
                         userValue["suborders"] = userValue["suborders"] || {};
                         userValue["suborders"][window.localStorage.uid]=userValue["suborders"][window.localStorage.uid] || {};
-                        userValue["suborders"][window.localStorage.uid][orderId] = orderId;
+                        userValue["suborders"][window.localStorage.uid][orderId] = JSON.parse(window.localstorage.userInfo).name;
                         var prom = superAgentsRef.update(userValue);
                         prom.then(function(w){
 
@@ -1375,6 +1375,14 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         };
         $scope.otp = "";
+        
+        $scope.gotoEmailSignIn = function(){
+            window.location.hash = "#/app/login";
+        }
+        
+          $scope.gotoMobileSignIn = function(){
+            window.location.hash = "#/app/loginPage";
+        }
 
         $scope.showToast = function(message, duration, location) {
             $cordovaToast.show(message, duration, location).then(function(success) {
@@ -1385,6 +1393,27 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
         $scope.onClickAnchorTag = function() {
+            var anchorText = document.getElementById('toggle').textContent;
+            if(anchorText=='SIGN UP'){
+                document.getElementById('toggle').textContent='SIGN IN';
+                document.getElementById('myOption').textContent = 'SIGN UP';
+                document.getElementById('backgroundContent').style.cssText = 'height: 100%; background: url("img/lalithaSignUpImage.jpg") 0% 0% / 100% 100% no-repeat;  ';
+                document.getElementById('welcomeDiv').style.display='block';
+                document.getElementById('loginDiv').style.marginTop='10%';
+
+
+            }else{
+                document.getElementById('toggle').textContent='SIGN UP';
+                document.getElementById('myOption').textContent = 'SIGN IN';
+                //document.getElementById('backgroundContent').style.background = "url('img/lalithaLoginImage.jpg')";
+                document.getElementById('backgroundContent').style.cssText = "height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;";
+                document.getElementById('welcomeDiv').style.display='none';
+                document.getElementById('loginDiv').style.marginTop='65%';
+
+            }
+        };
+         $scope.onSignupUsingMobile = function() {
+             window.location.hash="#/app/login";
             var anchorText = document.getElementById('toggle').textContent;
             if(anchorText=='SIGN UP'){
                 document.getElementById('toggle').textContent='SIGN IN';
@@ -1573,6 +1602,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
 
             };
+            
 
             if(buttonText == 'SIGN IN') {
 
@@ -1582,7 +1612,10 @@ angular.module('starter.controllers', ['ngCordova'])
                     otp=otp.toString();
                     confirmationResult.confirm(otp).then(function (result) {
                         var uid = result.user.uid;
-                        getMobileNumberFromAuthMobileMap(uid);
+                        
+                            getMobileNumberFromAuthMobileMap(uid);
+                          
+                          
                     }).catch(function (error) {
                      showPopUp("Invalid login. Please try again");
                     });
@@ -1604,9 +1637,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
             }else {
 
-                 if($scope.otpLogin==true) {
+                 if($scope.userData.otp) {
                     var confirmationResult =  window.confirmationResult;
                     var otp = $scope.userData.otp;
+                    otp=otp.toString();
                     confirmationResult.confirm(otp).then(function (result) {
                         var uid = result.user.uid;
                         window.localStorage.authId = uid;
@@ -1802,7 +1836,14 @@ angular.module('starter.controllers', ['ngCordova'])
             var usersRef = dbRef.child('users/'+ uid );
             var promise = usersRef.set(foo);
             promise.then(function(e) {
-                showPopUp("Please click the SIGN IN button below to login", "CONGRATULATIONS!!");
+                if($scope.mobileSignup){
+                    window.location.hash="#/app/loginPage";
+                    $scope.page = 'first';
+                    showPopUp("Please Sign In", "CONGRATULATIONS!!");
+                }else{
+                    showPopUp("Please click the SIGN IN button below to login", "CONGRATULATIONS!!");
+                }
+                    
                 $scope.showUserInputField = false;
                 //window.localStorage.clear();
                 //window.sessionStorage.clear();
@@ -1818,6 +1859,24 @@ angular.module('starter.controllers', ['ngCordova'])
                     window.localStorage.superAgentMobileNum=superAgentMobileNum;
                 }).catch(e => showPopUp("Could not update super agent information"));
             }
+        }
+        
+        $scope.clickOnToggle = function(param){
+            
+            if(param == 'false'){
+                $scope.mobileSignup = "false";
+                document.getElementById("loginSpan").style.color = "#dcf737";
+                document.getElementById("signUpSpan").style.color = "#B2B2B2";
+                document.getElementById("myOption").textContent="SIGN IN";
+            }else{
+                $scope.mobileSignup = "true";
+                document.getElementById("loginSpan").style.color = "#B2B2B2";
+                document.getElementById("signUpSpan").style.color = "#dcf737";
+                document.getElementById("myOption").textContent="SIGN UP";
+                
+            }
+//            $scope.$apply();
+            
         }
 
         $scope.moveToLoginScreen = function(){

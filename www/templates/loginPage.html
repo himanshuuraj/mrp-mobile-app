@@ -1,33 +1,210 @@
 <ion-view hide-nav-bar="true" cache-view="false">
-    <ion-content scroll="false" ng-show="page == 'first'"
+    <ion-content scroll="false" id="backgroundContent"
+                 style="height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;"
+                 ng-show="page == 'first'"
         style="height:100%;">
-          <div style="text-align:center;margin-top:30%;">Lalitha Brand</div>
-          <hr>
-          <div style="text-align:center;margin-top:30%;">Mobile Number</div>
-          <div>
-            <center><input type="text" ng-model="userData.mobileNumber"/></center>
-          </div>
-          <div style="margin-top:20%;">
-            <center>
-              <button id="sendOTPButton" class="button button-positive" ng-click="sendOTP();">
-                 SEND OTP
-              </button>
-            </center>
-          </div>
-          <div style="color:blue;text-align:center;">Login using Email</div>
+
+        <div id="loginSignUpDiv" style="margin-top: 30%" >
+    <div class="row">
+        <div class="col" ng-click="clickOnToggle('false')" >
+        <div id="loginDiv" class="padding" style="margin-top:65%;padding:4%">
+            <span style="color: #dcf737;" id="loginSpan" >Log In</span>
+         
+        </div>
+
+        </div>
+        <div class="col" ng-click="clickOnToggle('true')">
+                  <div id="SignupDiv" class="padding" style="margin-top:65%;padding:4%">
+                      <span id="signUpSpan" style="color:#B2B2B2">Sign Up</span>
+        </div>
+        </div>
+    </div>
+<!--            <div class="row" style="margin-top: 10px" ng-show="mobileSignup == 'true'">
+                <span>Enter your mobile number below to signup.<br> You will receive a SMS on the entered number</span>
+            </div>-->
+                <div class="row" style="margin-top: 4%">
+                <div class="col">
+                    <div style='margin-bottom: 2%'>
+                        <input type="text" class="animateInput animateText" placeholder="Mobile Number" ng-model="userData.mobileNumber" required=""
+                               style="width: 98%;color:white;font-size: 20px;font-weight: 700;">
+                    </div>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col">
+                    <center>
+                    <button id="sendOTPButton"  class="button button-block button-positive" 
+                            ng-click="sendOTP()" style="margin-top: 13%;width: 70%;background-color: #065f2c">SEND OTP</button>
+                    </center>
+                </div>
+                
+            </div>
+        </div>
+     
+          
+          <div style="color:white;text-align:center;"><a style="color:white" id="emailSignIn" ng-click="gotoEmailSignIn()">
+                  Sign in using email</a></div>
     </ion-content>
-    <ion-content scroll="false" ng-show="page == 'second'"
-        style="height:100%;">
+    <ion-content scroll="false" style="height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;"
+                 ng-show="page == 'second'"
+        >
         <i class="icon ion-arrow-left-c" style="font-size:50px;" ng-click="back();"></i>
-          <div style="text-align:center;margin-top:10%;">Enter OTP</div>
-          <div style="text-align:center;margin-top:10%;">
-            Please Enter The OTP sent to {{number}}
-            <u>Resend OTP</u>
-          </div>
-          <div style="margin-top:10px;">
-            <center><input type="number" ng-model="userData.otp" /></center>
-            <center><button id="myOption" value="login" class="button button-positive" ng-click="onClickButton()" style="margin-top: 13%;">SIGN IN</button></center>
-          </div>
+                <div id="otpDiv" class="padding" style="margin-top:50%;padding:4%">
+
+          <div class="row" style="margin-top: 1%">
+                <div class="col">
+                    <div style='margin-bottom: 2%;color:white;font-size: 14px;font-weight: 700;'>
+                        Please enter the OTP sent to <span style="color:red">{{userData.mobileNumber}}</span>
+                      <u style="color:skyblue">Resend OTP</u>
+                    </div>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col">
+                     <center><input type="number" ng-model="userData.otp" /></center>
+                      <center><button id="myOption" value="login" 
+                                      class="button button-positive" ng-click="onClickButton()" style="margin-top: 13%;background-color: #065f2c"">SIGN IN</button></center>
+       
+                </div>
+            </div>
+                </div>
 
     </ion-content>
+    
+      <ion-content ng-show="showUserInputField"
+                 style="background-color: white;" id="signUpInput">
+        <div class="padding" >
+            <div class="list list-inset">
+                <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <input type="text" class="animateInput" placeholder="Name" ng-model="signUpData.name" required="" style="width: 98%;">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <input type="tel" class="animateInput" placeholder="Mobile Number" ng-model="signUpData.mobile" required="" style="width: 98%;">
+                    </div>
+                </div>
+                 <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <input type="text" class="animateInput" placeholder="Address" ng-model="signUpData.address" required="" style="width: 98%;">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1%">
+                    <div class="col">
+                        <ion-checkbox ng-model="isChecked" ng-change="getIsAgent(isChecked)" style="width: 70%">
+                            <span class="row"><strong>Are you an agent?</strong></span>
+                        </ion-checkbox>
+                    </div>
+                </div>
+                <div class="padding" ng-hide="isChecked">
+                    <center><b>Shop</b></center>
+                    <div class="list list-inset" ng-hide="isChecked">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="animateInput" placeholder="Shop Name" ng-model="signUpData.shop.name" required="" style="width: 98%;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1%">
+                        <div class="col">
+                            <input type="text" class="animateInput" placeholder="Proprietor Name" ng-model="signUpData.shop.proprietor_name" required="" style="width: 98%;">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1%">
+                        <div class="col">
+                            <input type="tel" class="animateInput" placeholder="Mobile" ng-model="signUpData.shop.mobile" required="" style="width: 98%;">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1%">
+                        <div class="col">
+                            <input type="text" class="animateInput" placeholder="Pan" ng-model="signUpData.shop.pan" required="" style="width: 98%;">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1%">
+                        <div class="col">
+                            <input type="text" class="animateInput" placeholder="Tin" ng-model="signUpData.shop.tin" required="" style="width: 98%;">
+                        </div>
+                    </div>
+                    <div style="background-color: lightgray; margin-top: 2%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+                        <label class = "item item-input item-select">
+                            <div class = "input-label">
+                                Tax Type
+                            </div>
+                            <select ng-model="signUpData.shop.taxType">
+                                <option value="VAT">VAT</option>
+                                <option value="CST">CST</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="row" style="margin-top: 1%">
+                        <div class="col">
+                            <span class="row"><strong>Address</strong></span>
+                            <div class="row" style="margin-top: 1%">
+                                <div class="col">
+                                    <input type="text" class="animateInput" placeholder="House/Door/Shop Number" ng-model="signUpData.shop.shopnumber" required="" style="width: 98%;">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 1%">
+                                <div class="col">
+                                    <input type="text" class="animateInput" placeholder="Street Name" ng-model="signUpData.shop.street" required="" style="width: 98%;">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 1%">
+                                <div class="col">
+                                    <input type="text" class="animateInput" placeholder="City/Town/Village Name" ng-model="signUpData.shop.city" required="" style="width: 98%;">
+                                </div>
+                            </div>
+                            <span class="row" style="padding-left: 5%;padding-top: 5%">Please Select Area</span>
+                            <!--<div id="selectarea" style="background-color: lightgray; margin-top: 5%; width: 70%; height:40px; border: 1px ">
+                                <select ng-model="signUpData.shop.area"
+                                        ng-options="item.id as item.name for item in areas">
+                                    <option value="">Select Area</option>
+                                </select>
+                            </div>-->
+                            <div id="selectarea" style="background-color: lightgray; margin-top: 5%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
+                                <label class = "item item-input item-select">
+                                    <div class = "input-label">
+                                        Select Area
+                                    </div>
+
+                                    <select ng-model="signUpData.shop.area"
+                                            ng-options="item.id as item.name for item in areas">
+                                        <option value="">--No Area--</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="row" style="margin-top: 1%">
+                                <div class="col">
+                                    <input type="text" class="animateInput" placeholder="Pincode" ng-model="signUpData.shop.pincode" required="" style="width: 98%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="row" style="margin-top: 1%"  ng-show="isChecked">
+                    <div class="col">
+                        <ion-checkbox ng-model="isSubAgentChecked" style="width: 70%">
+                            <span class="row"><strong>Are you a sub-agent?</strong></span>
+                        </ion-checkbox>
+                    </div>
+                </div>
+
+                <div >
+                    <div class="list list-inset" ng-show="isSubAgentChecked">
+                        <div class="row" style="margin-top: 1%">
+                            <div class="col">
+                                <input type="text" class="animateInput" placeholder="Agent Mobile Number" ng-model="signUpData.superAgentMobile" required="" style="width: 98%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="button button-block button-positive"  ng-click="fillSignUpData()">Submit</button>
+
+        </div>
+    </ion-content>
+
+    
   </ion-view>
