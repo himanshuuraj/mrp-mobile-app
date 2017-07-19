@@ -1375,11 +1375,11 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         };
         $scope.otp = "";
-        
+
         $scope.gotoEmailSignIn = function(){
             window.location.hash = "#/app/login";
         }
-        
+
           $scope.gotoMobileSignIn = function(){
             window.location.hash = "#/app/loginPage";
         }
@@ -1437,12 +1437,10 @@ angular.module('starter.controllers', ['ngCordova'])
             showPopUp("Please contact administrator", "oops!!" );
         };
 
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sendOTPButton', {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('myOption', {
                     'size': 'invisible',
                     'callback': function(response) {
-                         // reCAPTCHA solved, allow signInWithPhoneNumber.
-                         //TODO confirm with himanshu
-                    $scope.onClickButton();
+                  //  $scope.onClickButton();
             }
         });
 
@@ -1602,7 +1600,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
 
             };
-            
+
 
             if(buttonText == 'SIGN IN') {
 
@@ -1612,10 +1610,10 @@ angular.module('starter.controllers', ['ngCordova'])
                     otp=otp.toString();
                     confirmationResult.confirm(otp).then(function (result) {
                         var uid = result.user.uid;
-                        
+
                             getMobileNumberFromAuthMobileMap(uid);
-                          
-                          
+
+
                     }).catch(function (error) {
                      showPopUp("Invalid login. Please try again");
                     });
@@ -1840,10 +1838,19 @@ angular.module('starter.controllers', ['ngCordova'])
                     window.location.hash="#/app/loginPage";
                     $scope.page = 'first';
                     showPopUp("Please Sign In", "CONGRATULATIONS!!");
+                    window.recaptchaVerifier = null;
+                    window.recaptcha = null;
+                    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('myOption', {
+                                'size': 'invisible',
+                                'callback': function(response) {
+                              //  $scope.onClickButton();
+                        }
+                    });
+
                 }else{
                     showPopUp("Please click the SIGN IN button below to login", "CONGRATULATIONS!!");
                 }
-                    
+
                 $scope.showUserInputField = false;
                 //window.localStorage.clear();
                 //window.sessionStorage.clear();
@@ -1860,9 +1867,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 }).catch(e => showPopUp("Could not update super agent information"));
             }
         }
-        
+
         $scope.clickOnToggle = function(param){
-            
+
             if(param == 'false'){
                 $scope.mobileSignup = "false";
                 document.getElementById("loginSpan").style.color = "#dcf737";
@@ -1873,10 +1880,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 document.getElementById("loginSpan").style.color = "#B2B2B2";
                 document.getElementById("signUpSpan").style.color = "#dcf737";
                 document.getElementById("myOption").textContent="SIGN UP";
-                
+
             }
 //            $scope.$apply();
-            
+
         }
 
         $scope.moveToLoginScreen = function(){
