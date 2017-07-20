@@ -1872,13 +1872,15 @@ angular.module('starter.controllers', ['ngCordova'])
 
             if(param == 'false'){
                 $scope.mobileSignup = "false";
-                document.getElementById("loginSpan").style.color = "#dcf737";
                 document.getElementById("signUpSpan").style.color = "#B2B2B2";
+                document.getElementById("loginDiv").style.cssText = "margin-top:65%;text-align: center;padding:4%;background-color: #065f2c;z-index: 1;border-radius: 10px;box-shadow: 2px 2px 1px #888888;";
+                document.getElementById("SignupDiv").style.cssText = "margin-top:65%;text-align: center;padding:4%;";
                 document.getElementById("myOption").textContent="SIGN IN";
             }else{
                 $scope.mobileSignup = "true";
                 document.getElementById("loginSpan").style.color = "#B2B2B2";
-                document.getElementById("signUpSpan").style.color = "#dcf737";
+                document.getElementById("loginDiv").style.cssText = "margin-top:65%;text-align: center;padding:4%;";
+                document.getElementById("SignupDiv").style.cssText = "margin-top:65%;text-align: center;padding:4%;background-color: #065f2c;z-index: 1;border-radius: 10px;box-shadow: 2px 2px 1px #888888;";
                 document.getElementById("myOption").textContent="SIGN UP";
 
             }
