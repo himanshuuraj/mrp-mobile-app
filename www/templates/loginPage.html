@@ -1,4 +1,4 @@
-<ion-view hide-nav-bar="true" cache-view="false" ng-init="init();">
+<ion-view hide-nav-bar="true" cache-view="false">
     <ion-content scroll="false" id="backgroundContent"
                  style="height:100%;background: url('img/lalithaLoginImage.jpg');background-size:100% 100%; background-repeat: no-repeat;"
                  ng-show="page == 'first'"
@@ -9,7 +9,7 @@
         <div class="col" ng-click="clickOnToggle('false')" >
         <div id="loginDiv" class="padding" style="margin-top:65%;padding:4%">
             <span style="color: #dcf737;" id="loginSpan" >Log In</span>
-
+         
         </div>
 
         </div>
@@ -33,15 +33,15 @@
             <div class="row" >
                 <div class="col">
                     <center>
-                    <button id="sendOTPButton"  class="button button-block button-positive"
+                    <button id="sendOTPButton"  class="button button-block button-positive" 
                             ng-click="sendOTP()" style="margin-top: 13%;width: 70%;background-color: #065f2c">SEND OTP</button>
                     </center>
                 </div>
-
+                
             </div>
         </div>
-
-
+     
+          
           <div style="color:white;text-align:center;"><a style="color:white" id="emailSignIn" ng-click="gotoEmailSignIn()">
                   Sign in using email</a></div>
     </ion-content>
@@ -62,15 +62,15 @@
             <div class="row" >
                 <div class="col">
                      <center><input type="number" ng-model="userData.otp" /></center>
-                      <center><button id="myOption" value="login"
-                                      class="button button-positive" ng-click="onClickButton()" style="margin-top: 13%;background-color: #065f2c">SIGN IN</button></center>
-
+                      <center><button id="myOption" value="login" 
+                                      class="button button-positive" ng-click="onClickButton()" style="margin-top: 13%;background-color: #065f2c"">SIGN IN</button></center>
+       
                 </div>
             </div>
                 </div>
 
     </ion-content>
-
+    
       <ion-content ng-show="showUserInputField"
                  style="background-color: white;" id="signUpInput">
         <div class="padding" >
@@ -206,5 +206,5 @@
         </div>
     </ion-content>
 
-
+    
   </ion-view>

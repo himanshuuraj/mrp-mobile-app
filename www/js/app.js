@@ -41,7 +41,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-
+    .state('app.loginPage', {
+        cache: false,
+        url: '/loginPage',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/loginPage.html',
+            controller: 'loginCtrl'
+          }
+        }
+      })
     .state('app.cart', {
       cache: false,
       url: '/cart',
@@ -83,16 +92,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    .state('app.loginPage', {
-        cache: false,
-        url: '/loginPage',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/loginPage.html',
-            controller: 'loginCtrl'
-          }
-        }
-      })
 
     .state('app.profile', {
         cache: false,

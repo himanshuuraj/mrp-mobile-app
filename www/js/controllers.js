@@ -112,9 +112,6 @@ angular.module('starter.controllers', ['ngCordova'])
         if(window.location.href.includes("login"))
             $scope.showHeader = false;
 
-        if(window.location.href.includes("loginPage"))
-            $scope.showHeader = false;
-
         $scope.loginData = {};
 
         $rootScope.$on('isAgent',function(){
@@ -1741,11 +1738,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
             return 1;
         }
-
-        $scope.init = function(){
-          document.getElementsByTagName("ion-side-menu-content")[0].className = "";
-        };
-
         $scope.initOnSignup = function(){
             var areasRef = loginCred.dbRef.child('areas' );
             $scope.areasObj = {};
