@@ -25,10 +25,10 @@
                     <div class="col wrapWord" style="color: #388e3c;font-size: 18px" ng-click="toggleGroup(shop)" title="{{shop.name}}" >
                         {{shop.name}}
                     </div>
-                    <div class="col col-10">
+                    <div class="col col-10" ng-show="editShopEnabled">
                         <i class="icon ion-edit" ng-click="showEditBox(shop);"></i>
                     </div>
-                    <div class="col col-10" ng-show="addShopEnabled">
+                    <div class="col col-10" ng-show="addShopEnabled && editShopEnabled">
                         <i class="icon icon ion-trash-b" ng-click="showConfirmRemoveShop(shop.tin)" style="float: right;"></i>
                     </div>
                 </div>
