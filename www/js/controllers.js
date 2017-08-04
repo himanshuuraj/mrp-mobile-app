@@ -680,29 +680,29 @@ angular.module('starter.controllers', ['ngCordova'])
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.selectedItem = "rice";
-        var getShopData = function(){
-            var id = uid;
-             if(userInfo.superAgentMobileNum){
-                 id= userInfo.superAgentMobileNum;
-             }
-             var shopsRef = dbRef.child('users/'+id + '/shops'); 
-             shopsRef.once('value', function(snap) {
-                existingShops = snap.val();
-                if(!$scope.isAgent && existingShops.length == 1){
-                    window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
-                    window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
-                    window.localStorage.areaId = $scope.shopDetail.areaId;
-                    $scope.getItemsPrice();
-                    $scope.cartArray[$scope.shopDetail.tin] = [];
-                }else{
-                    $scope.shopArray = existingShops;
-                    if(!window.localStorage.tin)
-                        $scope.showShopPopUp();
-                }
-                $scope.$apply();
-                //console.log(existingShops);
-            });
-        }
+//        var getShopData = function(){
+//            var id = uid;
+//             if(userInfo.superAgentMobileNum){
+//                 id= userInfo.superAgentMobileNum;
+//             }
+//             var shopsRef = dbRef.child('users/'+id + '/shops'); 
+//             shopsRef.once('value', function(snap) {
+//                existingShops = snap.val();
+//                if(!$scope.isAgent && existingShops.length == 1){
+//                    window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
+//                    window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
+//                    window.localStorage.areaId = $scope.shopDetail.areaId;
+//                    $scope.getItemsPrice();
+//                    $scope.cartArray[$scope.shopDetail.tin] = [];
+//                }else{
+//                    $scope.shopArray = existingShops;
+//                    if(!window.localStorage.tin)
+//                        $scope.showShopPopUp();
+//                }
+//                $scope.$apply();
+//                //console.log(existingShops);
+//            });
+//        }
 
         var userInfo = {};
         if(window.localStorage.userInfo)
@@ -891,8 +891,16 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArray[$scope.shopDetail.tin] = [];
         }
         else{
+            
             $scope.shopArray = userInfo.shops || [];
-            if(!window.localStorage.tin)
+            if(userInfo.superAgentMobileNum) {
+                  var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
+                  shopsRef.once('value', function(snap) {
+                        var superAgentShops = snap.val();
+                        $scope.shopArray = $scope.shopArray.concat(superAgentShops);
+                        $scope.showShopPopUp();
+                    })
+            }else if(!window.localStorage.tin)
                 $scope.showShopPopUp();
             else{
                 $scope.shopDetail.name = window.localStorage.shopName;
@@ -1443,7 +1451,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                              var uInfo = JSON.parse(window.localStorage.userInfo);
                                              uInfo.shops=superAgentShops;
                                              window.localStorage.userInfo = JSON.stringify(uInfo);
-                                         })
+                                })
                                  }
                                 $scope.isAgent = window.localStorage.isAgent = data.isAgent;
                                 window.localStorage.isActive = data.active;
@@ -1456,7 +1464,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                     x[userInfo.shops[0].tin] = userInfo.shops[0];
                                           window.localStorage.shopInfo = JSON.stringify(x);
                                 }
-                                if(!userInfo.shops || (userInfo.shops.length == 0))
+                                if(!userInfo.superAgentMobileNum && (!userInfo.shops || userInfo.shops.length == 0) )
                                     window.location.hash = "#/app/shop";
                                 else if(!data.active){
                                     alert("User not activated. Please contact administrator")
