@@ -161,7 +161,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
-    .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope) {
+    .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
         var showPopUp = loginCred.showPopup;
         if(window.localStorage.isActive === 'false') {
             alert("User not activated. Please contact administrator");
@@ -395,6 +395,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         $scope.submitOrder = function(){
+            $ionicLoading.show();
             $scope.validateIfLatestPrice(loginCred.dbRef);
             if($scope.flagForPriceModified==true){
                     //$scope.modifiedPriceList
@@ -467,10 +468,13 @@ angular.module('starter.controllers', ['ngCordova'])
             var usersRef = dbRef.child('users/' + window.localStorage.uid );
 
             usersRef.once('value', function(data){
+                  $ionicLoading.hide();
                 var userValue = data.val();
                 userValue["orders"] = userValue["orders"] || [];
                 userValue["orders"].push(orderId);
                 var promise = usersRef.update(userValue);
+            }).catch(function(e){
+                 $ionicLoading.hide();
             });
 
             var promise = ordersRef.set(newOrder);
