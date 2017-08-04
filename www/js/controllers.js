@@ -450,7 +450,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var now = (new Date().getTime());
 
             var isSubAgentOrder = false;
-            if(window.localStorage.superAgentMobileNum)
+             if(userInfo.superAgentMobileNum)
                 isSubAgentOrder=true;
 
             var newOrder = {
@@ -672,13 +672,17 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.isAgent = true;
         else
             $scope.isAgent = false;
-        var shopInfo = {};
+         var shopInfo = {}; var userInfo= JSON.parse(window.localStorage.userInfo);
         if(window.localStorage.shopInfo)
             shopInfo = JSON.parse(window.localStorage.shopInfo);
         $scope.selectedItem = "rice";
         var getShopData = function(){
-            var shopsRef = dbRef.child('users/'+uid + '/shops');
-            shopsRef.once('value', function(snap) {
+            var id = uid;
+             if(userInfo.superAgentMobileNum){
+                 id= userInfo.superAgentMobileNum;
+             }
+             var shopsRef = dbRef.child('users/'+id + '/shops'); 
+             shopsRef.once('value', function(snap) {
                 existingShops = snap.val();
                 if(!$scope.isAgent && existingShops.length == 1){
                     window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
@@ -1428,6 +1432,15 @@ angular.module('starter.controllers', ['ngCordova'])
                             if(data){
                                 userInfo = data;
                                 window.localStorage.userInfo = JSON.stringify(data);
+                                if(userInfo.superAgentMobileNum){
+                                         var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
+                                         shopsRef.once('value', function(snap) {
+                                             var superAgentShops = snap.val();
+                                             var uInfo = JSON.parse(window.localStorage.userInfo);
+                                             uInfo.shops=superAgentShops;
+                                             window.localStorage.userInfo = JSON.stringify(uInfo);
+                                         })
+                                 }
                                 $scope.isAgent = window.localStorage.isAgent = data.isAgent;
                                 window.localStorage.isActive = data.active;
                                 $rootScope.$broadcast('isAgent',{});
@@ -1616,15 +1629,9 @@ angular.module('starter.controllers', ['ngCordova'])
 
              if($scope.signUpData.superAgentMobile) {
                 foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
-                var superAgentShopsRef=dbRef.child('users/'+ $scope.signUpData.superAgentMobile + '/shops');
-                superAgentShopsRef.once('value', function(shopData){
-                   var allshops=shopData.val();
-                   foo['shops'] = allshops;
-                    createUser(foo);
-                })
-            }else{
+              }
                 createUser(foo);
-            }
+            
 
         };
 
@@ -1903,6 +1910,19 @@ angular.module('starter.controllers', ['ngCordova'])
 //                $scope.addShopEnabled = true;
 //            else
 //                $scope.addShopEnabled=false;
+
+
+               var userInfo = JSON.parse(window.localStorage.userInfo);
+             if(userInfo.superAgentMobileNum)
+                 $scope.editShopEnabled = false;
+             else 
+                 $scope.editShopEnabled = true;
+             
+             if(window.localStorage.isAgent=="true")
+                 $scope.addShopEnabled = true;
+             else
+                 $scope.addShopEnabled=false;
+             
             $scope.areasObj = {};
             areasRef.once('value', function (data) {
                 //console.log(data.val());
