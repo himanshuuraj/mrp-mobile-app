@@ -893,7 +893,7 @@ angular.module('starter.controllers', ['ngCordova'])
         else{
             
             $scope.shopArray = userInfo.shops || [];
-            if(userInfo.superAgentMobileNum) {
+            if(userInfo.superAgentMobileNum && !window.localStorage.tin) {
                   var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
                   shopsRef.once('value', function(snap) {
                         var superAgentShops = snap.val();
@@ -2667,10 +2667,9 @@ angular.module('starter.controllers', ['ngCordova'])
                   $scope.intVsDisp=  data.val();
              })
 
-              var areas = [];
-              usersRef.once('value', function(data){
-                 var userobj = data.val();
-                 var shops = userobj.shops;
+              var areas = [];var userInfo = JSON.parse(window.localStorage.userInfo);
+             
+              var shops = userInfo.shops;
                  if(shops!=null){
                      for(i=0;i<shops.length;i++){
                          var found=false;
@@ -2757,7 +2756,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                 })})(j);
              }
-              })
+              
               $rootScope.$broadcast("cached",{});
          };
      })
