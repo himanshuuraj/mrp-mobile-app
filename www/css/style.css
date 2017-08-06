@@ -125,8 +125,8 @@ h1,h2,h3{
 input.animateInput {
     display: block;
     border: none;
+    height:50px;
     padding: 10px 0;
-    border-bottom: solid 1px #1abc9c;
     -webkit-transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
     transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 96%, #1abc9c 4%);

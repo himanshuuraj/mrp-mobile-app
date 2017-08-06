@@ -1447,11 +1447,24 @@ angular.module('starter.controllers', ['ngCordova'])
                                 if(userInfo.superAgentMobileNum){
                                          var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
                                          shopsRef.once('value', function(snap) {
-                                             var superAgentShops = snap.val();
-                                             var uInfo = JSON.parse(window.localStorage.userInfo);
-                                             uInfo.shops=superAgentShops;
-                                             window.localStorage.userInfo = JSON.stringify(uInfo);
-                                })
+                                            var superAgentshops = snap.val() || [];
+                                        var uInfo = JSON.parse(window.localStorage.userInfo);
+                                        var existingShops = uInfo.shops || [];
+                                        uInfo.shops = existingShops.concat(superAgentshops);
+                                        window.localStorage.userInfo = JSON.stringify(uInfo);
+                                    })
+                                    
+                                    var myOwnShopsRef = dbRef.child('users/'+uid + '/shops');
+                                    myOwnShopsRef.once('value' , function(data){
+                                        var myshops = data.val() || [];
+                                        var uInfo = JSON.parse(window.localStorage.userInfo);
+                                        var existingShops = uInfo.shops || [];
+                                        uInfo.shops = existingShops.concat(myshops);
+
+                                        window.localStorage.userInfo = JSON.stringify(uInfo);
+ 
+                                    })
+                                    
                                  }
                                 $scope.isAgent = window.localStorage.isAgent = data.isAgent;
                                 window.localStorage.isActive = data.active;
@@ -1846,27 +1859,22 @@ angular.module('starter.controllers', ['ngCordova'])
             userInfo["shops"] = userInfo["shops"] || [];
             //console.log($scope.shop);
             userInfo["shops"].push(JSON.parse(JSON.stringify($scope.shop)));
-            saveShop('add');
+            saveShop('add', $scope.shop);
             $scope.shop = {
                 tax_id : {}
             };
         };
 
-        var saveShop = function(type){
-            delete userInfo.$$hashKey;
-            var shopLength = userInfo.shops.length;
-            for(var index = 0; index < shopLength; index++)
-                delete userInfo.shops[index].$$hashKey;
+        var saveShop = function(type, shop){
             var uid = window.localStorage.uid;
             var dbRef = loginCred.dbRef;
-            var usersRef = dbRef.child('users/'+ uid);
-            var foo = {};
-            foo[uid] = userInfo;
-            var promise = usersRef.update(userInfo);
-            promise.then(function(e) {
-                console.log( e);
-                window.localStorage.userInfo = JSON.stringify(userInfo);
-                if(type == 'add'){
+             var usersRef = loginCred.dbRef.child('users/'+ uid +'/shops');
+             usersRef.transaction(function(shops){
+                     shops=shops||[];
+                    shops.push(shop);
+                     return shops;
+            },function(success){
+                 if(type == 'add'){
                     showPopUp("Shop added successfully");
                 }
                 else if(type == 'edit'){
@@ -1874,13 +1882,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 else{
                     showPopUp("Shop deleted successfully");
-                    /*for(var index = 0; index < $scope.shopArray.length; index++){
-                     if($scope.shopArray[index].tin == tin){
-                     $scope.shopArray.splice(index,1);
-                     break;
-                     }
-                     }*/
+                   
                 }
+                window.localStorage.userInfo = JSON.stringify(userInfo);
+               
 
                 $scope.shopArray = userInfo.shops || [];
                 $scope.editType = false;
@@ -1888,7 +1893,8 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.$apply();
                 window.localStorage.userInfo = JSON.stringify(userInfo);
 
-            }).catch(e => showPopUp("Please try again"));
+            });
+          
         }
 
         $scope.showEditBox = function(shop){
