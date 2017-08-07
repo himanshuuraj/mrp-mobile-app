@@ -10,8 +10,6 @@
   <ion-content class="has-header">
 
       <div class="padding" ng-hide="showShopInput" style="margin-top:10%;">
-          
-          
           <input type="text" ng-model="shopSearchText.name"
                  id="shopSearch" placeholder="Search for Shop" class="search-input quick-search"
                     style="margin-left:30%;width: 70%;margin-bottom:10px;padding-left:10px;">
@@ -150,7 +148,21 @@
                   <input type="text" class="animateInput" placeholder="Pincode" ng-model="shop.pincode" required="" style="width: 98%;">
               </div>
           </div>
-         
+          <div class="padding">
+              <div class="row">
+                    <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
+                         <button class="button button-block button-positive" ng-click="closeEditBox();" style="margin:0;">Cancel</button>
+                    </div>
+                    <div class="col" style="max-height: 50px;padding-top: 0px;padding-bottom: 0px;">
+                        <button class="button button-block button-positive" style="margin: 0;" ng-click="addNewShop()">
+                     <b ng-hide="editType">SUBMIT</b>
+                     <b ng-show="editType">DONE</b>
+                    </button>
+                    </div>
+                  
+              </div>
+                 
+            </div>
       </div>
   </ion-content>
 </ion-view>

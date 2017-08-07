@@ -896,10 +896,7 @@ angular.module('starter.controllers', ['ngCordova'])
             if(userInfo.superAgentMobileNum && !window.localStorage.tin) {
                   var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
                   shopsRef.once('value', function(snap) {
-                        var superAgentShops = snap.val(); var allowedAreas=userInfo.allowedAreas || [];
-                        superAgentShops.filter(function(superAgentShop){
-                            return allowedAreas.indexOf(superAgentShop.areaId) >= 0
-                        })
+                        var superAgentShops = snap.val();
                         $scope.shopArray = $scope.shopArray.concat(superAgentShops);
                         $scope.showShopPopUp();
                     })
@@ -1451,10 +1448,6 @@ angular.module('starter.controllers', ['ngCordova'])
                                          var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
                                          shopsRef.once('value', function(snap) {
                                             var superAgentshops = snap.val() || [];
-                                            var allowedAreas=userInfo.allowedAreas || [];
-                                             superAgentshops.filter(function(superAgentShop){
-                                            return allowedAreas.indexOf(superAgentShop.areaId) >= 0
-                                            })
                                         var uInfo = JSON.parse(window.localStorage.userInfo);
                                         var existingShops = uInfo.shops || [];
                                         uInfo.shops = existingShops.concat(superAgentshops);
@@ -1661,7 +1654,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
              if($scope.signUpData.superAgentMobile) {
                 foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
-                foo.allowedAreas = []; // fill the selected areas here
               }
                 createUser(foo);
             
