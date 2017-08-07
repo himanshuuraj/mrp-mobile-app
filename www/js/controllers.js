@@ -255,8 +255,9 @@ angular.module('starter.controllers', ['ngCordova'])
 
             var calcDiscount = function() {
 
-             console.log('------------ entered discount');
-             console.log($scope.cartArray);$scope.totaldiscountedPrice = $scope.totaldiscountedPrice || 0 ;
+            // console.log('------------ entered discount');
+            // console.log($scope.cartArray);
+             $scope.totaldiscountedPrice = $scope.totaldiscountedPrice || 0 ;
              $scope.cartArray["discount_amount"] = $scope.totaldiscountedPrice;
             $scope.cartArray.totalPrice = $scope.cartArray.grossPrice - $scope.totaldiscountedPrice;
 
@@ -325,7 +326,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                     itemsProcessed++;
                     var discounts = data.val().discounts;
-                    console.log(discounts);
+                  //  console.log(discounts);
                     if(discounts) {
                         riceDiscArray = discounts.rice || riceDiscArray ;
                         ravvaDiscArray = discounts.ravva ||  ravvaDiscArray;
@@ -544,7 +545,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }
 
         var populateOrderList = function(orderId){
-                 console.log('orderid is ' + orderId);
+               //  console.log('orderid is ' + orderId);
                  var orderListRef = loginCred.dbRef.child('orderList');
                  orderListRef.transaction(function(orders){
                      orders=orders||[];
@@ -1614,7 +1615,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     })
 
                 }
-                console.log($scope.areasObj);
+             //   console.log($scope.areasObj);
                 $scope.areas = foo;
                 $scope.$apply();
             });
@@ -1699,7 +1700,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var authIdMobileMapRef = dbRef.child('authMobileMap/' + authId);
             var promiseFromAuthMobile = authIdMobileMapRef.set(uid);
             promiseFromAuthMobile.then(function(e){
-                console.log("Successfully added mobile mapping to the auth id");
+            //    console.log("Successfully added mobile mapping to the auth id");
                 window.localstorage.uid=uid;
             }).catch(e => console.log("Could not add mobile mapping"));
             var usersRef = dbRef.child('users/'+ uid );
@@ -2236,7 +2237,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 ]
             });
             myPopup.then(function(res) {
-                console.log('Tapped!', res);
+               // console.log('Tapped!', res);
             });
         };
 
@@ -2582,7 +2583,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                     shopObjectsGroup[tin]= objectsArray;
             }
-            console.log(shopObjectsGroup);
+           // console.log(shopObjectsGroup);
         }
 
         $scope.showDeletePopUp = function(orderId) {
