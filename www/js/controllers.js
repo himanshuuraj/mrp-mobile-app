@@ -898,10 +898,15 @@ angular.module('starter.controllers', ['ngCordova'])
                   shopsRef.once('value', function(snap) {
                         var superAgentShops = snap.val();
                             var superAgentShops = snap.val(); var allowedAreas=userInfo.allowedAreas || [];
-                            superAgentShops.filter(function(superAgentShop){
-                             return allowedAreas.indexOf(superAgentShop.areaId) >= 0
-                         })
-                        $scope.shopArray = $scope.shopArray.concat(superAgentShops);
+//                            superAgentShops.filter(function(superAgentShop){
+//                             return allowedAreas.indexOf(superAgentShop.areaId) >= 0
+//                            })
+                        var filteredShops=[];
+                        for (var i=0;i<superAgentShops.length;i++){
+                            if(allowedAreas.indexOf(superAgentShops[i]['areaId']) >=0)
+                                filteredShops.push(superAgentShops[i]);
+                        }
+                        $scope.shopArray = $scope.shopArray.concat(filteredShops);
                         $scope.showShopPopUp();
                     })
             }else if(!window.localStorage.tin)
@@ -1451,14 +1456,17 @@ angular.module('starter.controllers', ['ngCordova'])
                                 if(userInfo.superAgentMobileNum){
                                          var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
                                          shopsRef.once('value', function(snap) {
-                                            var superAgentshops = snap.val() || [];
+                                            var superAgentShops = snap.val() || [];
                                                  var allowedAreas=userInfo.allowedAreas || [];
-                                              superAgentshops.filter(function(superAgentShop){
-                                             return allowedAreas.indexOf(superAgentShop.areaId) >= 0
-                                             })
+                                              var filteredShops=[];
+                                                 for (var i=0;i<superAgentShops.length;i++){
+                                                    if(allowedAreas.indexOf(superAgentShops[i]['areaId']) >=0)
+                                                    filteredShops.push(superAgentShops[i]);
+                                                 }
+                            
                                         var uInfo = JSON.parse(window.localStorage.userInfo);
                                         var existingShops = uInfo.shops || [];
-                                        uInfo.shops = existingShops.concat(superAgentshops);
+                                        uInfo.shops = existingShops.concat(filteredShops);
                                         window.localStorage.userInfo = JSON.stringify(uInfo);
                                     })
                                     
@@ -1606,10 +1614,13 @@ angular.module('starter.controllers', ['ngCordova'])
                     })
 
                 }
+                console.log($scope.areasObj);
                 $scope.areas = foo;
                 $scope.$apply();
             });
         }
+        
+        $scope.selectedAreas = [];
 
         $scope.fillSignUpData = function(){
             var authId = window.localStorage.authId;
@@ -1660,9 +1671,22 @@ angular.module('starter.controllers', ['ngCordova'])
                 shops : shops
             };
 
+            var selectedAreas=[];
+            var index = 0;
+            for(var key in $scope.areasObj){
+                index++;
+                var element = document.getElementById("area"+index)
+                if(element){
+                    if(element.checked)
+                        selectedAreas.push(element.value);
+                    
+                }
+                
+            }
+
              if($scope.signUpData.superAgentMobile) {
                 foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
-                foo.allowedAreas = []; // fill the selected areas here
+                foo.allowedAreas = selectedAreas; // fill the selected areas here
               }
                 createUser(foo);
             
@@ -1954,12 +1978,14 @@ angular.module('starter.controllers', ['ngCordova'])
             areasRef.once('value', function (data) {
                 //console.log(data.val());
                 var areas = $scope.areasObj = data.val();
-                var foo = [];
+                var foo = []; var allowedAreas = userInfo.allowedAreas;
                 for (var area in areas) {
+                   if(allowedAreas.indexOf(area) >=0)  {                                                  
                     foo.push({
                         id: area,
                         name: areas[area].displayName
                     })
+                }
 
                 }
                 $scope.areas = foo;
