@@ -163,7 +163,7 @@
                     </div>
                 </div>
             
-                <div >
+                <div class="row" >
                     <div class="list list-inset" ng-show="isSubAgentChecked">                        
                         <div class="row" style="margin-top: 1%">
                             <div class="col">
@@ -174,8 +174,10 @@
                 </div>
                            <!-- code to multi select areas . In model it's available in $scope.areas -->
 
-                           
-                           <ul class = "list">
+                           <div class="row" style="margin-top: 10px">
+                               <br>
+                           <ul class = "list"    ng-show="isChecked">
+                               <span class="row"><strong>Select Area</strong></span>
                                 <li class = "item item-checkbox" ng-repeat="(k,v) in areasObj">
                                    {{v.displayName}}
                                    <label class = "checkbox">
@@ -183,6 +185,7 @@
                                    </label>
                                 </li>
                              </ul>
+                            </div>
                 <button class="button button-block button-positive"  ng-click="fillSignUpData()">Submit</button>
             
         </div>
