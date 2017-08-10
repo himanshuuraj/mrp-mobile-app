@@ -9,6 +9,10 @@ body{
     }
 }
 
+.popup-body{
+    padding : 0;
+}
+
 
 ion-content{
     background-color: #f1f1f2;

@@ -503,7 +503,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var userValue = data.val();
                         userValue["suborders"] = userValue["suborders"] || {};
                         userValue["suborders"][window.localStorage.uid]=userValue["suborders"][window.localStorage.uid] || {};
-                        userValue["suborders"][window.localStorage.uid][orderId] = orderId;
+                        userValue["suborders"][window.localStorage.uid][orderId] = userInfo.name;
                         var prom = superAgentsRef.update(userValue);
                         prom.then(function(w){
 
@@ -907,7 +907,7 @@ angular.module('starter.controllers', ['ngCordova'])
                             if(allowedAreas.indexOf(superAgentShops[i]['areaId']) >=0)
                                 filteredShops.push(superAgentShops[i]);
                         }
-                        $scope.shopArray = $scope.shopArray.concat(filteredShops);
+                        $scope.shopArray = filteredShops;
                         $scope.showShopPopUp();
                     })
             }else if(!window.localStorage.tin)
@@ -1494,11 +1494,12 @@ angular.module('starter.controllers', ['ngCordova'])
                                     x[userInfo.shops[0].tin] = userInfo.shops[0];
                                           window.localStorage.shopInfo = JSON.stringify(x);
                                 }
-                                if(!userInfo.superAgentMobileNum && (!userInfo.shops || userInfo.shops.length == 0) )
-                                    window.location.hash = "#/app/shop";
-                                else if(!data.active){
+                                
+                                if(!data.active){
                                     alert("User not activated. Please contact administrator")
-                                }else{
+                                }else if(!userInfo.superAgentMobileNum && (!userInfo.shops || userInfo.shops.length == 0) )
+                                    window.location.hash = "#/app/shop";
+                                else{
                                     window.location.hash = "#/app/search";
                                 }
                             }
@@ -2060,6 +2061,88 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         };
+        
+        $scope.viewSubAgentOrder = function(subAgentMobileNum, orderId){
+            
+             
+//            $ionicPopup.show({
+//                template: '<div class="row">'+
+//                '<div class="col">Item Name</div>'+
+//                '<div class="col-20">Old Price</div>'+
+//                '<div class="col-20">New Price</div>'+
+//                '</div>'+
+//                '<hr>'+
+//                '<div ng-repeat="item in modifiedPriceList" > ' +
+//                '<div class="row">'+
+//                '<div class="col">{{item.productId}}</div>'+
+//                '<div class="col-20">{{item.oldPrice}}</div>'+
+//                '<div class="col-20">{{item.newPrice}}</div>'+
+//                '</div>'+
+//                '</div>',
+//                title: 'INFO',
+//                scope: $scope,
+//                buttons: [
+//                    {   text: 'OK',
+//                        onTap: function(e) {
+//                            $scope.applyDiscount();
+//                            return;
+//                        }
+//
+//                    }
+//                ]
+//            });
+//            
+
+            $ionicPopup.show({
+              templateUrl: 'templates/viewOrder.html',
+              title: 'Order Summary',
+              scope: $scope,
+              buttons: [
+                {
+                  text: '<b>Done</b>',
+                  type: 'button-positive',
+                  onTap: function(e) { return true; }
+                },
+              ]
+              }).then(function(res) {
+                console.log('Tapped!', res);
+              }, function(err) {
+                console.log('Err:', err);
+              }, function(msg) {
+                console.log('message:', msg);
+              });
+            var subAgentOrdersRef = loginCred.dbRef.child('orders/'+orderId);
+            subAgentOrdersRef.once('value', function(data){
+                   if(!data.val())
+                    return;
+                $scope.cartArrayOrderDetail = data.val().cart;
+                $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
+
+            for (var index in $scope.shopArrayOrderDetail){
+                var shop = $scope.shopArrayOrderDetail[index];
+                for(var item in shop.items){
+                    var itemObj = shop.items[item];
+                    for( var product in itemObj){
+                        var productObj = itemObj[product];
+                        productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
+                        productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
+                        productObj['price'] = loginCred.toCommaFormat(productObj['price']);
+
+                    }
+                }
+                shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
+                shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
+                shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
+            }
+            $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
+            $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
+            $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                $scope.$apply();
+            });
+            
+
+        }
+
 
         $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
             var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
