@@ -1,35 +1,10 @@
-<ion-view ng-init="loadOrders()" style="background-color: #fff">
-    <div class="bar bar-header">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" id="naviconIcon" style="color:white;">
-        </button>
-        <h1 class="title" style="color:white;">ORDER HISTORY</h1>
-        <button class="button button-icon button-clear ion-ios-cart" id="addToCartLogo" ng-click="continue();"
-                style="color:white;">
-        </button>
-    </div>
-    <ion-content class="has-header">
-        <div class="padding" style="margin-top: 20px;">
-            <p style="padding-left: 10px;font-size:16px;font-weight: 500">Latest order appears on the top of the page.<br><br> You can track/cancel/view updates related to the order.</p>
-            <ion-list>
-                <div ng-repeat = "order in ordersArray " style="margin-top: 15px">
-                    <ion-item class="item-stable" style="background-color: white;margin-top: 4px">
-                        <div class="row" ng-click="onClickOrder(order)" style="cursor:pointer;color: #388e3c;font-weight: 500;font-size: 18px">
-                            <i id="{{order}}icon" style="margin-right: 10px" class="icon ion-plus" ng-class="ion-plus"></i>
-                            {{order}}
-                        </div>
-                    </ion-item>
-
-                    <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded"
-                         style="background-color:#fff;display: none;" >
-                        <div class="row card">
-                            <div class="col-75" style="padding-left: 15px;padding-top: 5px;">
-                                STATUS : {{value.status}}
-                            </div>
-                            <div class="col" ng-click="showOrder(order)">
-                                <i class="icon ion-eye"  style="font-size: 22px;float:right;margin-right: 8px"></i>
-                            </div>
-                        </div>
-                        <div id="{{order}}OrderEye" ng-show="isViewDetailClicked(order)">
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div id="OrderEye">
                             <div class="card" id="viewDetailedOrder">
 
                                 <div class="padding col" ng-repeat="shop in shopArrayOrderDetail" style="width: 108%">
@@ -126,31 +101,7 @@
                                                         </span>
                                 </p>
                             </div>
-                            <div class="button button-bar row" style="padding-left:2%;width: 25%;height: 10px;background-color: #af2020;margin-left: 72%"
-                                 ng-click="showDeletePopUp(order)">                          
-                                <p style="width: 100%;color: white;margin-top: 2px">
-                                    <span style="color:white">
-                                        <b>CANCEL</b>
-                                </span>
-                                </p>
-                            </div>
+                         
                         </div>
 
 
-                        <div ng-repeat="msgs in value.updates" class="row">
-                            <ion-item class="row" >
-                                <div class="col">
-                                    {{msgs.timestamp}}
-                                </div>
-                                <div class="col" style="word-wrap: break-word">
-                                    {{msgs.message}}
-                                </div>
-                            </ion-item>
-                        </div>
-                    </div>
-                </div>
-            </ion-list>
-        </div>
-    </ion-content>
-
-</ion-view>

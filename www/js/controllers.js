@@ -2094,7 +2094,102 @@ angular.module('starter.controllers', ['ngCordova'])
 //            
 
             $ionicPopup.show({
-              templateUrl: 'templates/viewOrder.html',
+              template: '<div id="OrderEye">'+
+                           ' <div class="card" id="viewDetailedOrder">'+
+                                '<div class="padding col" ng-repeat="shop in shopArrayOrderDetail" style="width: 108%">'+
+                                    '<h4 style="margin-left:10px">{{shop.name}}</h4>'+
+                                   ' <hr style="margin-left:10px">' +
+                                    '<div ng-repeat="(key,item) in shop.items" >' +
+                                       ' <div ng-repeat="(k,v) in item" >' +
+                                           '<div class="card" style="width:92%;">' + 
+                                                '<div class="row">'+
+                                                   ' <p style="width: 100%;">'+
+                                                    '    <span><b>Item Name</b></span>'+
+                                                     '   <span style="float:right;">{{v.name}}</span>'+
+                                                   ' </p>'+
+                                               ' </div>'+
+                                               ' <div class="row">'+
+                                                    '<p style="width: 100%;">'+
+                                                        '<span><b>Weight in Quintals</b></span>'+
+                                                        '<span style="float:right;">{{v.weight}}</span>'+
+                                                   ' </p>'+
+                                               ' </div>'+
+                                              '  <div class="row">'+
+                                                   ' <p style="width: 100%;">'+
+                                                    '    <span><b>Quintal Price</b></span>'+
+                                                       ' <span style="float:right;">&#8377;{{v.quintalWeightPrice}}</span>'+
+                                                 '   </p>'+
+                                              '  </div>'+
+                                               ' <div class="row">'+
+                                                '    <p style="width: 100%;">'+
+                                                  '      <span><b>Price After Discount</b></span>'+
+                                                     '   <span style="float:right;">&#8377;{{v.discountedQuintalPrice}}</span>'+
+                                                   ' </p>'+
+                                               ' </div>'+
+                                               ' <div class="row">'+
+                                                 '   <p style="width: 100%;">'+
+                                                    '    <span>'+
+                                                  '          <b>Price</b>'+
+                                                      '      <span style="float:right;">&#8377;{{v.price}}</span>'+
+                                                     '   </span>'+
+                                                   ' </p>'+
+                                               ' </div>'+
+                                        ' </div>'+
+                                       ' </div>'+
+                                   ' </div>'+
+                                      '   <div class="row" style="width: 92%;color:green;">'+
+                                       '      <p style="width: 100%;">'+
+                                        '                <span>'+
+                                         '                   <b>Total</b>'+
+                                          '                  <span style="float:right;">&#8377;{{shop.totalShopPrice}}</span>'+
+                                           '             </span>'+
+                                            ' </p>'+
+                                        ' </div>'+
+                                         '<div class="row" style="width: 92%;color:green;">'+
+                                          '   <p style="width: 100%;">'+
+                                           '             <span>'+
+                                            '                <b>Discount</b>'+
+                                             '               <span style="float:right;">&#8377;{{shop.shopDiscountAmount}}</span>'+
+                                              '          </span>'+
+                                             '</p>'+
+                                         '</div>'+
+                                         '<div class="row" style="width: 92%;color:green;">'+
+                                          '   <p style="width: 100%;">'+
+                                           '             <span>'+
+                                            '                <b>Amount Payable:</b>'+
+                                             '               <span style="float:right;">&#8377;{{shop.shopGrossAmount}}</span>'+
+                                              '          </span>'+
+                                             '</p>'+
+                                         '</div>'+
+                                   ' <hr style="border-top: 1px dotted">'+
+                                    '<br>'+
+                               ' </div>'+
+                            '</div>'+
+                            '<div class="row" style="padding-left:2%;width: 96%;">'+
+                             '   <p style="width: 100%;">'+
+                              '                          <span>'+
+                               '                             <b>TOTAL PRICE</b>'+
+                                '                            <span style="float:right;" id="gross_price">&#8377;{{cartArrayOrderDetail.grossPrice}}</span>'+
+                                 '                       </span>'+
+                                '</p>'+
+                            '</div>'+
+                            '<div class="row" style="padding-left:2%;width: 96%;">'+
+                             '   <p style="width: 100%;">'+
+                              '                          <span>'+
+                               '                             <b>Discount</b>'+
+                                '                            <span id="discount_amount" style="float:right;" id="discount_amount">&#8377;{{cartArrayOrderDetail.discount_amount}}</span>'+
+                                 '                       </span>'+
+                                '</p>'+
+                            '</div>'+
+                            '<div class="row" style="padding-left:2%;width: 96%;">'+
+                             '   <p style="width: 100%;">'+
+                              '                          <span>'+
+                               '                             <b>GRAND TOTAL</b>'+
+                                '                            <span id="grand_total" style="float:right;">&#8377;{{cartArrayOrderDetail.totalPrice}}</span>'+
+                                 '                       </span>'+
+                                '</p>'+
+                            '</div>  ' +                       
+                        '</div>',
               title: 'Order Summary',
               scope: $scope,
               buttons: [
