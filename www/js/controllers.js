@@ -2094,7 +2094,7 @@ angular.module('starter.controllers', ['ngCordova'])
 //            
 
             $ionicPopup.show({
-              template: '<div id="OrderEye">'+
+              template: '<div id="OrderEye" style="margin-left: -15px;margin-right:-15px">'+
                            ' <div class="card" id="viewDetailedOrder">'+
                                 '<div class="padding col" ng-repeat="shop in shopArrayOrderDetail" style="width: 108%">'+
                                     '<h4 style="margin-left:10px">{{shop.name}}</h4>'+
@@ -2337,12 +2337,36 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.priceArray = JSON.stringify(existingPriceArray);
             });
         }
+        
+         $scope.showDeletePopUp = function(orderId) {
+           
+        };
 
         $scope.deleteSubAgentOrder = function(subAgentMobileNum, orderId){
-            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
+             var myPopup = $ionicPopup.show({
+                template: 'Are you sure you want to delete the order ?',
+                title: 'Delete Order ?',
+                scope: $scope,
+                buttons: [
+                    { text: 'No' }, {
+                        text: '<b>Yes</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            $scope.deleteSubAgOrd(subAgentMobileNum,orderId);
+                        }
+                    }
+                ]
+            });
+            myPopup.then(function(res) {
+                console.log('Tapped!', res);
+            });          
+
+        }
+        
+        $scope.deleteSubAgOrd = function(subAgentMobileNum,orderId){
+             var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
                     '/suborders/'+subAgentMobileNum + '/' +orderId);
             subAgentOrdersRef.remove();
-
         }
 
         var showInitialPrice = function () {
