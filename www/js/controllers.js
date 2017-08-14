@@ -2240,6 +2240,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
+            var card = document.getElementById('order-' + orderId);
+            card.style="background:#27ae60";
             var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(order){
                 var shopDetailArray = order.val().cart.shopDetail;
@@ -2338,9 +2340,6 @@ angular.module('starter.controllers', ['ngCordova'])
             });
         }
         
-         $scope.showDeletePopUp = function(orderId) {
-           
-        };
 
         $scope.deleteSubAgentOrder = function(subAgentMobileNum, orderId){
              var myPopup = $ionicPopup.show({
