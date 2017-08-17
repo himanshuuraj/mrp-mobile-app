@@ -2240,15 +2240,65 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
+            
+            var priceListRef=loginCred.dbRef.child('priceList/');
+            priceListRef.once('value', function(data){
+               var priceList=data.val(); 
+               
             var card = document.getElementById('order-' + orderId);
             card.style="background:#27ae60";
             var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(order){
-                var shopDetailArray = order.val().cart.shopDetail;
+                var shopDetailArray = order.val().cart.shopDetail;var i=0;
                 shopDetailArray.forEach(function(eachShop){
+                    i++;
                     var tin= eachShop.tin;var areaId=eachShop.areaId;
-                    fetchPriceForEachShop(areaId,tin);
-                    var shopInfo=JSON.parse(window.localStorage.shopInfo);
+                    fetchPriceForEachShop(areaId,tin,eachShop,priceList);  
+                   
+                }
+                );
+                if(shopDetailArray.length==i){
+                    $scope.$apply();
+
+                }
+
+
+            });
+            });
+          
+//            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
+//                    '/suborders/'+subAgentMobileNum + '/' +orderId);
+//            subAgentOrdersRef.remove();
+        };
+
+        var fetchPriceForEachShop = function(areaId,tin,eachShop,priceList){
+           
+                var prices = priceList[areaId];
+                if(prices == null)
+                    return;
+                $scope.brokenPriceArray = prices.broken;
+                $scope.ravvaPriceArray = prices.ravva;
+                $scope.ricePriceArray = prices.rice;
+
+                 var existingPriceArray = {};
+                if(window.localStorage.priceArray)
+                    var existingPriceArray = JSON.parse(window.localStorage.priceArray);
+                existingPriceArray[tin]={'rice' : prices.rice,
+                    'ravva': prices.ravva,
+                    'broken': prices.broken
+                     } ;
+                window.localStorage.priceArray = JSON.stringify(existingPriceArray);
+                
+                updateBlaBla(tin,eachShop, prices);
+                    window.localStorage.cartArray=JSON.stringify($scope.cartArray);
+                     $timeout(function () {
+                        showInitialPrice();
+                    },1);
+            
+        }
+        
+        var updateBlaBla = function(tin,eachShop,prices){
+                     var shopInfo=JSON.parse(window.localStorage.shopInfo);
                     var x ={};
                       x["address"] = eachShop.address;
                       x["name"] = eachShop.name;
@@ -2258,6 +2308,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     x["mobile"] = eachShop.mobile;
                     shopInfo[tin] = x;
                     window.localStorage.shopInfo = JSON.stringify(shopInfo);
+                    $scope.cartArray[tin]=[];
 
                     var itemsInEachShop = eachShop.items;
                     var riceItems=itemsInEachShop.rice;
@@ -2273,9 +2324,33 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.price=riceProductObject.price;
                         ob.productId=productId;
                         ob.quantity=riceProductObject.weight;
-                       var existingObjects = $scope.cartArray[tin] || [];
-                       existingObjects.push(ob);
+                       var existingObjects = $scope.cartArray[tin] || [];var shopContext='Agent';
+                       
+                       if(prices['rice']!=null && prices['rice'][productId] != null &&  prices['rice'][productId][shopContext]!=null
+                               && prices['rice'][productId][shopContext].length != 0 )
+                        existingObjects.push(ob);
+                        else {
+                            var myPopup = $ionicPopup.show({
+                                 template: 'Product ' + ob.name + 'is not available' ,
+                                 title: 'Out of stock !!',
+                                 scope: $scope,
+                                 buttons: [
+                                          {
+                                             text: '<b>OK</b>',
+                                                type: 'button-positive',
+                                        onTap: function(e) {
+                                             
+                                        }
+                                    }
+                             ]
+                        });
+                        myPopup.then(function(res) {
+                                console.log('Tapped!', res);
+                        });          
+                        }
+                            
                        $scope.cartArray[tin] = existingObjects;
+                       
 
                     }
                     for(var productId in brokenItems){
@@ -2289,8 +2364,32 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.productId=productId;
                         ob.quantity=brokenProductObject.weight;
                          var existingObjects = $scope.cartArray[tin] || [];
-                       existingObjects.push(ob);
-                       $scope.cartArray[tin] = existingObjects;
+                        var shopContext='Agent';
+                       
+                       if(prices['broken']!=null && prices['broken'][productId] != null &&  prices['broken'][productId][shopContext]!=null
+                               && prices['broken'][productId][shopContext].length != 0 )
+                        existingObjects.push(ob);           
+                     else {
+                            var myPopup = $ionicPopup.show({
+                                 template: 'Product ' + ob.name + 'is not available' ,
+                                 title: 'Out of stock !!',
+                                 scope: $scope,
+                                 buttons: [
+                                         {
+                                             text: '<b>OK</b>',
+                                                type: 'button-positive',
+                                        onTap: function(e) {
+                                             
+                                        }
+                                    }
+                             ]
+                        });
+                        myPopup.then(function(res) {
+                                console.log('Tapped!', res);
+                        });          
+                        }
+                        
+                        $scope.cartArray[tin] = existingObjects;
                     }
                     for(var productId in ravvaItems){
                         var ravvaProductObject = ravvaItems[productId];
@@ -2303,41 +2402,36 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.productId=productId;
                         ob.quantity=ravvaProductObject.weight;
                         var existingObjects = $scope.cartArray[tin] || [];
-                       existingObjects.push(ob);
+                        
+                      
+                       if(prices['ravva']!=null && prices['ravva'][productId] != null &&  prices['ravva'][productId][shopContext]!=null
+                               && prices['ravva'][productId][shopContext].length != 0 )
+                            existingObjects.push(ob);
+                         else {
+                            var myPopup = $ionicPopup.show({
+                                 template: 'Product ' + '<b>' + ob.name+'</b>' + 'is not available' ,
+                                 title: 'Out of stock !!',
+                                 scope: $scope,
+                                 buttons: [
+                                         {
+                                             text: '<b>OK</b>',
+                                                type: 'button-positive',
+                                        onTap: function(e) {
+                                             
+                                        }
+                                    }
+                             ]
+                        });
+                        myPopup.then(function(res) {
+                                console.log('Tapped!', res);
+                        });          
+                        }
+                    
                        $scope.cartArray[tin] = existingObjects;
                     }
-                    $scope.$apply();
-                    window.localStorage.cartArray=JSON.stringify($scope.cartArray);
-                     $timeout(function () {
-                        showInitialPrice();
-                    },1);
-                }
-                );
-
-
-            });
-//            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
-//                    '/suborders/'+subAgentMobileNum + '/' +orderId);
-//            subAgentOrdersRef.remove();
-        };
-
-        var fetchPriceForEachShop = function(areaId,tin){
-            var areaRef = dbRef.child('priceList/'+ areaId);
-            areaRef.on('value',function(areaSnapshot){
-                var productsList = areaSnapshot.val();
-                $scope.brokenPriceArray = productsList.broken;
-                $scope.ravvaPriceArray = productsList.ravva;
-                $scope.ricePriceArray = productsList.rice;
-
-                 var existingPriceArray = {};
-                if(window.localStorage.priceArray)
-                    var existingPriceArray = JSON.parse(window.localStorage.priceArray);
-                existingPriceArray[tin]={'rice' : productsList.rice,
-                    'ravva': productsList.ravva,
-                    'broken': productsList.broken
-                     } ;
-                window.localStorage.priceArray = JSON.stringify(existingPriceArray);
-            });
+                    if( $scope.cartArray[tin].length === 0)
+                        delete $scope.cartArray[tin]
+                    
         }
         
 
@@ -2679,8 +2773,8 @@ angular.module('starter.controllers', ['ngCordova'])
             window.location.hash = "#/app/summary";
         }
 
-
         $scope.getShopName = function(tin){
+            var shopInfo=JSON.parse(window.localStorage.shopInfo);
             return shopInfo[tin] != null ? shopInfo[tin].name : '';
         }
 
