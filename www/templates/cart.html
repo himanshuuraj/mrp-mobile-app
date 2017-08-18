@@ -120,20 +120,21 @@
             </div>
         </div>
         <div class="padding " style="background-color:white;position:relative;margin-top: 15px;" ng-repeat = "(key,data) in suborders">
-            <div class="col card">Order from {{key}}
-                <div id="order-{{k}}" class="row" style="margin-top: 10px" ng-repeat="(k,v) in data">
-                    <div class="col">Name:{{v}}<br/>
+            <div class="col card">Order from <b>{{key}}</b>
+                <div id="order-{{k}}" class="row" style="margin-top: 10px;font-size: 12px" ng-repeat="(k,v) in data">
+                    <div class="col">{{getName(v)}}<br/>
+                        <span style="font-size: 10px;color:#27ae60">{{getShopNameFromName(v)}}</span>
                         <span style="font-style: italic;font-size: 8px">Order:{{k}}</span>
                     </div>
                     <div class="col" ng-click="viewSubAgentOrder(key,k)">
                         <i  class="icon ion-eye" style="float:right"></i>
                     </div>
-                    <div class="col" ng-click="moveSubAgentOrderToCart(key,k)">
+                    <div class="col" ng-click="acceptOrder(key,k)">
                         <i  class="icon ion-checkmark-round" style="float:right"></i>
                     </div>
-                    <div class="col" ng-click="deleteSubAgentOrder(key,k)">
+<!--                    <div class="col" ng-click="deleteSubAgentOrder(key,k)">
                         <i  class="icon icon ion-close-round" style="float: right"  ></i>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>

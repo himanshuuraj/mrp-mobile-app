@@ -481,8 +481,8 @@ angular.module('starter.controllers', ['ngCordova'])
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
-                         "You can track your order from the orders page","Yay!!");
-                populateInfoToSuperAgent();
+                         "You can track your order from the orders page","Congratulations!!");
+                populateInfoToSuperAgent(newOrder.cart.shopDetail[0].name);
                 sendSMS();
                  populateOrderList(orderId);
                 removeOrderedFromCartArray();
@@ -495,7 +495,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
             //populate order for super agent
-           function populateInfoToSuperAgent(){
+           function populateInfoToSuperAgent(shopName){
                var userInfo=JSON.parse(window.localStorage.userInfo);
                 if(userInfo.superAgentMobileNum) {
                     var superAgentsRef = dbRef.child('users/' + userInfo.superAgentMobileNum );
@@ -503,7 +503,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         var userValue = data.val();
                         userValue["suborders"] = userValue["suborders"] || {};
                         userValue["suborders"][window.localStorage.uid]=userValue["suborders"][window.localStorage.uid] || {};
-                        userValue["suborders"][window.localStorage.uid][orderId] = userInfo.name;
+                        userValue["suborders"][window.localStorage.uid][orderId] = userInfo.name + ';' + shopName;
                         var prom = superAgentsRef.update(userValue);
                         prom.then(function(w){
 
@@ -2062,6 +2062,16 @@ angular.module('starter.controllers', ['ngCordova'])
 
         };
         
+        $scope.getName = function(key){
+            var str = key.split(";");
+            return str[0] ;
+        };
+        
+         $scope.getShopNameFromName = function(key){
+            var str = key.split(";");
+            return str[1];
+        };
+        
         $scope.viewSubAgentOrder = function(subAgentMobileNum, orderId){
             
              
@@ -2237,7 +2247,31 @@ angular.module('starter.controllers', ['ngCordova'])
             
 
         }
+        
+        
+        $scope.acceptOrder = function(subAgentMobileNum,orderId){
+            
+            var myPopup = $ionicPopup.show({
+                template: 'Are you sure you want to accept the order ?',
+                title: 'Accept Order ?',
+                scope: $scope,
+                buttons: [
+                    { text: 'No' }, {
+                        text: '<b>Yes</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            $scope.moveSubAgentOrderToCart(subAgentMobileNum,orderId);
+                        }
+                    }
+                ]
+            });
+            myPopup.then(function(res) {
+                console.log('Tapped!', res);
+            });          
 
+            
+        }
+         
 
         $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
             
@@ -2245,8 +2279,8 @@ angular.module('starter.controllers', ['ngCordova'])
             priceListRef.once('value', function(data){
                var priceList=data.val(); 
                
-            var card = document.getElementById('order-' + orderId);
-            card.style="background:#27ae60";
+          //  var card = document.getElementById('order-' + orderId);
+          //  card.style="background:#27ae60";
             var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(order){
                 var shopDetailArray = order.val().cart.shopDetail;var i=0;
@@ -2259,6 +2293,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 );
                 if(shopDetailArray.length==i){
                     $scope.$apply();
+                    
+                    var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
+                    '/suborders/'+subAgentMobileNum + '/' +orderId);
+                    subAgentOrdersRef.remove();
 
                 }
 
@@ -2266,9 +2304,6 @@ angular.module('starter.controllers', ['ngCordova'])
             });
             });
           
-//            var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
-//                    '/suborders/'+subAgentMobileNum + '/' +orderId);
-//            subAgentOrdersRef.remove();
         };
 
         var fetchPriceForEachShop = function(areaId,tin,eachShop,priceList){
