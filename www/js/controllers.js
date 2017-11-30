@@ -353,7 +353,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
                 //simple and quick fix - dont calculate discounts for subagents
-                if(window.localStorage.superAgentMobileNum)
+                var userInfo = JSON.parse(window.localStorage.userInfo);
+                if(userInfo.superAgentMobileNum)
                     ricediscount=0, ravvadiscount=0,brokendiscount=0
 
 
@@ -1383,6 +1384,9 @@ angular.module('starter.controllers', ['ngCordova'])
     .controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate,$cordovaToast,$ionicSideMenuDelegate) {
         var dbRef = loginCred.dbRef;
         var authRef = loginCred.authRef;
+        
+        console.log('============' + authRef);
+        
         $scope.userData = {};
         $scope.loginAgain = false;
         var showPopUp = loginCred.showPopup;
@@ -1424,6 +1428,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         };
         $scope.onForgotPassword = function() {
+            
             showPopUp("Please contact administrator", "oops!!" );
         };
 
@@ -1435,6 +1440,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     $scope.showToast('this is a test', 'long', 'center');
                     return;
                 }
+                
+               
 
                 var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
                 promise.then(function(e) {
@@ -3156,6 +3163,20 @@ angular.module('starter.controllers', ['ngCordova'])
              })
 
            $rootScope.$broadcast("cached",{});
+        };
+        
+        $scope.sendEmail = function() {
+            var aRef = loginCred.authRef;
+            var email = aRef.currentUser.email;
+            var showPopUp = loginCred.showPopup;
+
+            aRef.sendPasswordResetEmail(email).then(function() {
+                showPopUp("An email to reset password has been sent successfully ", "Success!!" );
+            }).catch(function(error) {
+                showPopUp("Problem occured. Could not send email", "oops!!" );
+
+            }               
+            );            
         };
 
         $scope.updateProfile = function(){
