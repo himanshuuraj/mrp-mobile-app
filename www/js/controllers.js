@@ -438,9 +438,9 @@ angular.module('starter.controllers', ['ngCordova'])
             var dbRef = loginCred.dbRef;
             var now = new Date();
             var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-            var year = now.getYear();
+            var year = now.getFullYear();
             var mathRandom = Math.floor((Math.random())*1000);
-            var orderId= (now.getDate()).toString()  + monthsText[now.getMonth()] + (now.getYear()%10).toString() + '-'+
+            var orderId= (now.getDate()).toString()  + monthsText[now.getMonth()] + (now.getFullYear()%100).toString() + '-'+
                 userInfo.name.substring(0,3).toUpperCase() + userInfo.mobile.substring(0,3) +'-'+ mathRandom.toString();
 
             var cartArray = $scope.cartArray;
@@ -1384,9 +1384,7 @@ angular.module('starter.controllers', ['ngCordova'])
     .controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate,$cordovaToast,$ionicSideMenuDelegate) {
         var dbRef = loginCred.dbRef;
         var authRef = loginCred.authRef;
-        
-        console.log('============' + authRef);
-        
+                
         $scope.userData = {};
         $scope.loginAgain = false;
         var showPopUp = loginCred.showPopup;
