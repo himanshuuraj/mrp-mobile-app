@@ -1181,12 +1181,12 @@ angular.module('starter.controllers', ['ngCordova'])
                 brokenItemsPriorityArray.sort(function(a,b){
                     return a.value - b.value;
                 })
-                $scope.brokenItemsArray = [];
+                $scope.brokenArray = [];
 
                 brokenItemsPriorityArray.forEach(function(entry){
                     var ob={};
                     ob[entry.key]=$scope.brokenObject[entry.key];
-                    $scope.brokenItemsArray.push(ob);
+                    $scope.brokenArray.push(ob);
                 });
                 window.localStorage.brokenItemsPriorityArray = JSON.stringify(brokenItemsPriorityArray)
                 if(!$scope.$$phase) {
@@ -1562,7 +1562,11 @@ angular.module('starter.controllers', ['ngCordova'])
             if(!$scope.signUpData.name){
                 showPopUp('Enter Name Of User');
                 return 0;
+            }else if(/^[a-zA-Z0-9- ]*$/.test($scope.signUpData.name) == false) {
+                showPopUp('Name should not contain special characters like . , @ ');
+                return 0;
             }
+            
             if(!$scope.signUpData.mobile){
                 showPopUp('Enter Mobile Of User');
                 return 0;
