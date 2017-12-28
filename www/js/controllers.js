@@ -2801,6 +2801,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 x["tin"] = key;
                 x["proprietorName"] = shopInfo[key].proprietor_name;
                 x["areaId"] = shopInfo[key].areaId;
+                x["city"] = shopInfo[key].city;
+                x["district"] = shopInfo[key].district;
+                x["areaName"] = shopInfo[key].areaName;
                 x["totalShopPrice"] = Math.round(totalShopPrice*100) / 100;
                 x["totalWeight"] = Number(totalWeight);
                 x["mobile"] = shopInfo[key].mobile;
@@ -3008,12 +3011,14 @@ angular.module('starter.controllers', ['ngCordova'])
                 if(updates != null) {
                     for(var ob in updates){
                         var d = new Date(updates[ob].timestamp);
+                        if(updates[ob].msgType !== 'internal') { 
                         var singleMsg = {
                             timestamp : d.getDate() + '-'+monthNames[d.getMonth()] + '-' + d.getFullYear()+' '+ d.getHours() + ':'+ d.getMinutes(),
                             message : updates[ob].updateMsg,
                             messageType : updates[ob].msgType
                         }
                         foo.push(singleMsg);
+                        }
                     }
 
                 }
