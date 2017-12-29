@@ -2852,8 +2852,67 @@ angular.module('starter.controllers', ['ngCordova'])
             //console.log("show order clicked"+orderId);
             var ordersRef=loginCred.dbRef.child('orders/'+ orderId);
             ordersRef.once('value', function(data){
-                if(!data.val())
-                    return;
+                if(!data.val()) {
+                    var orderIdTokens = orderId.split("-");
+                    var dateInfoFromOrderId = orderIdTokens[0].toString();
+                    var year = dateInfoFromOrderId.substring((dateInfoFromOrderId.length-1),
+                                    dateInfoFromOrderId.length);
+                                    
+                    var month = dateInfoFromOrderId.substring(dateInfoFromOrderId.length-4 , dateInfoFromOrderId.length-1);
+                    var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+                    var index = monthsText.indexOf(month);
+                    var monthNumber = index +1;
+                    var day = dateInfoFromOrderId.substring( 0 , dateInfoFromOrderId.length-4);
+                    if(Number(day)<10)
+                        day='0'+ day;
+                    if(Number(monthNumber)<10)
+                        monthNumber = '0' + monthNumber;
+                    
+                    if(Number(year) == 7 )
+                        year = '2017';
+                    else
+                        year = 2000 + Number(year);
+                    
+                    var date = day + '-' + monthNumber + '-' + year;
+                    console.log(date);
+                    
+                    var oldOrdersRef=loginCred.dbRef.child('oldOrders/'+  date +'/'+ orderId);
+                    oldOrdersRef.once('value', function(data){
+                        if(!data.val())
+                                return;
+                            
+                            //same code is Repeated  below. Put it into a function later 
+                        $scope.cartArrayOrderDetail = data.val().cart;
+                        $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
+
+                                for (var index in $scope.shopArrayOrderDetail){
+                                    var shop = $scope.shopArrayOrderDetail[index];
+                                    for(var item in shop.items){
+                                        var itemObj = shop.items[item];
+                                        for( var product in itemObj){
+                                            var productObj = itemObj[product];
+                                            //console.log(productObj);
+                                            productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
+                                            productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
+                                            productObj['price'] = loginCred.toCommaFormat(productObj['price']);
+                                            //console.log(productObj);
+
+                                        }
+
+                                    }
+                                    shop['shopGrossAmount'] = loginCred.toCommaFormat(shop['totalShopPrice'] - shop['shopDiscountAmount']);
+                                    shop['shopDiscountAmount'] = loginCred.toCommaFormat(shop['shopDiscountAmount']);
+                                    shop['totalShopPrice'] = loginCred.toCommaFormat(shop['totalShopPrice']);
+                                }
+
+                                $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
+                                $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
+                                $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                                $scope.$apply();
+                        
+                    })
+                    
+                }else{
                 $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
 
@@ -2881,6 +2940,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
                 $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
                 $scope.$apply();
+            }
             });
 
         }
