@@ -1216,7 +1216,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             //var x = document.getElementById(key+"buy");
 
-            if(price == 'N/A'){
+            if(price == 'N/A' || price == '0'){
                 document.getElementById(key+"card").style.display = "none";
                 /*if(x)
                     x.style.display = "none";*/
