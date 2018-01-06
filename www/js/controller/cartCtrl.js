@@ -66,35 +66,6 @@ app.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNa
 
   $scope.viewSubAgentOrder = function(subAgentMobileNum, orderId){
 
-
-//            $ionicPopup.show({
-//                template: '<div class="row">'+
-//                '<div class="col">Item Name</div>'+
-//                '<div class="col-20">Old Price</div>'+
-//                '<div class="col-20">New Price</div>'+
-//                '</div>'+
-//                '<hr>'+
-//                '<div ng-repeat="item in modifiedPriceList" > ' +
-//                '<div class="row">'+
-//                '<div class="col">{{item.productId}}</div>'+
-//                '<div class="col-20">{{item.oldPrice}}</div>'+
-//                '<div class="col-20">{{item.newPrice}}</div>'+
-//                '</div>'+
-//                '</div>',
-//                title: 'INFO',
-//                scope: $scope,
-//                buttons: [
-//                    {   text: 'OK',
-//                        onTap: function(e) {
-//                            $scope.applyDiscount();
-//                            return;
-//                        }
-//
-//                    }
-//                ]
-//            });
-//
-
     $ionicPopup.show({
       template: '<div id="OrderEye" style="margin-left: -15px;margin-right:-15px">'+
       ' <div class="card" id="viewDetailedOrder">'+

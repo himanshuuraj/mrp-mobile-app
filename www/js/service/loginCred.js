@@ -1,15 +1,38 @@
 app.service('loginCred', function($ionicPopup) {
 
-  var config = {
-    apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
-    authDomain: "stage-db-b035c.firebaseapp.com",
-    databaseURL: "https://stage-db-b035c.firebaseio.com",
-    storageBucket: "stage-db-b035c.appspot.com",
-    messagingSenderId: "950510485815"
+  // var config = {
+  //   apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
+  //   authDomain: "stage-db-b035c.firebaseapp.com",
+  //   databaseURL: "https://stage-db-b035c.firebaseio.com",
+  //   storageBucket: "stage-db-b035c.appspot.com",
+  //   messagingSenderId: "950510485815"
+  // };
+
+  this.config = {
+      "clientName" : "abcBrand",
+      "displayName": "ABC Brand Limited",
+      "products" : {
+        "rice" : {"displayName": "RICE"},
+        "ravva" : {"displayName": "RAVVA"},
+        "atta" : {"displayName": "ATTA"},
+        "pulses" : {"displayName" : "PULSES"},
+        "oils" : {"displayName" : "OILS"}
+      },
+      "SMSURL" : "www.google.com",
+      "loginPageLogo" : "a",
+      "signupPageLogo" : "b",
+      "welcomeMessage" : "welcome to abc brand. We are leading manufacturers",
+      "dbConfig" : {
+        apiKey: "AIzaSyDQWFKBc6NRaV5sUevYQCDFxaWu9K3M8Ik",
+        authDomain: "testdb-26436.firebaseapp.com",
+        databaseURL: "https://testdb-26436.firebaseio.com",
+        projectId: "testdb-26436",
+        storageBucket: "testdb-26436.appspot.com",
+        messagingSenderId: "324070307145"
+      }
   };
 
-
-  firebase.initializeApp(config);
+  firebase.initializeApp(this.config.dbConfig);
   var authRef = this.authRef = firebase.auth();
   this.dbRef = firebase.database().ref();
 
