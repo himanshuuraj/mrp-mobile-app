@@ -3,6 +3,7 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     alert("User not activated. Please contact administrator");
     return;
   }
+  var itemJSON = loginCred.config.products;
   var smsURLRef = loginCred.dbRef.child('smsURL'); var smsURL = '';
   smsURLRef.once('value', function(data) {
     window.localStorage.smsURL = data.val();
@@ -15,7 +16,9 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
   $scope.cartArray = {};
   if(window.localStorage.cartArray)
     $scope.cartArray = JSON.parse(window.localStorage.cartArray);
-  $scope.tabArray = ['rice','ravva','broken'];
+  $scope.tabArray = [];
+  for(var item in itemJSON)
+    $scope.tabArray.push(item);
   $scope.isAgent = window.localStorage.isAgent;
   if(window.localStorage.isAgent == "true")
     $scope.isAgent = true;
@@ -24,30 +27,7 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
   var shopInfo = {}; var userInfo= JSON.parse(window.localStorage.userInfo);
   if(window.localStorage.shopInfo)
     shopInfo = JSON.parse(window.localStorage.shopInfo);
-  $scope.selectedItem = "rice";
-//        var getShopData = function(){
-//            var id = uid;
-//             if(userInfo.superAgentMobileNum){
-//                 id= userInfo.superAgentMobileNum;
-//             }
-//             var shopsRef = dbRef.child('users/'+id + '/shops');
-//             shopsRef.once('value', function(snap) {
-//                existingShops = snap.val();
-//                if(!$scope.isAgent && existingShops.length == 1){
-//                    window.localStorage.shopName = $scope.shopDetail.name = existingShops[0].name;
-//                    window.localStorage.tin = $scope.shopDetail.tin = existingShops[0].tin;
-//                    window.localStorage.areaId = $scope.shopDetail.areaId;
-//                    $scope.getItemsPrice();
-//                    $scope.cartArray[$scope.shopDetail.tin] = [];
-//                }else{
-//                    $scope.shopArray = existingShops;
-//                    if(!window.localStorage.tin)
-//                        $scope.showShopPopUp();
-//                }
-//                $scope.$apply();
-//                //console.log(existingShops);
-//            });
-//        }
+  $scope.selectedItem = $scope.tabArray[0];
 
   var userInfo = {};
   if(window.localStorage.userInfo)
@@ -100,7 +80,6 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
   $scope.showSelectShop = function(){
     if($scope.isAgent)
       return true;
-    //existingShops = existingShops || [];
     if(userInfo.shops.length > 1)
       return true;
     return false;
@@ -111,13 +90,9 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     var totalItemInFavouries = $scope.favouriteObject.length;
     if(totalItemInFavouries > 0){
       var favouriteElement = document.getElementById("addToFavouriteLogo");
-      //var favouriteTextElement = document.getElementById("addToFavouriteText");
-      //favouriteTextElement.innerHTML = totalItemInFavouries;
       favouriteElement.style.color = "red";
     }else{
       var favouriteElement = document.getElementById("addToFavouriteLogo");
-      //var favouriteTextElement = document.getElementById("addToFavouriteText");
-      //favouriteTextElement.innerHTML = "";
       favouriteElement.style.color = "white";
     }
   }
@@ -131,7 +106,7 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
 
   $scope.showFavouriteItems = function(){
     ($scope.showFavouriteFlag == 'item') ? $scope.showFavouriteFlag = 'favourite' : $scope.showFavouriteFlag = 'item';
-    //console.log($scope.showFavouriteFlag);
+
   };
 
   $scope.toggleFavourite = function(key){
@@ -150,9 +125,9 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     flagOfAlreadyPresentPrice = true;
     var priceArray = window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
     priceArray = priceArray[window.localStorage.tin];
-    $scope.brokenPriceArray = priceArray['broken'];
-    $scope.ravvaPriceArray = priceArray['ravva'];
-    $scope.ricePriceArray = priceArray['rice'];
+    for(var item in itemJSON){
+      $scope[item + "PriceArray"] = priceArray[item];
+    }
   }
   var slideIndex = 0;
 
@@ -214,9 +189,7 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
           text: '<b>Done</b>',
           type: 'button-positive',
           onTap: function(e) {
-            //console.log($scope.shopArray);
             if (!$scope.shopDetail.name) {
-              //don't allow the user to close unless he enters model...
               e.preventDefault();
             } else {
               return $scope.shopDetail;
@@ -243,9 +216,6 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
       shopsRef.once('value', function(snap) {
         var superAgentShops = snap.val();
         var superAgentShops = snap.val(); var allowedAreas=userInfo.allowedAreas || [];
-//                            superAgentShops.filter(function(superAgentShop){
-//                             return allowedAreas.indexOf(superAgentShop.areaId) >= 0
-//                            })
         var filteredShops=[];
         for (var i=0;i<superAgentShops.length;i++){
           if(allowedAreas.indexOf(superAgentShops[i]['areaId']) >=0)
@@ -314,11 +284,10 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
         alert("Price not correct");
         return;
       }
-      price = price.toString(); // array to string
+      price = price.toString();
 
       tickElement.className='button icon ion-checkmark-round';
-      tickElement.style.backgroundColor="#388e3c"
-      //x = value;
+      tickElement.style.backgroundColor="#388e3c";
       x["master_weight"] = value.master_weight;
       x["name"] = value.name;
       x["productId"] = key;
@@ -354,7 +323,6 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
       tickElement.setAttribute("status","add");
       updateCart();
     }
-    //console.log($scope.cartArray);
   };
 
   var cln;
@@ -469,69 +437,30 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     productsRef.on('value' , function(productSnapshot){
       var productsList = productSnapshot.val();
 
-      $scope.brokenObject = productsList.broken;
-      $scope.ravvaObject = productsList.ravva;
-      $scope.riceObject = productsList.rice;
+      for(var item in itemJSON) {
+          $scope[item+"Object"] = productsList[item];
+          var priorityArray = [];
+          for(var productId in $scope[item + "Object"]) {
+            var prty = $scope[item + "Object"][productId]['priority'] || 0;
+            priorityArray.push({
+              'key': productId,
+              'value' : prty
+            });
+          }
+          priorityArray.sort(function(a,b){
+            return a.value - b.value;
+          });
 
-      var riceItemsPriorityArray = [];
-      for(var productId in $scope.riceObject) {
-        var prty = $scope.riceObject[productId]['priority'] || 0;
-        riceItemsPriorityArray.push({
-          'key': productId,
-          'value' : prty
-        });
+          priorityArray.forEach(function(entry){
+            var ob={};
+            ob[entry.key] = $scope[item + "Object"][entry.key];
+            if(!$scope[item+"Array"])
+              $scope[item+"Array"] = [];
+            $scope[item+"Array"].push(ob);
+          })
+          window.localStorage[item+"ItemsPriorityArray"] = JSON.stringify(priorityArray);
       }
-      riceItemsPriorityArray.sort(function(a,b){
-        return a.value - b.value;
-      })
-      $scope.riceArray = [];
 
-      riceItemsPriorityArray.forEach(function(entry){
-        var ob={};
-        ob[entry.key]=$scope.riceObject[entry.key];
-        $scope.riceArray.push(ob);
-      })
-      window.localStorage.riceItemsPriorityArray = JSON.stringify(riceItemsPriorityArray)
-      //ravva
-      var ravvaItemsPriorityArray = [];
-      for(var productId in $scope.ravvaObject) {
-        var prty = $scope.ravvaObject[productId]['priority'] || 0;
-        ravvaItemsPriorityArray.push({
-          'key': productId,
-          'value' : prty
-        });
-      }
-      ravvaItemsPriorityArray.sort(function(a,b){
-        return a.value - b.value;
-      })
-      $scope.ravvaArray = [];
-
-      ravvaItemsPriorityArray.forEach(function(entry){
-        var ob={};
-        ob[entry.key]=$scope.ravvaObject[entry.key];
-        $scope.ravvaArray.push(ob);
-      })
-      window.localStorage.ravvaItemsPriorityArray = JSON.stringify(ravvaItemsPriorityArray)
-      //broken
-      var brokenItemsPriorityArray = [];
-      for(var productId in $scope.brokenObject) {
-        var prty = $scope.brokenObject[productId]['priority'] || 0;
-        brokenItemsPriorityArray.push({
-          'key': productId,
-          'value' : prty
-        });
-      }
-      brokenItemsPriorityArray.sort(function(a,b){
-        return a.value - b.value;
-      })
-      $scope.brokenArray = [];
-
-      brokenItemsPriorityArray.forEach(function(entry){
-        var ob={};
-        ob[entry.key]=$scope.brokenObject[entry.key];
-        $scope.brokenArray.push(ob);
-      });
-      window.localStorage.brokenItemsPriorityArray = JSON.stringify(brokenItemsPriorityArray)
       if(!$scope.$$phase) {
         $scope.$apply();
       }
@@ -541,7 +470,6 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
   };
 
   $scope.getPrice = function(key){
-    //
     var type=$scope.selectedItem;
     var shopContext = 'Agent';
     if(window.localStorage.isAgent=='true')
@@ -556,8 +484,6 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     var obj = priceArray[window.localStorage.tin][type];
     if(obj && obj[key] && obj[key][shopContext])
       price = obj[key][shopContext];
-
-    //var x = document.getElementById(key+"buy");
 
     if(price == 'N/A' || price == '0'){
       document.getElementById(key+"card").style.display = "none";
@@ -593,17 +519,17 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
     var areaRef = dbRef.child('priceList/'+ areaId);
     areaRef.on('value',function(areaSnapshot){
       var productsList = areaSnapshot.val();
-      $scope.brokenPriceArray = productsList.broken;
-      $scope.ravvaPriceArray = productsList.ravva;
-      $scope.ricePriceArray = productsList.rice;
+      for(var item in itemJSON){
+        $scope[item + "PriceArray"] = productsList[item];
+      }
       var tin  = window.localStorage.tin;
       if(!tin)
         return;
       var x= window.localStorage.priceArray ? JSON.parse(window.localStorage.priceArray) : {};
-      x[tin] = {'rice' : productsList.rice,
-        'ravva': productsList.ravva,
-        'broken': productsList.broken
-      } ;
+      var json = {};
+      for(var item in itemJSON)
+          json[item] = productsList[item];
+      x[tin] = json;
       window.localStorage.priceArray = JSON.stringify(x);
       flagOfAlreadyPresentPrice = true;
       window.sessionStorage.flagOfAlreadyPresentPrice = true;
@@ -656,8 +582,11 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
   };
 
   var deleteUI = function(){
-    document.getElementById('brokentab').className='button';
-    document.getElementById('ravvatab').className='button';
+    for(var i = 1; i < $scope.tabArray.length; i++){
+      var element = document.getElementById($scope.tabArray[index]+'tab');
+      if(element)
+          element.className='button';
+    }
     var tin = earlySelectedShop["tin"];
     var obj = $scope.cartArray[tin] || [];
     for(var index = 0; index < obj.length; index++){
@@ -696,8 +625,7 @@ app.controller('searchCtrl', function($scope,$http,loginCred,$state,$ionicPopup,
         buttonElement.style.backgroundColor = "green";
         buttonElement.setAttribute("status","remove");
         var animateElement = document.getElementById(productId+"animate");
-        //animateElement.className = "widthFull animatewidthfull";
-        animateElement.className = "widthZero";// animatewidthzero";
+        animateElement.className = "widthZero";
         var computedElement = document.getElementById(arg.pId + "computedPrice");
         if(!computedElement.innerText)
           computedElement.innerHTML = obj[arg.index].price;
