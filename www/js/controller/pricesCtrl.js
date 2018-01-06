@@ -47,13 +47,8 @@ app.controller('pricesCtrl',
       var priorityArray = keyINProduct + "PriorityArray";
       if(!window.localStorage[localStoragePriorityArray])
         continue;
-      //window.localStorage[localStoragePriorityArray] = window.localStorage[localStoragePriorityArray] || "{}";
       priorityAreaJSON[priorityArray] = JSON.parse(window.localStorage[localStoragePriorityArray]);
-      //priorityAreaJSON["key"] = keyINProduct;
     }
-      //var ricePriorityArray = JSON.parse(window.localStorage.riceItemsPriorityArray);
-      //var ravvaPriorityArray = JSON.parse(window.localStorage.ravvaItemsPriorityArray);
-      //var brokenPriorityArray = JSON.parse(window.localStorage.brokenItemsPriorityArray);
       for (j = 0; j < areas.length; j++) {
         (function (j) {
           var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
@@ -64,9 +59,6 @@ app.controller('pricesCtrl',
             for(var key in itemJSON){
               priceArray[key + "Array"] = items[key];
             }
-            // var riceArray = items['rice'];
-            // var ravvaArray = items['ravva'];
-            // var brokenArray = items['broken'];
             var foobar = {};
             var bar = [];
             var userType = 'Agent';
@@ -74,7 +66,6 @@ app.controller('pricesCtrl',
               userType = 'Outlet';
 
             for(var area in priorityAreaJSON){
-              //if(key == "key") continue;
               priorityAreaJSON[area].forEach(function (object) {
                 var key = $scope.getKey(area);
                 var itemArray = priceArray[key+"Array"];
@@ -98,56 +89,10 @@ app.controller('pricesCtrl',
               bar = [];
             }
 
-            // ricePriorityArray.forEach(function (object) {
-            //   var displayNameOfProduct = $scope.intVsDisp[object['key']];
-            //   if (displayNameOfProduct == null)
-            //     displayNameOfProduct = object['key'];
-            //
-            //   if ((!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType] == ""))
-            //     return;
-            //   var foo = {
-            //     name: displayNameOfProduct,
-            //     price: riceArray[object['key']][userType]
-            //   };
-            //   bar.push(foo);
-            // })
-            // foobar['Rice'] = bar;
-            // var bar = [];
-            //
-            // ravvaPriorityArray.forEach(function (object) {
-            //   var displayNameOfProduct = $scope.intVsDisp[object['key']];
-            //   if (displayNameOfProduct == null)
-            //     displayNameOfProduct = object['key'];
-            //   if (((!ravvaArray[object['key']]) || (!ravvaArray[object['key']][userType]) || (ravvaArray[object['key']][userType] == "")))
-            //     return;
-            //   var foo = {
-            //     name: displayNameOfProduct,
-            //     price: ravvaArray[object['key']][userType]
-            //   };
-            //   bar.push(foo);
-            // })
-            // foobar['Ravva'] = bar;
-            // var bar = [];
-            //
-            // brokenPriorityArray.forEach(function (object) {
-            //   var displayNameOfProduct = $scope.intVsDisp[object['key']];
-            //   if (displayNameOfProduct == null)
-            //     displayNameOfProduct = object['key'];
-            //   if (((!brokenArray[object['key']]) || (!brokenArray[object['key']][userType]) || (brokenArray[object['key']][userType] == "")))
-            //     return;
-            //   var foo = {
-            //     name: displayNameOfProduct,
-            //     price: brokenArray[object['key']][userType]
-            //   };
-            //   bar.push(foo);
-            // })
-            // foobar['Broken'] = bar;
-
             $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
             console.log($scope.pricesForAreas);
             if(!$scope.$$phase)
               $scope.$apply();
-            //console.log($scope.pricesForAreas);
             $rootScope.$broadcast("cached", {});
 
           })
