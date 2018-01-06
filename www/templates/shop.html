@@ -102,7 +102,7 @@
           </div>
           <div class="row">
               <div class="col">
-                  <input type="text" class="animateInput" placeholder="Tin" ng-model="shop.tin" required="" style="width: 98%;">
+                  <input type="text" class="animateInput" placeholder="GST Number / Tin Number" ng-model="shop.tin" required="" style="width: 98%;">
               </div>
           </div>
           <div style="background-color: lightgray; margin-top: 2%; margin-left: 15%;width: 70%; height:30px; border: 1px ">
@@ -111,8 +111,9 @@
                        Tax Type
                     </div>
                     <select ng-model="shop.taxType">
+                        <option value="GST">GST</option>
                         <option value="VAT">VAT</option>
-                          <option value="CST">CST</option>
+                        <option value="CST">CST</option>
                     </select>
                  </label>
           </div>

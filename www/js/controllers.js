@@ -1,6 +1,7 @@
 angular.module('starter.controllers', ['ngCordova'])
 
     .service('loginCred', function($ionicPopup) {
+        
         var config = {
             apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
             authDomain: "stage-db-b035c.firebaseapp.com",
@@ -8,6 +9,8 @@ angular.module('starter.controllers', ['ngCordova'])
             storageBucket: "stage-db-b035c.appspot.com",
             messagingSenderId: "950510485815"
         };
+
+  
         firebase.initializeApp(config);
         var authRef = this.authRef = firebase.auth();
         this.dbRef = firebase.database().ref();
@@ -1399,9 +1402,9 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.showToast = function(message, duration, location) {
             $cordovaToast.show(message, duration, location).then(function(success) {
-                console.log("The toast was shown");
+                //console.log("The toast was shown");
             }, function (error) {
-                console.log("The toast was not shown due to " + error);
+                //console.log("The toast was not shown due to " + error);
             });
         };
 
@@ -1512,14 +1515,17 @@ angular.module('starter.controllers', ['ngCordova'])
                                 $scope.showUserInputField = true;
                                 $scope.$apply();
                             }
-                        }).catch(function(e){console.log(e)});
-                    }).catch(function(e){console.log(e)});
+                        }).catch(function(e){//console.log(e)
+                            });
+                    }).catch(function(e){
+                        //console.log(e)
+                        });
 
 
                 }).catch(
                     function(e){
                         showPopUp("Username password doesnt match");
-                        console.log(e);
+                       // console.log(e);
                     });
             }else {
                 if(!$scope.userData.password || !$scope.userData.username){
@@ -1535,7 +1541,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
                     var usersRef = dbRef.child('users/' + authId);
                 }).catch(function(e){
-                    console.log(e);
+                   // console.log(e);
                     showPopUp(e)
                 });
             }
@@ -1712,7 +1718,9 @@ angular.module('starter.controllers', ['ngCordova'])
             promiseFromAuthMobile.then(function(e){
             //    console.log("Successfully added mobile mapping to the auth id");
                 window.localstorage.uid=uid;
-            }).catch(e => console.log("Could not add mobile mapping"));
+            }).catch(function(e){//console.log(e);
+                //console.log("Could not add mobile mapping")
+            });
             var usersRef = dbRef.child('users/'+ uid );
             var promise = usersRef.set(foo);
             promise.then(function(e) {
@@ -1911,12 +1919,24 @@ angular.module('starter.controllers', ['ngCordova'])
 
         var saveShop = function(type, shop){
             var uid = window.localStorage.uid;
+            
+            if(shop.$$hashKey)
+                delete shop.$$hashKey
+            
             var dbRef = loginCred.dbRef;
              var usersRef = loginCred.dbRef.child('users/'+ uid +'/shops');
              usersRef.transaction(function(shops){
+                    if(type == 'add') {
                      shops=shops||[];
                     shops.push(shop);
                      return shops;
+                    }else {
+                        for(var i=0;i<shops.length;i++) {
+                            if(shops[i].tin == shop.tin)
+                                shops[i]=shop;
+                        }
+                        return shops;
+                    }
             },function(success){
                  if(type == 'add'){
                     showPopUp("Shop added successfully");
@@ -1963,7 +1983,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     break;
                 }
             }
-            saveShop('edit');
+            saveShop('edit' , $scope.shop);
         };
 
         $scope.onInit = function () {
@@ -2000,6 +2020,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                 }
                 $scope.areas = foo;
+              //  console.log('areas =' + foo)
                 $scope.$apply();
                 //console.log($scope.areas);
 
