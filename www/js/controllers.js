@@ -1703,8 +1703,8 @@ angular.module('starter.controllers', ['ngCordova'])
 
              if($scope.signUpData.superAgentMobile) {
                 foo.superAgentMobileNum=$scope.signUpData.superAgentMobile;
-                foo.allowedAreas = selectedAreas; // fill the selected areas here
               }
+            foo.allowedAreas = selectedAreas; // fill the selected areas here
                 createUser(foo);
             
 
