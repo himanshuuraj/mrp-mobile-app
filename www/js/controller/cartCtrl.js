@@ -5,6 +5,7 @@ app.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNa
   }
   var userInfo = JSON.parse(window.localStorage.userInfo);
   var dbRef = loginCred.dbRef;
+  var itemJSON = loginCred.config.products;
   var ordersRef =  dbRef.child('orders');
   $scope.getImageUrl = loginCred.getImageUrl;
   var shopInfo = {};
@@ -274,17 +275,28 @@ app.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNa
     var prices = priceList[areaId];
     if(prices == null)
       return;
-    $scope.brokenPriceArray = prices.broken;
-    $scope.ravvaPriceArray = prices.ravva;
-    $scope.ricePriceArray = prices.rice;
+
+    for(var item in itemJSON){
+        $scope[item + "PriceArray"] = prices[item];
+    }
+    // $scope.brokenPriceArray = prices.broken;
+    // $scope.ravvaPriceArray = prices.ravva;
+    // $scope.ricePriceArray = prices.rice;
 
     var existingPriceArray = {};
     if(window.localStorage.priceArray)
       var existingPriceArray = JSON.parse(window.localStorage.priceArray);
-    existingPriceArray[tin]={'rice' : prices.rice,
-      'ravva': prices.ravva,
-      'broken': prices.broken
-    } ;
+
+    var json = {};
+    for(var item in itemJSON) {
+        json[item] = prices[item];
+    }
+    existingPriceArray[tin]= json;
+        // {
+        //   'rice' : prices.rice,
+        //   'ravva': prices.ravva,
+        //   'broken': prices.broken
+        // };
     window.localStorage.priceArray = JSON.stringify(existingPriceArray);
 
     updateBlaBla(tin,eachShop, prices);
@@ -309,124 +321,164 @@ app.controller('cartCtrl', function($scope,$http,$stateParams,loginCred,$ionicNa
     $scope.cartArray[tin]=[];
 
     var itemsInEachShop = eachShop.items;
-    var riceItems=itemsInEachShop.rice;
-    var ravvaItems = itemsInEachShop.ravva;
-    var brokenItems = itemsInEachShop.broken;
-    for(var productId in riceItems){
-      var riceProductObject = riceItems[productId];
-      var ob = {};
-      ob.itemType = "rice";
-      ob.bag = riceProductObject.bags;
-      ob.master_weight = Number(riceProductObject.weight)*100/Number(riceProductObject.bags)+'KG';
-      ob.name=riceProductObject.name;
-      ob.price=riceProductObject.price;
-      ob.productId=productId;
-      ob.quantity=riceProductObject.weight;
-      var existingObjects = $scope.cartArray[tin] || [];var shopContext='Agent';
+    for(var item in itemJSON) {
+        var Items = itemsInEachShop[item];
+        for(var productId in Items){
+            var productObject = Items[productId];
+            var ob = {};
+            ob.itemType = "rice";
+            ob.bag = productObject.bags;
+            ob.master_weight = Number(productObject.weight)*100/Number(productObject.bags)+'KG';
+            ob.name=productObject.name;
+            ob.price=productObject.price;
+            ob.productId=productId;
+            ob.quantity=productObject.weight;
+            var existingObjects = $scope.cartArray[tin] || [];var shopContext='Agent';
 
-      if(prices['rice']!=null && prices['rice'][productId] != null &&  prices['rice'][productId][shopContext]!=null
-        && prices['rice'][productId][shopContext].length != 0 )
-        existingObjects.push(ob);
-      else {
-        var myPopup = $ionicPopup.show({
-          template: 'Product ' + ob.name + 'is not available' ,
-          title: 'Out of stock !!',
-          scope: $scope,
-          buttons: [
-            {
-              text: '<b>OK</b>',
-              type: 'button-positive',
-              onTap: function(e) {
+            if(prices['rice']!=null && prices['rice'][productId] != null &&  prices['rice'][productId][shopContext]!=null
+              && prices['rice'][productId][shopContext].length != 0 )
+              existingObjects.push(ob);
+            else {
+              var myPopup = $ionicPopup.show({
+                template: 'Product ' + ob.name + 'is not available' ,
+                title: 'Out of stock !!',
+                scope: $scope,
+                buttons: [
+                  {
+                    text: '<b>OK</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
 
-              }
+                    }
+                  }
+                ]
+              });
+              myPopup.then(function(res) {
+                console.log('Tapped!', res);
+              });
             }
-          ]
-        });
-        myPopup.then(function(res) {
-          console.log('Tapped!', res);
-        });
+
+            $scope.cartArray[tin] = existingObjects;
       }
-
-      $scope.cartArray[tin] = existingObjects;
-
-
     }
-    for(var productId in brokenItems){
-      var brokenProductObject = brokenItems[productId];
-      var ob = {};
-      ob.itemType = "broken";
-      ob.bag = brokenProductObject.bags;
-      ob.master_weight = Number(brokenProductObject.weight)*100/Number(brokenProductObject.bags)+'KG';
-      ob.name=brokenProductObject.name;
-      ob.price=brokenProductObject.price;
-      ob.productId=productId;
-      ob.quantity=brokenProductObject.weight;
-      var existingObjects = $scope.cartArray[tin] || [];
-      var shopContext='Agent';
-
-      if(prices['broken']!=null && prices['broken'][productId] != null &&  prices['broken'][productId][shopContext]!=null
-        && prices['broken'][productId][shopContext].length != 0 )
-        existingObjects.push(ob);
-      else {
-        var myPopup = $ionicPopup.show({
-          template: 'Product ' + ob.name + 'is not available' ,
-          title: 'Out of stock !!',
-          scope: $scope,
-          buttons: [
-            {
-              text: '<b>OK</b>',
-              type: 'button-positive',
-              onTap: function(e) {
-
-              }
-            }
-          ]
-        });
-        myPopup.then(function(res) {
-          console.log('Tapped!', res);
-        });
-      }
-
-      $scope.cartArray[tin] = existingObjects;
-    }
-    for(var productId in ravvaItems){
-      var ravvaProductObject = ravvaItems[productId];
-      var ob = {};
-      ob.itemType = "ravva";
-      ob.bag = ravvaProductObject.bags;
-      ob.master_weight = Number(ravvaProductObject.weight)*100/Number(ravvaProductObject.bags)+'KG';
-      ob.name=ravvaProductObject.name;
-      ob.price=ravvaProductObject.price;
-      ob.productId=productId;
-      ob.quantity=ravvaProductObject.weight;
-      var existingObjects = $scope.cartArray[tin] || [];
-
-
-      if(prices['ravva']!=null && prices['ravva'][productId] != null &&  prices['ravva'][productId][shopContext]!=null
-        && prices['ravva'][productId][shopContext].length != 0 )
-        existingObjects.push(ob);
-      else {
-        var myPopup = $ionicPopup.show({
-          template: 'Product ' + '<b>' + ob.name+'</b>' + 'is not available' ,
-          title: 'Out of stock !!',
-          scope: $scope,
-          buttons: [
-            {
-              text: '<b>OK</b>',
-              type: 'button-positive',
-              onTap: function(e) {
-
-              }
-            }
-          ]
-        });
-        myPopup.then(function(res) {
-          console.log('Tapped!', res);
-        });
-      }
-
-      $scope.cartArray[tin] = existingObjects;
-    }
+    // var riceItems=itemsInEachShop.rice;
+    // var ravvaItems = itemsInEachShop.ravva;
+    // var brokenItems = itemsInEachShop.broken;
+    // for(var productId in riceItems){
+    //   var riceProductObject = riceItems[productId];
+    //   var ob = {};
+    //   ob.itemType = "rice";
+    //   ob.bag = riceProductObject.bags;
+    //   ob.master_weight = Number(riceProductObject.weight)*100/Number(riceProductObject.bags)+'KG';
+    //   ob.name=riceProductObject.name;
+    //   ob.price=riceProductObject.price;
+    //   ob.productId=productId;
+    //   ob.quantity=riceProductObject.weight;
+    //   var existingObjects = $scope.cartArray[tin] || [];var shopContext='Agent';
+    //
+    //   if(prices['rice']!=null && prices['rice'][productId] != null &&  prices['rice'][productId][shopContext]!=null
+    //     && prices['rice'][productId][shopContext].length != 0 )
+    //     existingObjects.push(ob);
+    //   else {
+    //     var myPopup = $ionicPopup.show({
+    //       template: 'Product ' + ob.name + 'is not available' ,
+    //       title: 'Out of stock !!',
+    //       scope: $scope,
+    //       buttons: [
+    //         {
+    //           text: '<b>OK</b>',
+    //           type: 'button-positive',
+    //           onTap: function(e) {
+    //
+    //           }
+    //         }
+    //       ]
+    //     });
+    //     myPopup.then(function(res) {
+    //       console.log('Tapped!', res);
+    //     });
+    //   }
+    //
+    //   $scope.cartArray[tin] = existingObjects;
+    //
+    //
+    // }
+    // for(var productId in brokenItems){
+    //   var brokenProductObject = brokenItems[productId];
+    //   var ob = {};
+    //   ob.itemType = "broken";
+    //   ob.bag = brokenProductObject.bags;
+    //   ob.master_weight = Number(brokenProductObject.weight)*100/Number(brokenProductObject.bags)+'KG';
+    //   ob.name=brokenProductObject.name;
+    //   ob.price=brokenProductObject.price;
+    //   ob.productId=productId;
+    //   ob.quantity=brokenProductObject.weight;
+    //   var existingObjects = $scope.cartArray[tin] || [];
+    //   var shopContext='Agent';
+    //
+    //   if(prices['broken']!=null && prices['broken'][productId] != null &&  prices['broken'][productId][shopContext]!=null
+    //     && prices['broken'][productId][shopContext].length != 0 )
+    //     existingObjects.push(ob);
+    //   else {
+    //     var myPopup = $ionicPopup.show({
+    //       template: 'Product ' + ob.name + 'is not available' ,
+    //       title: 'Out of stock !!',
+    //       scope: $scope,
+    //       buttons: [
+    //         {
+    //           text: '<b>OK</b>',
+    //           type: 'button-positive',
+    //           onTap: function(e) {
+    //
+    //           }
+    //         }
+    //       ]
+    //     });
+    //     myPopup.then(function(res) {
+    //       console.log('Tapped!', res);
+    //     });
+    //   }
+    //
+    //   $scope.cartArray[tin] = existingObjects;
+    // }
+    // for(var productId in ravvaItems){
+    //   var ravvaProductObject = ravvaItems[productId];
+    //   var ob = {};
+    //   ob.itemType = "ravva";
+    //   ob.bag = ravvaProductObject.bags;
+    //   ob.master_weight = Number(ravvaProductObject.weight)*100/Number(ravvaProductObject.bags)+'KG';
+    //   ob.name=ravvaProductObject.name;
+    //   ob.price=ravvaProductObject.price;
+    //   ob.productId=productId;
+    //   ob.quantity=ravvaProductObject.weight;
+    //   var existingObjects = $scope.cartArray[tin] || [];
+    //
+    //
+    //   if(prices['ravva']!=null && prices['ravva'][productId] != null &&  prices['ravva'][productId][shopContext]!=null
+    //     && prices['ravva'][productId][shopContext].length != 0 )
+    //     existingObjects.push(ob);
+    //   else {
+    //     var myPopup = $ionicPopup.show({
+    //       template: 'Product ' + '<b>' + ob.name+'</b>' + 'is not available' ,
+    //       title: 'Out of stock !!',
+    //       scope: $scope,
+    //       buttons: [
+    //         {
+    //           text: '<b>OK</b>',
+    //           type: 'button-positive',
+    //           onTap: function(e) {
+    //
+    //           }
+    //         }
+    //       ]
+    //     });
+    //     myPopup.then(function(res) {
+    //       console.log('Tapped!', res);
+    //     });
+    //   }
+    //
+    //   $scope.cartArray[tin] = existingObjects;
+    // }
     if( $scope.cartArray[tin].length === 0)
       delete $scope.cartArray[tin]
 
