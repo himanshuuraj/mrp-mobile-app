@@ -18,9 +18,9 @@ app.controller('pricesCtrl',
 
     var shops = userInfo.shops;
     if (shops != null) {
-      for (i = 0; i < shops.length; i++) {
+      for (var i = 0; i < shops.length; i++) {
         var found = false;
-        for (ky = 0; ky < areas.length; ky++) {
+        for (var ky = 0; ky < areas.length; ky++) {
           if (areas[ky] == shops[i].areaId) {
             found = true;
             break;
@@ -90,7 +90,7 @@ app.controller('pricesCtrl',
             }
 
             $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
-            console.log($scope.pricesForAreas);
+            //console.log($scope.pricesForAreas);
             if(!$scope.$$phase)
               $scope.$apply();
             $rootScope.$broadcast("cached", {});

@@ -1,5 +1,6 @@
 app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
   var showPopUp = loginCred.showPopup;
+  var itemJSON = loginCred.config.products;
   if(window.localStorage.isActive === 'false') {
     alert("User not activated. Please contact administrator");
     return;
@@ -23,67 +24,39 @@ app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup
     shopArray.forEach(function(shop){
       (function(){
         var items = shop.items;
-        var riceObject = items.rice;
-        var ravvaObject = items.ravva;
-        var brokenObject = items.broken;
-        var areaId = shop.areaId;
+        for(var item in itemJSON) {
+            var object = items[item];
+            var areaId = shop.areaId;
 
 
-        var areaRef = dbRef.child('priceList/'+ areaId);
-        areaRef.once('value',function(areaSnapshot){
-          var productsList = areaSnapshot.val();
-          var brokenPriceArray = productsList.broken;
-          var ravvaPriceArray = productsList.ravva;
-          var ricePriceArray = productsList.rice;var userType="Outlet";
-          if(window.localStorage.isAgent == "true"){
-            userType="Agent";
-          }
-          for(var productId in riceObject){
-            if(riceObject[productId].quintalWeightPrice != ricePriceArray[productId][userType]){
-              $scope.flagForPriceModified=true;
-              var a= {
-                productId : productId,
-                newPrice : ricePriceArray[productId][userType],
-                oldPrice : riceObject[productId].quintalWeightPrice
+            var areaRef = dbRef.child('priceList/' + areaId);
+            areaRef.once('value', function (areaSnapshot) {
+              var productsList = areaSnapshot.val();
+              for(var item in itemJSON) {
+                  var priceArray = productsList[item];
+                  var userType = "Outlet";
+                  if (window.localStorage.isAgent == "true") {
+                    userType = "Agent";
+                  }
+
+                  for (var productId in object) {
+                  if (object[productId].quintalWeightPrice != priceArray[productId][userType]) {
+                    $scope.flagForPriceModified = true;
+                    var a = {
+                      productId: productId,
+                      newPrice: priceArray[productId][userType],
+                      oldPrice: object[productId].quintalWeightPrice
+                    }
+                    $scope.modifiedPriceList.push(a);
+                    object[productId].quintalWeightPrice = priceArray[productId][userType];
+
+                  }
+
+                }
               }
-              $scope.modifiedPriceList.push(a);
-              riceObject[productId].quintalWeightPrice = ricePriceArray[productId][userType];
 
-            }
-
-          }
-
-          for(var productId in ravvaObject){
-            if(ravvaObject[productId].quintalWeightPrice != ravvaPriceArray[productId][userType]){
-              $scope.flagForPriceModified=true;
-              var a= {
-                productId : productId,
-                newPrice : ravvaPriceArray[productId][userType],
-                oldPrice : riceObject[productId].quintalWeightPrice
-              }
-              $scope.modifiedPriceList.push(a);
-              ravvaObject[productId].quintalWeightPrice = ravvaPriceArray[productId][userType];
-
-            }
-
-          }
-
-          for(var productId in brokenObject){
-            if(brokenObject[productId].quintalWeightPrice != brokenPriceArray[productId][userType]){
-              $scope.flagForPriceModified=true;
-              var a= {
-                productId : productId,
-                newPrice : brokenPriceArray[productId][userType],
-                oldPrice : riceObject[productId].quintalWeightPrice
-              }
-              $scope.modifiedPriceList.push(a);
-              brokenObject[productId].quintalWeightPrice = brokenPriceArray[productId][userType];
-
-            }
-
-          }
-
-        });
+            });
+        }
       })();
 
     });
@@ -106,12 +79,9 @@ app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup
         var itemObj = shop.items[item];
         for( var product in itemObj){
           var productObj = itemObj[product];
-          //console.log(productObj);
           productObj['quintalWeightPrice'] = loginCred.toCommaFormat(productObj['quintalWeightPrice']);
           productObj['discountedQuintalPrice'] = loginCred.toCommaFormat(productObj['discountedQuintalPrice']);
           productObj['price'] = loginCred.toCommaFormat(productObj['price']);
-          //console.log(productObj);
-
         }
 
       }
@@ -133,100 +103,62 @@ app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup
     var shopArray = $scope.shopArray;
     $scope.totaldiscountedPrice = 0; var itemsProcessed = 0;
     shopArray.forEach(function(shop){
-      var shopDiscountAmount = 0;
 
-      var items = shop.items;
-      var riceObjectOrg = items.rice;
-      var ravvaObjectOrg = items.ravva;
-      var brokenObjectOrg = items.broken;
-      var shopRiceWeight = 0;var shopRavvaWeight = 0; var shopBrokenWeight= 0;
-      for(var productId in riceObjectOrg){
-        shopRiceWeight += riceObjectOrg[productId].weight;
-      }
-      for(var productId in ravvaObjectOrg){
-        shopRavvaWeight += ravvaObjectOrg[productId].weight;
-      }
-      for(var productId in brokenObjectOrg){
-        shopBrokenWeight += brokenObjectOrg[productId].weight;
-      }
-      var ricediscount=0, ravvadiscount=0,brokendiscount=0;
+      for(var item in itemJSON) {
+        var shopDiscountAmount = 0;
 
-      var areasRef = loginCred.dbRef.child('areas/' + shop.areaId );
-      var riceDiscArray = [];var ravvaDiscArray = []; var brokenDiscArray=[];
-      (function() {
+        var items = shop.items;
+        var objectOrg = items[item];
+        var shopItemWeight = 0;
+        for (var productId in objectOrg) {
+          shopItemWeight += objectOrg[productId].weight;
+        }
 
-        var ravvaObject = ravvaObjectOrg ? JSON.parse(JSON.stringify(ravvaObjectOrg)) : {};
-        var riceObject = riceObjectOrg ? JSON.parse(JSON.stringify(riceObjectOrg)): {};
-        var brokenObject = brokenObjectOrg ? JSON.parse(JSON.stringify(brokenObjectOrg)): {};
+        var itemDiscount = 0;
 
-        areasRef.once('value', function(data){
+        var areasRef = loginCred.dbRef.child('areas/' + shop.areaId);
+        var itemDiscArray = [];
+        (function () {
 
-          itemsProcessed++;
-          var discounts = data.val().discounts;
-          //  console.log(discounts);
-          if(discounts) {
-            riceDiscArray = discounts.rice || riceDiscArray ;
-            ravvaDiscArray = discounts.ravva ||  ravvaDiscArray;
-            brokenDiscArray = discounts.broken || brokenDiscArray;
-          }
+          var itemObject = objectOrg ? JSON.parse(JSON.stringify(objectOrg)) : {};
 
-          riceDiscArray.forEach(function(entry){
-            if(shopRiceWeight >= entry.quintals){
-              ricediscount = entry.discount;
+          areasRef.once('value', function (data) {
+
+            itemsProcessed++;
+            var discounts = data.val().discounts;
+            //  console.log(discounts);
+            if (discounts) {
+              itemDiscArray = discounts[item] || itemDiscArray;
             }
-          });
 
-          ravvaDiscArray.forEach(function(entry){
-            if(shopRavvaWeight >= entry.quintals){
-              ravvadiscount = entry.discount;
+            itemDiscArray.forEach(function (entry) {
+              if (shopRiceWeight >= entry.quintals) {
+                itemDiscount = entry.discount;
+              }
+            });
+
+
+            //simple and quick fix - dont calculate discounts for subagents
+            var userInfo = JSON.parse(window.localStorage.userInfo);
+            if (userInfo.superAgentMobileNum)
+              itemDiscount = 0;
+
+            for (var productId in itemObject) {
+              itemObject[productId]['discountedQuintalPrice'] = itemObject[productId].quintalWeightPrice - itemDiscount;
+              itemObject[productId]['price'] = itemObject[productId].discountedQuintalPrice * itemObject[productId]['weight'];
+              shopDiscountAmount += itemDiscount * itemObject[productId]['weight'];
+              $scope.totaldiscountedPrice += itemDiscount * itemObject[productId]['weight']
             }
-          });
 
-          brokenDiscArray.forEach(function(entry){
-            if(shopBrokenWeight >= entry.quintals){
-              brokendiscount = entry.discount;
-            }
-          });
+            shop['items'][item] = itemObject;
 
-
-          //simple and quick fix - dont calculate discounts for subagents
-          var userInfo = JSON.parse(window.localStorage.userInfo);
-          if(userInfo.superAgentMobileNum)
-            ricediscount=0, ravvadiscount=0,brokendiscount=0
-
-
-          for(var productId in riceObject){
-            riceObject[productId]['discountedQuintalPrice']=  riceObject[productId].quintalWeightPrice - ricediscount;
-            riceObject[productId]['price']= riceObject[productId].discountedQuintalPrice * riceObject[productId]['weight'];
-            shopDiscountAmount += ricediscount*riceObject[productId]['weight'];
-            $scope.totaldiscountedPrice += ricediscount*riceObject[productId]['weight']
-          }
-          for(var productId in ravvaObject){
-            ravvaObject[productId]['discountedQuintalPrice']=  ravvaObject[productId].quintalWeightPrice - ravvadiscount;
-            ravvaObject[productId]['price']= ravvaObject[productId].discountedQuintalPrice * ravvaObject[productId]['weight']
-            shopDiscountAmount += ravvadiscount*ravvaObject[productId]['weight'];
-            $scope.totaldiscountedPrice += ravvadiscount*ravvaObject[productId]['weight'];
-          }
-
-          for(var productId in brokenObject){
-            brokenObject[productId]['discountedQuintalPrice']=  brokenObject[productId].quintalWeightPrice - brokendiscount;
-            brokenObject[productId]['price']= brokenObject[productId].discountedQuintalPrice * brokenObject[productId]['weight']
-            shopDiscountAmount += brokendiscount*brokenObject[productId]['weight'];
-            $scope.totaldiscountedPrice += brokendiscount*brokenObject[productId]['weight'];
-          }
-
-          shop['items']['rice'] = riceObject;
-          shop['items']['ravva'] = ravvaObject;
-          shop['items']['broken'] = brokenObject;
-
-          shop['shopDiscountAmount'] = shopDiscountAmount;
-          shop['shopGrossAmount'] = shop['totalShopPrice'] - shopDiscountAmount;
-          if(itemsProcessed == shopArray.length)
-            calcDiscount();
-        })
-      }());
-
-
+            shop['shopDiscountAmount'] = shopDiscountAmount;
+            shop['shopGrossAmount'] = shop['totalShopPrice'] - shopDiscountAmount;
+            if (itemsProcessed == shopArray.length)
+              calcDiscount();
+          })
+        }());
+      }
     });
 
   }
@@ -402,18 +334,13 @@ app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup
           var shopName = shop.name || "";
           var text = "Dear " + shopName + "! \nYour order has been  placed successfully.";
           var mobile = shopInfo[shop.tin].mobile;
-          var objectOfAllItems = jsonConcat(shop.items.rice || {},shop.items.ravva || {}) || {};
-          objectOfAllItems = jsonConcat(objectOfAllItems,shop.items.broken || {}) || {};
+          var objectOfAllItems;
+          for(var item in itemJSON) {
+            objectOfAllItems = jsonConcat(shop.items[item] || {}, {}) || {};
+            //objectOfAllItems = jsonConcat(objectOfAllItems, shop.items.broken || {}) || {};
+          }
           text += "Total Weight = " + shop.totalWeight +" Quintals\n";
-//                    for(var key in objectOfAllItems){
-//                        text += objectOfAllItems[key].name + "-" + objectOfAllItems[key].weight;
-//                        text += " quintals\n"
-//                                //- Rs." + objectOfAllItems[key].discountedQuintalPrice + "/Qtl";
-//                       // text += "- Amount = Rs." + objectOfAllItems[key].price + "\n";
-//                    }
           text += "We will deliver your goods as soon as possible.\n Thank-you!";
-          //  text += "Total Weight = " + shop.totalWeight +" Quintals\n"+ "Total Discount = " + shop.shopDiscountAmount ;
-          //  text += "\n Total Amount = " + shop["totalShopPrice"] + "\n\n Thank-you! \n Team Lalitha";
           var obj = {};
           obj[mobile] = text;
           if(smsURL) {
@@ -451,14 +378,6 @@ app.controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup
       if (!xhr) {
         return;
       }
-
-//              // Response handlers.
-//              xhr.onload = function() {
-//                var text = xhr.responseText;
-//              };
-//
-//              xhr.onerror = function() {
-//              };
 
       var params = JSON.stringify(object);
       xhr.send(params);
