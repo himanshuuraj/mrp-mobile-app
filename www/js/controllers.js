@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['ngCordova'])
 
     .service('loginCred', function($ionicPopup) {
-        
+
         var config = {
             apiKey: "AIzaSyD3C0GHIqn8g-CMATS60LDcoQotkqM3ex8",
             authDomain: "stage-db-b035c.firebaseapp.com",
@@ -10,7 +10,7 @@ angular.module('starter.controllers', ['ngCordova'])
             messagingSenderId: "950510485815"
         };
 
-  
+
         firebase.initializeApp(config);
         var authRef = this.authRef = firebase.auth();
         this.dbRef = firebase.database().ref();
@@ -482,6 +482,10 @@ angular.module('starter.controllers', ['ngCordova'])
                  $ionicLoading.hide();
             });
 
+            setTimeout(function(){
+              $ionicLoading.hide();
+            }, 30000);
+
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
                 showPopUp("Your order has been successfully placed. <br><hr> Order number is <b> "+ orderId+ "</b><br><hr>"+
@@ -557,7 +561,7 @@ angular.module('starter.controllers', ['ngCordova'])
                      return orders;
                  });
           }
-          
+
             var sendSMS  = function(){
                 var userInfo=JSON.parse(window.localStorage.userInfo);
                 if(!userInfo.superAgentMobileNum) {
@@ -690,7 +694,7 @@ angular.module('starter.controllers', ['ngCordova'])
 //             if(userInfo.superAgentMobileNum){
 //                 id= userInfo.superAgentMobileNum;
 //             }
-//             var shopsRef = dbRef.child('users/'+id + '/shops'); 
+//             var shopsRef = dbRef.child('users/'+id + '/shops');
 //             shopsRef.once('value', function(snap) {
 //                existingShops = snap.val();
 //                if(!$scope.isAgent && existingShops.length == 1){
@@ -896,7 +900,7 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArray[$scope.shopDetail.tin] = [];
         }
         else{
-            
+
             $scope.shopArray = userInfo.shops || [];
             if(userInfo.superAgentMobileNum && !window.localStorage.tin) {
                   var shopsRef = dbRef.child('users/'+userInfo.superAgentMobileNum + '/shops');
@@ -1387,7 +1391,7 @@ angular.module('starter.controllers', ['ngCordova'])
     .controller('loginCtrl', function($scope,$http,$state,loginCred,$rootScope,$ionicNavBarDelegate,$cordovaToast,$ionicSideMenuDelegate) {
         var dbRef = loginCred.dbRef;
         var authRef = loginCred.authRef;
-                
+
         $scope.userData = {};
         $scope.loginAgain = false;
         var showPopUp = loginCred.showPopup;
@@ -1429,7 +1433,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }
         };
         $scope.onForgotPassword = function() {
-            
+
             showPopUp("Please contact administrator", "oops!!" );
         };
 
@@ -1441,8 +1445,8 @@ angular.module('starter.controllers', ['ngCordova'])
                     $scope.showToast('this is a test', 'long', 'center');
                     return;
                 }
-                
-               
+
+
 
                 var promise = authRef.signInWithEmailAndPassword($scope.userData.username,$scope.userData.password);
                 promise.then(function(e) {
@@ -1472,13 +1476,13 @@ angular.module('starter.controllers', ['ngCordova'])
                                                     if(allowedAreas.indexOf(superAgentShops[i]['areaId']) >=0)
                                                     filteredShops.push(superAgentShops[i]);
                                                  }
-                            
+
                                         var uInfo = JSON.parse(window.localStorage.userInfo);
                                         var existingShops = uInfo.shops || [];
                                         uInfo.shops = existingShops.concat(filteredShops);
                                         window.localStorage.userInfo = JSON.stringify(uInfo);
                                     })
-                                    
+
                                     var myOwnShopsRef = dbRef.child('users/'+uid + '/shops');
                                     myOwnShopsRef.once('value' , function(data){
                                         var myshops = data.val() || [];
@@ -1487,9 +1491,9 @@ angular.module('starter.controllers', ['ngCordova'])
                                         uInfo.shops = existingShops.concat(myshops);
 
                                         window.localStorage.userInfo = JSON.stringify(uInfo);
- 
+
                                     })
-                                    
+
                                  }
                                 $scope.isAgent = window.localStorage.isAgent = data.isAgent;
                                 window.localStorage.isActive = data.active;
@@ -1502,7 +1506,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                     x[userInfo.shops[0].tin] = userInfo.shops[0];
                                           window.localStorage.shopInfo = JSON.stringify(x);
                                 }
-                                
+
                                 if(!data.active){
                                     alert("User not activated. Please contact administrator")
                                 }else if(!userInfo.superAgentMobileNum && (!userInfo.shops || userInfo.shops.length == 0) )
@@ -1572,7 +1576,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 showPopUp('Name should not contain special characters like . , @ ');
                 return 0;
             }
-            
+
             if(!$scope.signUpData.mobile){
                 showPopUp('Enter Mobile Of User');
                 return 0;
@@ -1636,7 +1640,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.$apply();
             });
         }
-        
+
         $scope.selectedAreas = [];
 
         $scope.fillSignUpData = function(){
@@ -1696,9 +1700,9 @@ angular.module('starter.controllers', ['ngCordova'])
                 if(element){
                     if(element.checked)
                         selectedAreas.push(element.value);
-                    
+
                 }
-                
+
             }
 
              if($scope.signUpData.superAgentMobile) {
@@ -1706,7 +1710,7 @@ angular.module('starter.controllers', ['ngCordova'])
               }
               foo.allowedAreas = selectedAreas; // fill the selected areas here
                 createUser(foo);
-            
+
 
         };
 
@@ -1919,10 +1923,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
         var saveShop = function(type, shop){
             var uid = window.localStorage.uid;
-            
+
             if(shop.$$hashKey)
                 delete shop.$$hashKey
-            
+
             var dbRef = loginCred.dbRef;
              var usersRef = loginCred.dbRef.child('users/'+ uid +'/shops');
              usersRef.transaction(function(shops){
@@ -1946,10 +1950,10 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 else{
                     showPopUp("Shop deleted successfully");
-                   
+
                 }
                 window.localStorage.userInfo = JSON.stringify(userInfo);
-               
+
 
                 $scope.shopArray = userInfo.shops || [];
                 $scope.editType = false;
@@ -1958,7 +1962,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 window.localStorage.userInfo = JSON.stringify(userInfo);
 
             });
-          
+
         }
 
         $scope.showEditBox = function(shop){
@@ -1997,21 +2001,21 @@ angular.module('starter.controllers', ['ngCordova'])
                var userInfo = JSON.parse(window.localStorage.userInfo);
              if(userInfo.superAgentMobileNum)
                  $scope.editShopEnabled = false;
-             else 
+             else
                  $scope.editShopEnabled = true;
-             
+
              if(window.localStorage.isAgent=="true")
                  $scope.addShopEnabled = true;
              else
                  $scope.addShopEnabled=false;
-             
+
             $scope.areasObj = {};
             areasRef.once('value', function (data) {
                 //console.log(data.val());
                 var areas = $scope.areasObj = data.val();
                 var foo = []; var allowedAreas = userInfo.allowedAreas;
                 for (var area in areas) {
-                   if(allowedAreas.indexOf(area) >=0)  {                                                  
+                   if(allowedAreas.indexOf(area) >=0)  {
                     foo.push({
                         id: area,
                         name: areas[area].displayName
@@ -2091,20 +2095,20 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
         };
-        
+
         $scope.getName = function(key){
             var str = key.split(";");
             return str[0] ;
         };
-        
+
          $scope.getShopNameFromName = function(key){
             var str = key.split(";");
             return str[1];
         };
-        
+
         $scope.viewSubAgentOrder = function(subAgentMobileNum, orderId){
-            
-             
+
+
 //            $ionicPopup.show({
 //                template: '<div class="row">'+
 //                '<div class="col">Item Name</div>'+
@@ -2131,7 +2135,7 @@ angular.module('starter.controllers', ['ngCordova'])
 //                    }
 //                ]
 //            });
-//            
+//
 
             $ionicPopup.show({
               template: '<div id="OrderEye" style="margin-left: -15px;margin-right:-15px">'+
@@ -2141,7 +2145,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                    ' <hr style="margin-left:10px">' +
                                     '<div ng-repeat="(key,item) in shop.items" >' +
                                        ' <div ng-repeat="(k,v) in item" >' +
-                                           '<div class="card" style="width:92%;">' + 
+                                           '<div class="card" style="width:92%;">' +
                                                 '<div class="row">'+
                                                    ' <p style="width: 100%;">'+
                                                     '    <span><b>Item Name</b></span>'+
@@ -2228,7 +2232,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                 '                            <span id="grand_total" style="float:right;">&#8377;{{cartArrayOrderDetail.totalPrice}}</span>'+
                                  '                       </span>'+
                                 '</p>'+
-                            '</div>  ' +                       
+                            '</div>  ' +
                         '</div>',
               title: 'Order Summary',
               scope: $scope,
@@ -2274,13 +2278,13 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
                 $scope.$apply();
             });
-            
+
 
         }
-        
-        
+
+
         $scope.acceptOrder = function(subAgentMobileNum,orderId){
-            
+
             var myPopup = $ionicPopup.show({
                 template: 'Are you sure you want to accept the order ?',
                 title: 'Accept Order ?',
@@ -2297,18 +2301,18 @@ angular.module('starter.controllers', ['ngCordova'])
             });
             myPopup.then(function(res) {
                 console.log('Tapped!', res);
-            });          
+            });
 
-            
+
         }
-         
+
 
         $scope.moveSubAgentOrderToCart = function(subAgentMobileNum,orderId){
-            
+
             var priceListRef=loginCred.dbRef.child('priceList/');
             priceListRef.once('value', function(data){
-               var priceList=data.val(); 
-               
+               var priceList=data.val();
+
           //  var card = document.getElementById('order-' + orderId);
           //  card.style="background:#27ae60";
             var ordersRef = loginCred.dbRef.child('orders/'+ orderId);
@@ -2317,13 +2321,13 @@ angular.module('starter.controllers', ['ngCordova'])
                 shopDetailArray.forEach(function(eachShop){
                     i++;
                     var tin= eachShop.tin;var areaId=eachShop.areaId;
-                    fetchPriceForEachShop(areaId,tin,eachShop,priceList);  
-                   
+                    fetchPriceForEachShop(areaId,tin,eachShop,priceList);
+
                 }
                 );
                 if(shopDetailArray.length==i){
                     $scope.$apply();
-                    
+
                     var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
                     '/suborders/'+subAgentMobileNum + '/' +orderId);
                     subAgentOrdersRef.remove();
@@ -2333,11 +2337,11 @@ angular.module('starter.controllers', ['ngCordova'])
 
             });
             });
-          
+
         };
 
         var fetchPriceForEachShop = function(areaId,tin,eachShop,priceList){
-           
+
                 var prices = priceList[areaId];
                 if(prices == null)
                     return;
@@ -2353,15 +2357,15 @@ angular.module('starter.controllers', ['ngCordova'])
                     'broken': prices.broken
                      } ;
                 window.localStorage.priceArray = JSON.stringify(existingPriceArray);
-                
+
                 updateBlaBla(tin,eachShop, prices);
                     window.localStorage.cartArray=JSON.stringify($scope.cartArray);
                      $timeout(function () {
                         showInitialPrice();
                     },1);
-            
+
         }
-        
+
         var updateBlaBla = function(tin,eachShop,prices){
                      var shopInfo=JSON.parse(window.localStorage.shopInfo);
                     var x ={};
@@ -2390,7 +2394,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.productId=productId;
                         ob.quantity=riceProductObject.weight;
                        var existingObjects = $scope.cartArray[tin] || [];var shopContext='Agent';
-                       
+
                        if(prices['rice']!=null && prices['rice'][productId] != null &&  prices['rice'][productId][shopContext]!=null
                                && prices['rice'][productId][shopContext].length != 0 )
                         existingObjects.push(ob);
@@ -2404,18 +2408,18 @@ angular.module('starter.controllers', ['ngCordova'])
                                              text: '<b>OK</b>',
                                                 type: 'button-positive',
                                         onTap: function(e) {
-                                             
+
                                         }
                                     }
                              ]
                         });
                         myPopup.then(function(res) {
                                 console.log('Tapped!', res);
-                        });          
+                        });
                         }
-                            
+
                        $scope.cartArray[tin] = existingObjects;
-                       
+
 
                     }
                     for(var productId in brokenItems){
@@ -2430,10 +2434,10 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.quantity=brokenProductObject.weight;
                          var existingObjects = $scope.cartArray[tin] || [];
                         var shopContext='Agent';
-                       
+
                        if(prices['broken']!=null && prices['broken'][productId] != null &&  prices['broken'][productId][shopContext]!=null
                                && prices['broken'][productId][shopContext].length != 0 )
-                        existingObjects.push(ob);           
+                        existingObjects.push(ob);
                      else {
                             var myPopup = $ionicPopup.show({
                                  template: 'Product ' + ob.name + 'is not available' ,
@@ -2444,16 +2448,16 @@ angular.module('starter.controllers', ['ngCordova'])
                                              text: '<b>OK</b>',
                                                 type: 'button-positive',
                                         onTap: function(e) {
-                                             
+
                                         }
                                     }
                              ]
                         });
                         myPopup.then(function(res) {
                                 console.log('Tapped!', res);
-                        });          
+                        });
                         }
-                        
+
                         $scope.cartArray[tin] = existingObjects;
                     }
                     for(var productId in ravvaItems){
@@ -2467,8 +2471,8 @@ angular.module('starter.controllers', ['ngCordova'])
                         ob.productId=productId;
                         ob.quantity=ravvaProductObject.weight;
                         var existingObjects = $scope.cartArray[tin] || [];
-                        
-                      
+
+
                        if(prices['ravva']!=null && prices['ravva'][productId] != null &&  prices['ravva'][productId][shopContext]!=null
                                && prices['ravva'][productId][shopContext].length != 0 )
                             existingObjects.push(ob);
@@ -2482,23 +2486,23 @@ angular.module('starter.controllers', ['ngCordova'])
                                              text: '<b>OK</b>',
                                                 type: 'button-positive',
                                         onTap: function(e) {
-                                             
+
                                         }
                                     }
                              ]
                         });
                         myPopup.then(function(res) {
                                 console.log('Tapped!', res);
-                        });          
+                        });
                         }
-                    
+
                        $scope.cartArray[tin] = existingObjects;
                     }
                     if( $scope.cartArray[tin].length === 0)
                         delete $scope.cartArray[tin]
-                    
+
         }
-        
+
 
         $scope.deleteSubAgentOrder = function(subAgentMobileNum, orderId){
              var myPopup = $ionicPopup.show({
@@ -2517,10 +2521,10 @@ angular.module('starter.controllers', ['ngCordova'])
             });
             myPopup.then(function(res) {
                 console.log('Tapped!', res);
-            });          
+            });
 
         }
-        
+
         $scope.deleteSubAgOrd = function(subAgentMobileNum,orderId){
              var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
                     '/suborders/'+subAgentMobileNum + '/' +orderId);
@@ -2878,7 +2882,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     var dateInfoFromOrderId = orderIdTokens[0].toString();
                     var year = dateInfoFromOrderId.substring((dateInfoFromOrderId.length-1),
                                     dateInfoFromOrderId.length);
-                                    
+
                     var month = dateInfoFromOrderId.substring(dateInfoFromOrderId.length-4 , dateInfoFromOrderId.length-1);
                     var monthsText=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
                     var index = monthsText.indexOf(month);
@@ -2888,21 +2892,21 @@ angular.module('starter.controllers', ['ngCordova'])
                         day='0'+ day;
                     if(Number(monthNumber)<10)
                         monthNumber = '0' + monthNumber;
-                    
+
                     if(Number(year) == 7 )
                         year = '2017';
                     else
                         year = 2000 + Number(year);
-                    
+
                     var date = day + '-' + monthNumber + '-' + year;
                     console.log(date);
-                    
+
                     var oldOrdersRef=loginCred.dbRef.child('oldOrders/'+  date +'/'+ orderId);
                     oldOrdersRef.once('value', function(data){
                         if(!data.val())
                                 return;
-                            
-                            //same code is Repeated  below. Put it into a function later 
+
+                            //same code is Repeated  below. Put it into a function later
                         $scope.cartArrayOrderDetail = data.val().cart;
                         $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
 
@@ -2930,9 +2934,9 @@ angular.module('starter.controllers', ['ngCordova'])
                                 $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
                                 $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
                                 $scope.$apply();
-                        
+
                     })
-                    
+
                 }else{
                 $scope.cartArrayOrderDetail = data.val().cart;
                 $scope.shopArrayOrderDetail = $scope.cartArrayOrderDetail.shopDetail;
@@ -3092,7 +3096,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 if(updates != null) {
                     for(var ob in updates){
                         var d = new Date(updates[ob].timestamp);
-                        if(updates[ob].msgType !== 'internal') { 
+                        if(updates[ob].msgType !== 'internal') {
                         var singleMsg = {
                             timestamp : d.getDate() + '-'+monthNames[d.getMonth()] + '-' + d.getFullYear()+' '+ d.getHours() + ':'+ d.getMinutes(),
                             message : updates[ob].updateMsg,
@@ -3135,7 +3139,7 @@ angular.module('starter.controllers', ['ngCordova'])
              })
 
               var areas = [];var userInfo = JSON.parse(window.localStorage.userInfo);
-             
+
               var shops = userInfo.shops;
                  if(shops!=null){
                      for(i=0;i<shops.length;i++){
@@ -3223,7 +3227,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                 })})(j);
              }
-              
+
               $rootScope.$broadcast("cached",{});
          };
      })
@@ -3252,7 +3256,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
            $rootScope.$broadcast("cached",{});
         };
-        
+
         $scope.sendEmail = function() {
             var aRef = loginCred.authRef;
             var email = aRef.currentUser.email;
@@ -3263,8 +3267,8 @@ angular.module('starter.controllers', ['ngCordova'])
             }).catch(function(error) {
                 showPopUp("Problem occured. Could not send email", "oops!!" );
 
-            }               
-            );            
+            }
+            );
         };
 
         $scope.updateProfile = function(){
