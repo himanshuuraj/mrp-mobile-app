@@ -1517,6 +1517,7 @@ angular.module('starter.controllers', ['ngCordova'])
                             }
                             else{
                                 $scope.showUserInputField = true;
+                                if(!$scope.$$phase)
                                 $scope.$apply();
                             }
                         }).catch(function(e){//console.log(e)
@@ -1541,6 +1542,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     var authId=e.uid;
                     window.localStorage.authId = e.uid;
                     $scope.showUserInputField = true;
+                    if(!$scope.$$phase)
                     $scope.$apply();
                     //TODO - change this - below implementation is wrong users/{id} will not exist after creating user
                     var usersRef = dbRef.child('users/' + authId);
@@ -1561,6 +1563,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 var authId=e.uid;
                 window.localStorage.authId = e.uid;
                 $scope.showUserInputField = true;
+                if(!$scope.$$phase)
                 $scope.$apply();
             }).catch(function(e){
                 alert("Network error");
@@ -1637,6 +1640,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
              //   console.log($scope.areasObj);
                 $scope.areas = foo;
+                if(!$scope.$$phase)
                 $scope.$apply();
             });
         }
@@ -1732,6 +1736,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.showUserInputField = false;
                 //window.localStorage.clear();
                 //window.sessionStorage.clear();
+                if(!$scope.$$phase)
                 $scope.$apply();
             }).catch(e => showPopUp("Please try again"));
 
@@ -1958,6 +1963,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.shopArray = userInfo.shops || [];
                 $scope.editType = false;
                 $scope.showShopInput = false;
+                if(!$scope.$$phase)
                 $scope.$apply();
                 window.localStorage.userInfo = JSON.stringify(userInfo);
 
@@ -1974,6 +1980,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
         $scope.closeEditBox = function(){
             $scope.showShopInput = false;
+            if(!$scope.$$phase)
             $scope.$apply();
         };
 
@@ -2025,6 +2032,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 $scope.areas = foo;
               //  console.log('areas =' + foo)
+                if(!$scope.$$phase)
                 $scope.$apply();
                 //console.log($scope.areas);
 
@@ -2085,6 +2093,7 @@ angular.module('starter.controllers', ['ngCordova'])
             var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid + '/suborders');
             subAgentOrdersRef.on('value', function(data){
                 $scope.suborders= data.val();
+                if(!$scope.$$phase)
                 $scope.$apply();
             });
 
@@ -2276,6 +2285,7 @@ angular.module('starter.controllers', ['ngCordova'])
             $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
             $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
             $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                if(!$scope.$$phase)
                 $scope.$apply();
             });
 
@@ -2326,6 +2336,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 }
                 );
                 if(shopDetailArray.length==i){
+                    if(!$scope.$$phase)
                     $scope.$apply();
 
                     var subAgentOrdersRef = loginCred.dbRef.child('users/'+ window.localStorage.uid +
@@ -2860,6 +2871,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 function(data){
                     $scope.ordersArray = data.val().orders;
                     $scope.ordersArray.reverse();
+                    if(!$scope.$$phase)
                     $scope.$apply();
                 });
             $rootScope.$broadcast("cached",{});
@@ -2933,6 +2945,7 @@ angular.module('starter.controllers', ['ngCordova'])
                                 $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
                                 $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
                                 $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                                if(!$scope.$$phase)
                                 $scope.$apply();
 
                     })
@@ -2964,6 +2977,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 $scope.cartArrayOrderDetail['grossPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['grossPrice']);
                 $scope.cartArrayOrderDetail['discount_amount'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['discount_amount']);
                 $scope.cartArrayOrderDetail['totalPrice'] = loginCred.toCommaFormat($scope.cartArrayOrderDetail['totalPrice']);
+                if(!$scope.$$phase)
                 $scope.$apply();
             }
             });
@@ -3111,6 +3125,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         updates:foo,
                         status:order.status
                     }
+                    if(!$scope.$$phase)
                     $scope.$apply();
 
 
@@ -3221,6 +3236,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     foobar['Broken']= bar;
 
                      $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
+                     if(!$scope.$$phase)
                      $scope.$apply();
                      //console.log($scope.pricesForAreas);
                      $rootScope.$broadcast("cached",{});
@@ -3250,6 +3266,7 @@ angular.module('starter.controllers', ['ngCordova'])
                  $scope.userProfileView['Is Agent'] = userObj['isAgent'];
                  $scope.userProfileView['Address'] = userObj['address'];
                  $scope.userProfileView['Mobile'] = userObj['mobile'];
+                 if(!$scope.$$phase)
                  $scope.$apply();
 
              })
@@ -3281,6 +3298,7 @@ angular.module('starter.controllers', ['ngCordova'])
                   $scope.editProfile=false;
                 $scope.userProfileView['Name'] = userObj['name'];
                 $scope.userProfileView['Address'] = userObj['address'];
+                if(!$scope.$$phase)
                 $scope.$apply();
                 showPopup('User information updated successfully', 'Success');
 
