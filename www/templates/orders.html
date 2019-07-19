@@ -11,7 +11,7 @@
         <div class="padding" style="margin-top: 20px;">
             <p style="padding-left: 10px;font-size:16px;font-weight: 500">Latest order appears on the top of the page.<br><br> You can track/cancel/view updates related to the order.</p>
             <ion-list>
-                <div ng-repeat = "order in ordersArray " style="margin-top: 15px">
+                <div ng-repeat = "order in ordersArray track by $index" style="margin-top: 15px">
                     <ion-item class="item-stable" style="background-color: white;margin-top: 4px">
                         <div class="row" ng-click="onClickOrder(order)" style="cursor:pointer;color: #388e3c;font-weight: 500;font-size: 18px">
                             <i id="{{order}}icon" style="margin-right: 10px" class="icon ion-plus" ng-class="ion-plus"></i>
@@ -19,7 +19,7 @@
                         </div>
                     </ion-item>
 
-                    <div ng-repeat="(key,value) in getOrderStatus(order)" id="{{order}}expanded"
+                    <div ng-repeat="(key,value) in getOrderStatus(order) track by $index" id="{{order}}expanded"
                          style="background-color:#fff;display: none;" >
                         <div class="row card">
                             <div class="col-75" style="padding-left: 15px;padding-top: 5px;">
@@ -126,7 +126,9 @@
                                                         </span>
                                 </p>
                             </div>
-                            <div class="button button-bar row" style="padding-left:2%;width: 25%;height: 10px;background-color: #af2020;margin-left: 72%"
+                            <div class="button button-bar row" 
+                                ng-if="value.status != 'dispatch'"
+                                style="padding-left:2%;width: 25%;height: 10px;background-color: #af2020;margin-left: 72%"
                                  ng-click="showDeletePopUp(order)">                          
                                 <p style="width: 100%;color: white;margin-top: 2px">
                                     <span style="color:white">
@@ -148,6 +150,21 @@
                     </div>
                 </div>
             </ion-list>
+            <div style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        ">
+                <button style="cursor:pointer;" ng-if="orderCount > 5" ng-click="loadMoreOrders('less')">
+                    <span style="width : 22px;">←</span>
+                    <span><u>Prev</u></span>
+                </button>
+                <button style="cursor:pointer;" ng-click="loadMoreOrders('more')">
+                    <span><u>Next</u></span> 
+                    <span style="width : 22px;">→</span>
+                </button>
+            </div>
         </div>
     </ion-content>
 

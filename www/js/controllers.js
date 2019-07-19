@@ -67,12 +67,10 @@ angular.module('starter.controllers', ['ngCordova'])
             }
             if(!addToCartElement)
                 return;
-            if(addToCartElement){
-                if(totalItemInCart === 0)
-                    addToCartElement.innerHTML = "";
-                else
-                    addToCartElement.innerHTML = totalItemInCart;
-            }
+            if(totalItemInCart === 0)
+                addToCartElement.innerHTML = "";
+            else
+                addToCartElement.innerHTML = totalItemInCart;
         };
 
         this.toCommaFormat = function(x){
@@ -477,14 +475,18 @@ angular.module('starter.controllers', ['ngCordova'])
                 var userValue = data.val();
                 userValue["orders"] = userValue["orders"] || [];
                 userValue["orders"].push(orderId);
-                var promise = usersRef.update(userValue);
+                //var promise = usersRef.update(userValue);
+            }, function(error){
+                $ionicLoading.hide();
+                alert("There is some error in placing order - pLease try again");
             }).catch(function(e){
-                 $ionicLoading.hide();
+                $ionicLoading.hide();
+                alert("There is some error in placing order - pLease try again");
             });
 
             setTimeout(function(){
               $ionicLoading.hide();
-            }, 30000);
+            }, 5000);
 
             var promise = ordersRef.set(newOrder);
             promise.then(function(e) {
@@ -730,6 +732,11 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.showDiv = function(key){
             var element = document.getElementById(key+"animate");
             element.className = "widthFull animatewidthfull";
+            document.getElementById(key+'bag').value = "";
+            document.getElementById(key+'quantity').value = "";
+            var tickElement = document.getElementById(key+"button");
+            tickElement.className='button icon ion-plus-round';
+            tickElement.style.backgroundColor="#fff";
         };
 
         $scope.favouriteObject = [];
@@ -953,6 +960,21 @@ angular.module('starter.controllers', ['ngCordova'])
         var addToCartNumber;
         $scope.addToCart = function(key,value){
             var tickElement = document.getElementById(key+"button");
+            if(tickElement.getAttribute("status") != "add"){
+                tickElement.className='button icon ion-plus-round';
+                tickElement.style.backgroundColor="#fff";
+                $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
+                var length = $scope.cartArray[$scope.shopDetail.tin].length;
+                for(var index = 0; index<length; index++){
+                    if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
+                        $scope.cartArray[$scope.shopDetail.tin].splice(index,1);
+                        break;
+                    }
+                }
+                window.localStorage.cartArray = JSON.stringify($scope.cartArray);
+                tickElement.setAttribute("status","add");
+                updateCart();
+            }
             if(tickElement.getAttribute("status") == "add")
             {
                 var x = {};
@@ -1003,20 +1025,6 @@ angular.module('starter.controllers', ['ngCordova'])
                 doAnimation(key);
                 tickElement.setAttribute("status","remove");
                 window.localStorage.cartArray = JSON.stringify($scope.cartArray);
-            }else{
-                tickElement.className='button icon ion-plus-round';
-                tickElement.style.backgroundColor="#fff";
-                $scope.cartArray[$scope.shopDetail.tin] = $scope.cartArray[$scope.shopDetail.tin] || [];
-                var length = $scope.cartArray[$scope.shopDetail.tin].length;
-                for(var index = 0; index<length; index++){
-                    if($scope.cartArray[$scope.shopDetail.tin][index].productId == key){
-                        $scope.cartArray[$scope.shopDetail.tin].splice(index,1);
-                        break;
-                    }
-                }
-                window.localStorage.cartArray = JSON.stringify($scope.cartArray);
-                tickElement.setAttribute("status","add");
-                updateCart();
             }
             //console.log($scope.cartArray);
         };
@@ -2099,7 +2107,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
             $timeout(function () {
                     showInitialPrice();
-            },1);
+            },0);
             $rootScope.$broadcast("cached",{});
 
 
@@ -2579,6 +2587,11 @@ angular.module('starter.controllers', ['ngCordova'])
             }
             updateCart();
             $scope.removeItemFromDeliverable(key,value);
+            $timeout(function () {
+                showInitialPrice();
+            },0);
+            if(!$scope.$$phase)
+                $scope.$apply();
         }
 
         $scope.showLorryPopUp = function() {
@@ -2864,17 +2877,28 @@ angular.module('starter.controllers', ['ngCordova'])
     })
 
     .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope) {
-        var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid );
+        $scope.orderCount = 10;
+        var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid + '/orders');
         $scope.orderStatusArray = {};  $scope.ordersArray = [];
         $scope.loadOrders = function(){
-            usersRef.orderByKey().once('value' ,
+            usersRef.orderByKey().limitToLast($scope.orderCount).once('value' ,
                 function(data){
-                    $scope.ordersArray = data.val().orders;
-                    $scope.ordersArray.reverse();
+                    $scope.ordersArray = data.val(); //.orders;
+                    console.log($scope.ordersArray);
+                    //$scope.ordersArray.reverse();
                     if(!$scope.$$phase)
                     $scope.$apply();
                 });
             $rootScope.$broadcast("cached",{});
+        }
+
+        $scope.loadMoreOrders = function(type){
+            if(type === 'less'){
+                $scope.orderCount = $scope.orderCount - 10;
+            }else{
+                $scope.orderCount = $scope.orderCount + 10;
+            }
+            $scope.loadOrders();
         }
 
         $scope.isViewDetailClicked = function(orderId){
@@ -3183,6 +3207,7 @@ angular.module('starter.controllers', ['ngCordova'])
                  ordersRef.once('value', function(data){
                     //console.log(areas[j]);
                     var items = data.val();
+                    if(!items) return;
                     var riceArray = items['rice'];
                     var ravvaArray = items['ravva'];
                     var brokenArray = items['broken'];
@@ -3190,9 +3215,13 @@ angular.module('starter.controllers', ['ngCordova'])
                     var bar=[]; var userType = 'Agent';
                     if(!window.localStorage.isAgent)
                         userType='Outlet';
-                   ricePriorityArray.forEach( function(object) {
-                        var displayNameOfProduct = $scope.intVsDisp[object['key']];
-                        if(displayNameOfProduct ==null)
+                    for(var index = 0; index < ricePriorityArray.length; index++){
+                   //ricePriorityArray.forEach( function(object) {
+                        var object = ricePriorityArray[index];
+                        var displayNameOfProduct;
+                        if($scope.intVsDisp)
+                            displayNameOfProduct = $scope.intVsDisp[object['key']];
+                        if(displayNameOfProduct == null)
                             displayNameOfProduct = object['key'];
 
                         if( (!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType]=="" ))
@@ -3202,9 +3231,10 @@ angular.module('starter.controllers', ['ngCordova'])
                               price:riceArray[object['key']][userType]
                           };
                           bar.push(foo);
-                    })
+                    //})
+                    }
                     foobar['Rice']= bar;
-                                       var bar=[]
+                    var bar=[]
 
                     ravvaPriorityArray.forEach( function(object) {
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
