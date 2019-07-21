@@ -3193,6 +3193,8 @@ angular.module('starter.controllers', ['ngCordova'])
                           areas.push(shops[i].areaId);
                       }
                   }
+                  
+                  areas= userInfo.allowedAreas;
 
                  $scope.pricesForAreas ={};
                  var ricePriorityArray = JSON.parse(window.localStorage.riceItemsPriorityArray);
@@ -3224,13 +3226,16 @@ angular.module('starter.controllers', ['ngCordova'])
                         if(displayNameOfProduct == null)
                             displayNameOfProduct = object['key'];
 
-                        if( (!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType]=="" ))
-                                            return;
+                        //if( (!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType]=="" ))
+                                            //return;
+                        if(riceArray && riceArray[object['key']] && riceArray[object['key']][userType]){         
                           var foo={
                               name:displayNameOfProduct,
                               price:riceArray[object['key']][userType]
                           };
                           bar.push(foo);
+                        }//else
+                         //   return;
                     //})
                     }
                     foobar['Rice']= bar;
@@ -3255,13 +3260,13 @@ angular.module('starter.controllers', ['ngCordova'])
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
-                        if(((!brokenArray[object['key']]) || (!brokenArray[object['key']][userType]) || (brokenArray[object['key']][userType]=="" )))
-                                            return;
+                        if(brokenArray && brokenArray[object['key']] && brokenArray[object['key']][userType]){
                           var foo={
                               name:displayNameOfProduct,
                               price:brokenArray[object['key']][userType]
                           };
                           bar.push(foo);
+                        }
                     })
                     foobar['Broken']= bar;
 
