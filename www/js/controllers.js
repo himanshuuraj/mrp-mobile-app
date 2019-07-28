@@ -2876,16 +2876,18 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
-    .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope) {
+    .controller('orderCtrl', function($scope,$http,$stateParams,loginCred,$ionicNavBarDelegate,$ionicPopup,$timeout,$rootScope, $ionicLoading) {
         $scope.orderCount = 10;
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid + '/orders');
         $scope.orderStatusArray = {};  $scope.ordersArray = [];
+        $ionicLoading.show();
         $scope.loadOrders = function(){
             usersRef.orderByKey().once('value' ,
                 function(data){
                     $scope.ordersArray = data.val(); //.orders;
                     console.log($scope.ordersArray);
                     $scope.ordersArray.reverse();
+                    $ionicLoading.hide();
                     if(!$scope.$$phase)
                     $scope.$apply();
                 });
