@@ -2881,11 +2881,11 @@ angular.module('starter.controllers', ['ngCordova'])
         var usersRef = loginCred.dbRef.child('users/' + window.localStorage.uid + '/orders');
         $scope.orderStatusArray = {};  $scope.ordersArray = [];
         $scope.loadOrders = function(){
-            usersRef.orderByKey().limitToLast($scope.orderCount).once('value' ,
+            usersRef.orderByKey().once('value' ,
                 function(data){
                     $scope.ordersArray = data.val(); //.orders;
                     console.log($scope.ordersArray);
-                    //$scope.ordersArray.reverse();
+                    $scope.ordersArray.reverse();
                     if(!$scope.$$phase)
                     $scope.$apply();
                 });
