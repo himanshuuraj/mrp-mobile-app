@@ -82,7 +82,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    
+
     .state('app.profile', {
         cache: false,
       url: '/profile',
@@ -93,7 +93,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    
+
      .state('app.prices', {
       url: '/prices',
       views: {
@@ -104,9 +104,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     });
 
-  
+
   $ionicConfigProvider.scrolling.jsScrolling(false);
- 
+
   // Or for only a single platform, use
   // if( ionic.Platform.isAndroid() ) {
     // $ionicConfigProvider.scrolling.jsScrolling(false);
@@ -117,13 +117,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 })
 
 .run(function($ionicPlatform,$state) {
-    
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+    if (window.cordova && window.Keyboard) {
+      window.Keyboard.hideKeyboardAccessoryBar(true);
     }
       $ionicPlatform.ready(function() {
           setTimeout(function() {
@@ -141,6 +140,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       window.location.hash = "#/app/login";
 
   });
-  
+
     //$ionicConfigProvider.views.swipeBackEnabled(false);
 });

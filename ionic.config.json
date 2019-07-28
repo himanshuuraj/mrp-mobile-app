@@ -1,4 +1,7 @@
 {
   "name": "lalitha",
-  "app_id": ""
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
 }

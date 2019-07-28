@@ -475,7 +475,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 var userValue = data.val();
                 userValue["orders"] = userValue["orders"] || [];
                 userValue["orders"].push(orderId);
-                //var promise = usersRef.update(userValue);
+                var promise = usersRef.update(userValue);
             }, function(error){
                 $ionicLoading.hide();
                 alert("There is some error in placing order - pLease try again");
@@ -3193,7 +3193,7 @@ angular.module('starter.controllers', ['ngCordova'])
                           areas.push(shops[i].areaId);
                       }
                   }
-                  
+
                   areas= userInfo.allowedAreas;
 
                  $scope.pricesForAreas ={};
@@ -3207,7 +3207,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 (function(j){
                  var ordersRef = loginCred.dbRef.child('priceList/' + areas[j]);
                  ordersRef.once('value', function(data){
-                    //console.log(areas[j]);
+                    console.log(areas[j]);
                     var items = data.val();
                     if(!items) return;
                     var riceArray = items['rice'];
@@ -3221,6 +3221,9 @@ angular.module('starter.controllers', ['ngCordova'])
                    //ricePriorityArray.forEach( function(object) {
                         var object = ricePriorityArray[index];
                         var displayNameOfProduct;
+                        if(!$scope.intVsDisp || !riceArray)
+                            continue;
+
                         if($scope.intVsDisp)
                             displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct == null)
@@ -3228,7 +3231,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
                         //if( (!riceArray[object['key']]) || (!riceArray[object['key']][userType]) || (riceArray[object['key']][userType]=="" ))
                                             //return;
-                        if(riceArray && riceArray[object['key']] && riceArray[object['key']][userType]){         
+                        if(riceArray && riceArray[object['key']] && riceArray[object['key']][userType]){
                           var foo={
                               name:displayNameOfProduct,
                               price:riceArray[object['key']][userType]
@@ -3242,11 +3245,17 @@ angular.module('starter.controllers', ['ngCordova'])
                     var bar=[]
 
                     ravvaPriorityArray.forEach( function(object) {
+                      if(!$scope.intVsDisp || !ravvaArray)
+                          return;
+
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
-                            if( ((!ravvaArray[object['key']]) || (!ravvaArray[object['key']][userType]) || (ravvaArray[object['key']][userType]=="" )) )
-                                            return;
+
+                        if( ((!ravvaArray[object['key']]) || (!ravvaArray[object['key']][userType]) || (ravvaArray[object['key']][userType]=="" )) )
+                                      return;
+
+
                           var foo={
                               name:displayNameOfProduct,
                               price:ravvaArray[object['key']][userType]
@@ -3257,6 +3266,8 @@ angular.module('starter.controllers', ['ngCordova'])
                                        var bar=[]
 
                     brokenPriorityArray.forEach( function(object) {
+                      if(!$scope.intVsDisp || !brokenArray)
+                          return;
                         var displayNameOfProduct = $scope.intVsDisp[object['key']];
                         if(displayNameOfProduct ==null)
                             displayNameOfProduct = object['key'];
@@ -3269,6 +3280,9 @@ angular.module('starter.controllers', ['ngCordova'])
                         }
                     })
                     foobar['Broken']= bar;
+
+                    if(!$scope.intVsDisp)
+                      return;
 
                      $scope.pricesForAreas[$scope.intVsDisp[areas[j]]] = foobar;
                      if(!$scope.$$phase)
@@ -3346,4 +3360,3 @@ angular.module('starter.controllers', ['ngCordova'])
         };
 
              })
-
