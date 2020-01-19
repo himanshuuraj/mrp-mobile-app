@@ -207,12 +207,12 @@ angular.module('starter.controllers', ['ngCordova'])
             var dailyPrices = {};
             var date = getDateString();
             dailyPrices[date] = {};
-            dailyPrices[date][$scope.selectedData.selectedConstituency.state] = {};
-            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district] = {};
-            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district][$scope.selectedData.selectedConstituency.name] = {};
+            // dailyPrices[date][$scope.selectedData.selectedConstituency.state] = {};
+            // dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district] = {};
+            dailyPrices[date][$scope.selectedData.selectedConstituency.name] = {};
             var selectedItem = $scope.selectedData.selectedItem;
             delete selectedItem.$$hashKey;
-            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district][$scope.selectedData.selectedConstituency.name][$scope.selectedData.selectedVariety.name] = selectedItem;
+            dailyPrices[date][$scope.selectedData.selectedConstituency.name][$scope.selectedData.selectedVariety.name] = selectedItem;
             console.log(dailyPrices);
             var usersRef = dbRef.child('dailyPrices');
             usersRef.update(dailyPrices).then(() => {
