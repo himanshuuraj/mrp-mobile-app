@@ -161,6 +161,67 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
     .controller('loginPageCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
+        
+    })
+
+    .controller('constituencyCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
+
+        var dbRef = loginCred.dbRef;
+        $scope.varietyData = {};
+
+        $scope.selectedData = {
+            selectedConstituency : {},
+            selectedVariety : {},
+            selectedItem : {}
+        };
+
+        $scope.selectedConstituency = {};
+
+        $scope.selectedVariety = {};
+
+        $scope.selectedItem = {};
+
+        $scope.constituencyData = [];
+
+        $scope.onInit = function(){
+            var usersRef = dbRef.child('constituency');
+            usersRef.once('value', (data) => {
+                $scope.constituencyData = data.val();
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            });
+        }
+
+        function getDateString(){
+            var date = new Date();
+            var dd = date.getDate();
+            if(dd < 10) dd = "0" + dd;
+            var mm = date.getMonth();
+            mm += 1;
+            if(mm < 10) mm = "0" + mm;
+            var yy = date.getFullYear();
+            return dd + "-" + mm + "-" + yy;
+        }
+
+        $scope.storeData = function(){
+            var dailyPrices = {};
+            var date = getDateString();
+            dailyPrices[date] = {};
+            dailyPrices[date][$scope.selectedData.selectedConstituency.state] = {};
+            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district] = {};
+            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district][$scope.selectedData.selectedConstituency.name] = {};
+            var selectedItem = $scope.selectedData.selectedItem;
+            delete selectedItem.$$hashKey;
+            dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district][$scope.selectedData.selectedConstituency.name][$scope.selectedData.selectedVariety.name] = selectedItem;
+            console.log(dailyPrices);
+            var usersRef = dbRef.child('dailyPrices');
+            usersRef.update(dailyPrices).then(() => {
+                alert("Daily price submitted succesfully");
+                $scope.selectedData.selectedItem = {};
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            });
+        }
 
     })
 
