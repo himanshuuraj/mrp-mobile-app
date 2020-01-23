@@ -167,7 +167,6 @@ angular.module('starter.controllers', ['ngCordova'])
     .controller('constituencyCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
 
         var dbRef = loginCred.dbRef;
-        $scope.varietyData = {};
 
         $scope.selectedData = {
             selectedConstituency : {},
@@ -175,18 +174,110 @@ angular.module('starter.controllers', ['ngCordova'])
             selectedItem : {}
         };
 
-        $scope.selectedConstituency = {};
+        $scope.showCardType = "viewConstituency";
 
-        $scope.selectedVariety = {};
+        $scope.constituencyData = [{
+            name : "conName1",
+            id : "conId1",
+            state : "S1",
+            district : "D1",
+            city : "C1",
+            agent : [{
+                    name : "A1",
+                    phoneNumber : "9849123866"
+                },
+                {
+                    name : "A2",
+                    phoneNumber : "p!"
+                }
+            ],
+            variety : [
+                {
+                    id : "paddy",
+                    name : "Paddy",
+                    item : [
+                        {
+                            id : "rice1D1",
+                            name : "riceName1"
+                        },
+                        {
+                            id : "rice1D2",
+                            name : "riceName2"
+                        },
+                        {
+                            id : "rice1D3",
+                            name : "riceName3"
+                        },
+                        {
+                            id : "rice1D4",
+                            name : "riceName4"
+                        }
+                    ]
+                },
+                {
+                    id : "wheat",
+                    name : "Wheat"
+                }
+            ] 
+        }];
 
-        $scope.selectedItem = {};
+        $scope.changeView = function(type){
+            $scope.edit = false;
+            if(type == 'view'){
+                $scope.showCardType = "addConstituency";
+                var dailyPricesRef = dbRef.child('dailyPrices/' + getDateString() + "/" + window.localStorage.uid);
+                dailyPricesRef.once('value', (data) => {
+                    $scope.dailyUpdatedData = data.val();
+                }).catch(() => {
+                    alert("OOPS something went wrong");
+                });
+            }
+            else if(type == "add"){
+                $scope.showCardType = "viewConstituency";
+                $scope.selectedData.selectedConstituency = {};
+            }else if (type == "edit"){
+                $scope.showCardType = "viewConstituency";
+                $scope.selectedData.selectedItem = $scope.selectedData.selectedVariety.item.filter(data => data.id == $scope.itemDetail.id)[0];
+                for(var key in $scope.itemDetail){
+                    $scope.selectedData.selectedItem[key] = $scope.itemDetail[key];
+                }
+                $scope.edit = true;
+            }else if(type == "delete"){
+                $scope.showCardType = "viewConstituency";
+                var str = 'dailyPrices/' + getDateString() + "/" + window.localStorage.uid + "/" + 
+                        $scope.selectedData.selectedConstituency.id + "/" + $scope.selectedData.selectedVariety.id + 
+                        "/" + $scope.itemDetail.id;
+                var dailyPricesRef = dbRef.child(str);
+                dailyPricesRef.update({}).then(() => {
+                    $scope.itemDetail = {};
+                    $scope.selectedData.selectedConstituency = {};
+                    $scope.selectedData.selectedVariety = {};
+                }).catch(() => {
+                    alert("OOPS something went wrong");
+                });
+            }else if(type == "back"){
+                $scope.showCardType = "addConstituency";
+            }
+        }
 
-        $scope.constituencyData = [];
+        $scope.getItemArray = function(){
+            if(!$scope.dailyUpdatedData) return;
+            var obj = $scope.dailyUpdatedData[$scope.selectedData.selectedConstituency.id][$scope.selectedData.selectedVariety.id];
+            console.log(obj);
+            return obj;
+        }
+
+        $scope.showDetails = function(itemDetail){
+            $scope.showCardType = "showDetails";
+            $scope.itemDetail = itemDetail;
+        }
 
         $scope.onInit = function(){
             var usersRef = dbRef.child('constituency');
             usersRef.once('value', (data) => {
-                $scope.constituencyData = data.val();
+            // usersRef.update($scope.constituencyData).then(() => {
+                $scope.constituencyData = data.val().filter(data => data.agent.findIndex(agent => agent.phoneNumber == window.localStorage.uid) != -1);
+                console.log($scope.constituencyData);
             }).catch(() => {
                 alert("OOPS something went wrong");
             });
@@ -204,20 +295,21 @@ angular.module('starter.controllers', ['ngCordova'])
         }
 
         $scope.storeData = function(){
-            var dailyPrices = {};
+            if(!$scope.selectedData.selectedConstituency.id){
+                alert("Please select a constituency");
+                return;
+            }
             var date = getDateString();
-            dailyPrices[date] = {};
-            // dailyPrices[date][$scope.selectedData.selectedConstituency.state] = {};
-            // dailyPrices[date][$scope.selectedData.selectedConstituency.state][$scope.selectedData.selectedConstituency.district] = {};
-            dailyPrices[date][$scope.selectedData.selectedConstituency.name] = {};
             var selectedItem = $scope.selectedData.selectedItem;
             delete selectedItem.$$hashKey;
-            dailyPrices[date][$scope.selectedData.selectedConstituency.name][$scope.selectedData.selectedVariety.name] = selectedItem;
-            console.log(dailyPrices);
-            var usersRef = dbRef.child('dailyPrices');
-            usersRef.update(dailyPrices).then(() => {
+            var usersRef = dbRef.child('dailyPrices/'+ date + "/" + window.localStorage.uid + "/" + $scope.selectedData.selectedConstituency.id + "/" + $scope.selectedData.selectedVariety.id + "/" + selectedItem.id);
+            usersRef.update(selectedItem).then(() => {
                 alert("Daily price submitted succesfully");
-                $scope.selectedData.selectedItem = {};
+                $scope.selectedData = {
+                    selectedConstituency : {},
+                    selectedVariety : {},
+                    selectedItem : {}
+                };
             }).catch(() => {
                 alert("OOPS something went wrong");
             });

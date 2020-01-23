@@ -5,7 +5,19 @@
         <h1 class="title" style="color:white;">CONSTITUENCY</h1>
     </div>
     <ion-content class="has-header">
-        <div class="card" style="margin-top: 40px; padding-top : 10px; padding-bottom : 20px;">
+        <div class="card" ng-show="showCardType == 'viewConstituency'" style="margin-top: 30px;">
+            <button class = "button button-block" ng-click="changeView('view')"
+                style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; width : 90%; margin-top : 10px; background-color : #387ef5;">
+                <span style="color :white; font-size: 16px;font-weight:bold;">View Daily Prices</span>
+            </button>
+        </div>
+        <div class="card" ng-show="showCardType == 'addConstituency'" style="margin-top: 30px;">
+                <button class = "button button-block" ng-click="changeView('add')"
+                    style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; width : 90%; margin-top : 10px; background-color : #387ef5;">
+                    <span style="color :white; font-size: 16px;font-weight:bold;">Add Daily Prices</span>
+                </button>
+            </div>
+        <div class="card" style="margin-top: 20px; padding-top : 10px; padding-bottom : 20px;" ng-show="showCardType == 'viewConstituency'">
             <h4 style="text-align: center;"> Add Daily Price </h4>
             <div style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; margin-top : 10px;">Select Constituency</div>
             <select ng-model="selectedData.selectedConstituency"
@@ -46,8 +58,72 @@
 
             <button class = "button button-block" ng-click="storeData()"
                 style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; width : 90%; margin-top : 10px; background-color : #387ef5;">
-                <span style="color :white; font-size: 16px;font-weight:bold;">ADD</span>
+                <span style="color :white; font-size: 16px;font-weight:bold;">
+                    <span ng-show="!edit">ADD</span>
+                    <span ng-show="edit">EDIT</span>
+                </span>
             </button>
+        </div>
+
+        <div class="card" style="margin-top: 40px; padding-top : 10px; padding-bottom : 20px;" ng-show="showCardType == 'addConstituency'">
+            <div style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; margin-top : 10px;">Select Constituency</div>
+            <select ng-model="selectedData.selectedConstituency"
+                style="margin-left: 5%; border: 1px solid #bbb; width : 90%; height : 40px;"
+                ng-options="item as item.name for item in constituencyData">
+                <option value="">-- No Constituency --</option>
+            </select>
+            <div style="margin-left : 5%; margin-bottom : 5px; font-size: 12px; margin-top : 10px;">Select Variety</div>
+            <select ng-model="selectedData.selectedVariety"
+                style="margin-left: 5%; border: 1px solid #bbb; width : 90%; height : 40px;"
+                ng-options="item as item.name for item in selectedData.selectedConstituency.variety">
+                <option value="">-- No Variety --</option>
+            </select>
+            <div class="card" ng-repeat="(x, y) in getItemArray() track by $index" ng-if="selectedData.selectedVariety" 
+                ng-click="showDetails(y)"
+                style="margin-left: 5%;
+                width: 90%;
+                padding-left: 15px;
+                padding-top: 15px;
+                position: relative;">
+                <p><b> {{ y.name }} </b></p>
+                <p style="font-size:12px;"> ₹ {{ y.price }} </p>
+                <div style="font-size: 18px;position : absolute; top:26px;; right:20px;"> > </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px; padding-top : 10px; padding-bottom : 20px;" ng-show="showCardType == 'showDetails'">
+                <div style="display: flex; flex-direction : row; justify-content: center;">
+                <button class = "button" style="margin-right: 15px; background-color:#387ef5;" ng-click="changeView('back')">Back</button>
+                <button class = "button" style="margin-right: 15px; background-color:bisque;" ng-click="changeView('edit')">Edit</button>
+                <!-- <button class = "button" style="margin-right: 15px; background-color:orangered;" ng-click="changeView('delete')">Delete</button> -->
+                </div>
+                <div style="padding-left: 15px;
+                    padding-top: 40px;">
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                        <span><b> Name</b></span>
+                        <span > {{ itemDetail.name }} </span>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                    <span><b> Weight </b></span>
+                    <span> {{ itemDetail.weight }} </span>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                    <span><b> Moisture </b></span>
+                    <span> {{ itemDetail.moisture }} </span>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                    <span><b> Price </b></span>
+                    <span> ₹ {{ itemDetail.price }} </span>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                    <span><b> Freight </b></span>
+                    <span> ₹ {{ itemDetail.freight }} </span>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;align-items: center;padding-right: 15px;margin-bottom : 15px;">
+                    <span><b> Total Price </b></span>
+                    <span> ₹ {{ itemDetail.totalPrice }} </span>
+                    </div>
+                </div>
         </div>
       </ion-content>
 </ion-view>
