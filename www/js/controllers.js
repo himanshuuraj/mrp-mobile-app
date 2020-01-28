@@ -162,6 +162,269 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
+    .controller('constituencyCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
+
+        var dbRef = loginCred.dbRef;
+
+        $scope.selectedData = {
+            selectedConstituency : {},
+            selectedVariety : {},
+            selectedItem : {}
+        };
+
+        $scope.showCardType = "viewConstituency";
+
+        $scope.constituencyData = {
+            conId1 : {
+            name : "conName1",
+            id : "conId1",
+            state : "S1",
+            district : "D1",
+            city : "C1",
+            agent : [{
+                    name : "A1",
+                    phoneNumber : "9849123866"
+                },
+                {
+                    name : "A2",
+                    phoneNumber : "p!"
+                }
+            ],
+            variety : [
+                {
+                    id : "paddy",
+                    name : "Paddy",
+                    item : [
+                        {
+                            id : "rice1D1",
+                            name : "riceName1"
+                        },
+                        {
+                            id : "rice1D2",
+                            name : "riceName2"
+                        },
+                        {
+                            id : "rice1D3",
+                            name : "riceName3"
+                        },
+                        {
+                            id : "rice1D4",
+                            name : "riceName4"
+                        }
+                    ]
+                },
+                {
+                    id : "wheat",
+                    name : "Wheat"
+                }
+            ] 
+            }, 
+            conId2 : {
+                name : "conName2",
+                id : "conId2",
+                state : "S2",
+                district : "D2",
+                city : "C2",
+                agent : [{
+                        name : "A2",
+                        phoneNumber : "9849123866"
+                    },
+                    {
+                        name : "A2",
+                        phoneNumber : "p!"
+                    }
+                ],
+                variety : [
+                    {
+                        id : "paddy",
+                        name : "Paddy",
+                        item : [
+                            {
+                                id : "crice1D1",
+                                name : "criceName1"
+                            },
+                            {
+                                id : "crice1D2",
+                                name : "criceName2"
+                            },
+                            {
+                                id : "crice1D3",
+                                name : "criceName3"
+                            },
+                            {
+                                id : "crice1D4",
+                                name : "criceName4"
+                            }
+                        ]
+                    },
+                    {
+                        id : "wheat",
+                        name : "Wheat"
+                    }
+                ] 
+            }
+        };
+
+        var agentConstituencyArray = [];
+        $scope.dailyUpdatedData = {};
+
+        $scope.changeView = function(type){
+            $scope.edit = false;
+            if(type == 'view'){
+                $scope.showCardType = "addConstituency";
+                for(var index = 0; index < agentConstituencyArray.length; index++){
+                    (function(){
+                        let i = index;
+                        var dailyPricesRef = dbRef.child('dailyPrices/' + getDateString() + "/" + agentConstituencyArray[i].cId + "/" + window.localStorage.uid);
+                        dailyPricesRef.once('value', (data) => {
+                            $scope.dailyUpdatedData[agentConstituencyArray[i].cId] = {};
+                            $scope.dailyUpdatedData[agentConstituencyArray[i].cId][window.localStorage.uid] = data.val();
+                            console.log("UPDATED DATA", $scope.dailyUpdatedData);
+                        }).catch(() => {
+                            alert("OOPS something went wrong");
+                        });
+                    })();
+                }
+            }
+            else if(type == "add"){
+                $scope.showCardType = "viewConstituency";
+                $scope.selectedData.selectedConstituency = {};
+            }else if (type == "edit"){
+                $scope.showCardType = "viewConstituency";
+                $scope.selectedData.selectedItem = $scope.selectedData.selectedVariety.item.filter(data => data.id == $scope.itemDetail.id)[0];
+                for(var key in $scope.itemDetail){
+                    $scope.selectedData.selectedItem[key] = $scope.itemDetail[key];
+                }
+                $scope.edit = true;
+            }else if(type == "delete"){
+                $scope.showCardType = "viewConstituency";
+                var str = 'dailyPrices/' + getDateString() + "/" + window.localStorage.uid + "/" + 
+                        $scope.selectedData.selectedConstituency.id + "/" + $scope.selectedData.selectedVariety.id + 
+                        "/" + $scope.itemDetail.id;
+                var dailyPricesRef = dbRef.child(str);
+                dailyPricesRef.update({}).then(() => {
+                    $scope.itemDetail = {};
+                    $scope.selectedData.selectedConstituency = {};
+                    $scope.selectedData.selectedVariety = {};
+                }).catch(() => {
+                    alert("OOPS something went wrong");
+                });
+            }else if(type == "back"){
+                $scope.showCardType = "addConstituency";
+            }
+        }
+
+        $scope.getItemArray = function(){
+            if(!$scope.dailyUpdatedData) return;
+            var obj = {};
+            if($scope.dailyUpdatedData[$scope.selectedData.selectedConstituency.id] 
+                && $scope.selectedData.selectedVariety.id
+                    && $scope.dailyUpdatedData[$scope.selectedData.selectedConstituency.id][window.localStorage.uid] 
+                        && $scope.dailyUpdatedData[$scope.selectedData.selectedConstituency.id][window.localStorage.uid][$scope.selectedData.selectedVariety.id]
+                    )
+                obj = $scope.dailyUpdatedData[$scope.selectedData.selectedConstituency.id][window.localStorage.uid][$scope.selectedData.selectedVariety.id];
+            // console.log(obj);
+            return obj;
+        }
+
+        $scope.showDetails = function(itemDetail){
+            $scope.showCardType = "showDetails";
+            $scope.itemDetail = itemDetail;
+        }
+
+        function updateConstituencyData(){
+            var usersRef = dbRef.child('constituency');
+            usersRef.update($scope.constituencyData).then(() => {
+                console.log("UPDATED");
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            });
+        }
+
+        function getConstituencyData(){
+            var usersRef = dbRef.child('constituency');
+            // console.log($scope.constituencyData, "CONSTITUENCY DATA")
+            usersRef.once('value', (data) => {
+            // usersRef.update($scope.constituencyData).then(() => {
+                var constituencyData = {};
+                var cData = data.val();
+                for(var key in cData){
+                    var obj = cData[key];
+                    if(obj.agent.findIndex(agent => agent.phoneNumber == window.localStorage.uid) != -1)
+                        constituencyData[key] = cData[key];
+                }
+                $scope.constituencyData = constituencyData;
+                console.log($scope.constituencyData);
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            }); 
+        }
+
+        $scope.onInit = function(){
+            // updateConstituencyData();
+            getConstituencyData();
+            getAgentConstituency();
+        }
+
+        function getAgentConstituency(){
+            var usersRef = dbRef.child('users/' + window.localStorage.uid + "/constituency");
+            usersRef.once('value', (data) => {
+                agentConstituencyArray = data.val();
+                console.log(agentConstituencyArray, "CONSTITUENCY ARRAY");
+            });
+        }
+
+        function updateAgentInfo(){
+            var usersRef = dbRef.child('users/' + window.localStorage.uid + "/constituency");
+            var obj = [
+                { 
+                    cId : "conId1",
+                    cName : "conName1"
+                },
+                { 
+                    cId : "conId2",
+                    cName : "conName2"
+                }
+            ];
+            usersRef.update(obj).then(() => {
+                alert("DONE");
+            });
+        }
+
+        function getDateString(){
+            var date = new Date();
+            var dd = date.getDate();
+            if(dd < 10) dd = "0" + dd;
+            var mm = date.getMonth();
+            mm += 1;
+            if(mm < 10) mm = "0" + mm;
+            var yy = date.getFullYear();
+            return dd + "-" + mm + "-" + yy;
+        }
+
+        $scope.storeData = function(){
+            if(!$scope.selectedData.selectedConstituency.id){
+                alert("Please select a constituency");
+                return;
+            }
+            var date = getDateString();
+            var selectedItem = $scope.selectedData.selectedItem;
+            delete selectedItem.$$hashKey;
+            var usersRef = dbRef.child('dailyPrices/'+ date + "/" + $scope.selectedData.selectedConstituency.id + "/" + window.localStorage.uid + "/" + $scope.selectedData.selectedVariety.id + "/" + selectedItem.id);
+            usersRef.update(selectedItem).then(() => {
+                alert("Daily price submitted succesfully");
+                $scope.selectedData = {
+                    selectedConstituency : {},
+                    selectedVariety : {},
+                    selectedItem : {}
+                };
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            });
+        }
+
+    })
+
     .controller('summaryCtrl', function($scope,$http,loginCred,$state,$ionicPopup,$rootScope,$ionicLoading) {
         var showPopUp = loginCred.showPopup;
         if(window.localStorage.isActive === 'false') {

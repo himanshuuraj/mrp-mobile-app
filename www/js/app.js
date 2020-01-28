@@ -31,6 +31,17 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+  .state('app.constituency', {
+    cache: false,
+    url: '/constituency',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/constituency.html',
+        controller: 'constituencyCtrl'
+      }
+    }
+  })
+
   .state('app.shop', {
       cache: false,
       url: '/shop',
