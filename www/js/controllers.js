@@ -421,6 +421,14 @@ angular.module('starter.controllers', ['ngCordova'])
             }).catch(() => {
                 alert("OOPS something went wrong");
             });
+
+            usersRef = dbRef.child('dailyPricesAdmin/'+ date + "/constituencies/" + $scope.selectedData.selectedConstituency.id + "/" + $scope.selectedData.selectedVariety.id + "/" + selectedItem.id + "/agentPrice/" + window.localStorage.uid);
+            usersRef.update(selectedItem).then(() => {
+                //alert("Daily price submitted succesfully");
+                // alert("done one more time");
+            }).catch(() => {
+                alert("OOPS something went wrong");
+            });
         }
 
     })
